@@ -1,0 +1,12 @@
+
+
+{% for flashMessage in app.session.flashbag.get('notice') %}
+
+    {{ flashMessage }}
+
+{% endfor %}
+{% for flashMessage in app.session.flashbag.get('error') %}
+
+    {{ flashMessage }}
+
+{% endfor %}

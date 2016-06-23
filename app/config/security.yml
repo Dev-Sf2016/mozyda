@@ -1,24 +1,95 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
 security:
+    encoders:
+        AppBundle\Entity\Customer:
+            algorithm: md5
+            iterations: 0
+            encode_as_base64: false
+
+        AppBundle\Security\User\CustomerUser:
+            algorithm: md5
+            iterations: 0
+            encode_as_base64: false
+
+        AppBundle\Security\User\CompanyUser:
+            algorithm: md5
+            iterations: 0
+            encode_as_base64: false
+
+        AppBundle\Security\User\AdminUser:
+            algorithm: md5
+            iterations: 0
+            encode_as_base64: false
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         in_memory:
             memory: ~
 
+        customers:
+            id: app.customer_user_provider
+
+        companies:
+            id: app.company_user_provider
+
+        admins:
+            id: app.admin_user_provider
+
     firewalls:
+
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
+        customer_area:
+            context: customer_area
             anonymous: ~
-            # activate different ways to authenticate
+            pattern: ^/customer/*
+            form_login:
+                login_path: customer_login
+                check_path: customer_login
+                default_target_path: customer_home
+                provider: customers
+            logout:
+                path: customer_logout
+                target: customer_login
 
-            # http_basic: ~
-            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+        company_area:
+            context: company_area
+            anonymous: ~
+            pattern: ^/company/*
+            form_login:
+                login_path: company_login
+                check_path: company_login
+                default_target_path: company_home
+                provider: companies
+            logout:
+                path: company_logout
+                target: company_login
 
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+        admin_area:
+            context: admin_area
+            anonymous: ~
+            pattern: ^/admin/*
+            form_login:
+                login_path: admin_login
+                check_path: admin_login
+                default_target_path: admin_home
+                provider: admins
+            logout:
+                path: admin_logout
+                target: admin_login
+
+    access_control:
+        - { path: ^/customer/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/customer, roles: ROLE_CUSTOMER }
+        - { path: ^/company/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/company, roles: ROLE_COMPANY }
+        - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+#        - { path: ^/admin, roles: ROLE_ADMIN }
+#        - { path: ^/vendor, roles: ROLE_VENDOR }

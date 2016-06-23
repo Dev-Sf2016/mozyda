@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block topmenu %}
+    <a href="{{ path('customer_logout') }}">Logout</a>
+        {% endblock %}
+
+{% block body %}
+    {{ dump(app.user) }}
+    welcome to customer default
+{% endblock %}

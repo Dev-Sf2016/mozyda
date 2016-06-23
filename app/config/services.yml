@@ -4,6 +4,29 @@ parameters:
 #    parameter_name: value
 
 services:
+    app.token_authenticator:
+        class: AppBundle\Security\TokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager']
+    app.loyality:
+        class: AppBundle\Services\Loyality
+    app.customer_user_provider:
+        class: AppBundle\Security\User\CustomerUserProvider
+        arguments: ["@doctrine.orm.entity_manager"]
+    app.customer_authenticator:
+        class: AppBundle\Security\CustomerAuthenticator
+        arguments: ["@security.password_encoder"]
+    app.company_user_provider:
+        class: AppBundle\Security\User\CompanyUserProvider
+        arguments: ["@doctrine.orm.entity_manager"]
+    app.company_authenticator:
+        class: AppBundle\Security\CompanyAuthenticator
+        arguments: ["@security.password_encoder"]
+    app.admin_user_provider:
+        class: AppBundle\Security\User\AdminUserProvider
+        arguments: ["@doctrine.orm.entity_manager"]
+    app.admin_authenticator:
+        class: AppBundle\Security\AdminAuthenticator
+        arguments: ["@security.password_encoder"]
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
