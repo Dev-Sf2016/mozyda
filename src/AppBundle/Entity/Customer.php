@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="customers")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\CustomerRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\CustomerRepository")
  * @UniqueEntity("email")
  * @ORM\HasLifecycleCallbacks()
  */

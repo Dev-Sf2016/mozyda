@@ -1,12 +1,13 @@
 <?php
 namespace AppBundle\Security\User;
 
-use AppBundle\Entity\Company;
+use AppBundle\Entity\CompanyDelegate;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+
 
 class CompanyUserProvider implements UserProviderInterface
 {
@@ -20,25 +21,17 @@ class CompanyUserProvider implements UserProviderInterface
 
     public function loadUserByUsername($username)
     {
-//        die ('--loaduser');
-        /**
-         * @var \AppBundle\Entity\Company
-         */
-        $user = $this->em->createQueryBuilder()
-            ->select('c')
-            ->from('AppBundle:Company', 'c')
-            ->where('c.email = :email')
-            ->setParameter('email', $username)
-            ->getQuery()
-            ->getOneOrNullResult();
 
-        var_dump($user);
-//        die('---');
+
+        $user = $this->em->getRepository('AppBundle:CompanyDelegate')->findByEmail($username);
+
+
         if($user != null){
 
-            $companyUser = new CompanyUser($user->getEmail(), $user->getPassword(), $user->getName(), $user->getUrl(),$user->getLogo(), $user->getIsActive());
-            $companyUser->setId($user->getId())
-                ;
+            $company = $user->getCompany();
+            
+            $companyUser = new CompanyUser($user->getEmail(), $user->getPassword(), $user->getName(), $company->getUrl(),$company->getLogo(), $company->getIsActive());
+            $companyUser->setId($user->getId());
 
             return $companyUser;
         }

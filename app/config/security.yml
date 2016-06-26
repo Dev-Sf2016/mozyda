@@ -86,6 +86,7 @@ security:
         - { path: ^/customer/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/customer, roles: ROLE_CUSTOMER }
         - { path: ^/company/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/company/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/company, roles: ROLE_COMPANY }
         - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }

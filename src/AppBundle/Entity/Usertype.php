@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Tests\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="user_role")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\UsertypeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\UsertypeRepository")
  */
 
 class Usertype
