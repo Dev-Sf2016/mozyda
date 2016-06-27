@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <section id="vendoredit-reg" class="container">
+
+    <div class="row">
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-centered">
+            {% if app.session.flashBag.has('success') %}
+                <div class="alert alert-info">
+                    {% for message in app.session.flashBag.get('success') %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% else %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ 'Regiter as a company' }}</div>
+                <div class="panel-body">
+                    {{ form_start(form) }}
+
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.url) }}
+                    {{ form_row(form.logo) }}
+
+                    {{ form_row(form.companyDelegate.children[0].name) }}
+                    {{ form_row(form.companyDelegate.children[0].email) }}
+                    {{ form_row(form.companyDelegate.children[0].password.first) }}
+                    {{ form_row(form.companyDelegate.children[0].password.second) }}
+
+                    {{ form_row(form.submit) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    </section>
+
+
+
+{% endblock %}

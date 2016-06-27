@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <section id="vendoredit-reg" class="container">
+
+    <div class="row">
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-centered">
+            <ul>
+                <li>Company Name: {{ company.name }}</li>
+                <li>Website: {{ company.url }}</li>
+                <li>Logo: <img src="{{ asset("files/company/logo/") }}{{ company.logo }}" alt="" width="150" height="150"> </li>
+
+            </ul>
+        </div>
+    </div>
+    </section>
+
+
+
+{% endblock %}

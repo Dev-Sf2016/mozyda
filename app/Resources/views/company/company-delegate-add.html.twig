@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <section id="vendoredit-reg" class="container">
+
+    <div class="row">
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-centered">
+            {% if app.session.flashBag.has('success') %}
+                <div class="alert alert-info">
+                    {% for message in app.session.flashBag.get('success') %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ 'Add Delegate' }}</div>
+                <div class="panel-body">
+                    {{ form_start(form) }}
+
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.password.first) }}
+                    {{ form_row(form.password.second) }}
+
+                    {#{{ form_row(form.submit) }}#}
+                    <div class="form-group"><button class="btn btn-custom btn-lg btn-block btn" name="company[submit]" id="company_submit" type="submit">Add</button></div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+
+
+{% endblock %}

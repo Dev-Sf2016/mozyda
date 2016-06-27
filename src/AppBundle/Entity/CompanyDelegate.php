@@ -3,19 +3,19 @@ namespace AppBundle\Entity;
 
 
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Table(name="company")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\CompanyRepository")
+ * @ORM\Table(name="company_delegate")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\CompanyDelegateRepository")
+ * @UniqueEntity("email")
  * @ORM\HasLifecycleCallbacks()
+ *
  */
-class Company
+class CompanyDelegate
 {
-
 
     /**
      * @ORM\Column(type="integer")
@@ -25,41 +25,38 @@ class Company
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=200, unique=true)
+     * @ORM\Column(name="name", type="string", length=200)
      *
      * @Assert\NotBlank(message="This field is required")
      */
     private $name;
 
     /**
-     * @ORM\Column(name="is_active", type="integer", length=1)
-     */
-    private $isActive;
-
-
-    /**
-     * @ORM\Column(name="url", type="string", length=150)
+     * @ORM\Column(name="email", type="string", length=100, unique=true)
      * @Assert\NotBlank(message="This field is required")
-     * @Assert\Url()
+     * @Assert\Email()
      */
-    private $url;
+    private $email;
 
     /**
-     * @ORM\Column(name="logo", type="string", length=64)
-     * @Assert\NotBlank(message="Please select logo")
-     * @Assert\Image(
-     *     maxSize="1Mi",
-     *     maxSizeMessage="Maximum Image size allowed is 1Mi"
-     * )
-     */
-    private $logo;
-
-    /**
-     * @var ArrayCollection
+     * @ORM\Column(type="string", length=64)
      *
-     * @Assert\Valid()
+     * @Assert\NotBlank(message="This field is required")
+     * @Assert\Length(minMessage="Password must be at least 8 characters", maxMessage="Password must not be grater then 40 characters", min="8", max="40")
      */
-    private $companyDelegate;
+    private $password;
+
+    /**
+     * @ORM\Column(name="is_default", type="string", length=1, )
+     *
+     */
+    private $isDefault;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Company")
+    * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+    */
+    private $company;
 
     /**
      * @var \DateTime
@@ -131,97 +128,84 @@ class Company
     }
 
     /**
-     * Set isActive
+     * Set email
      *
-     * @param integer $isActive
+     * @param string $email
      *
      * @return Company
      */
-    public function setIsActive($isActive)
+    public function setEmail($email)
     {
-        $this->isActive = $isActive;
+        $this->email = $email;
 
         return $this;
     }
 
     /**
-     * Get isActive
-     *
-     * @return integer
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * Set url
-     *
-     * @param string $url
-     *
-     * @return Company
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * Get url
+     * Get email
      *
      * @return string
      */
-    public function getUrl()
+    public function getEmail()
     {
-        return $this->url;
+        return $this->email;
     }
 
     /**
-     * Set logo
+     * Set password
      *
-     * @param string $logo
+     * @param string $password
      *
      * @return Company
      */
-    public function setLogo($logo)
+    public function setPassword($password)
     {
-        $this->logo = $logo;
+        $this->password = $password;
 
         return $this;
     }
 
     /**
-     * Get logo
+     * Get password
      *
      * @return string
      */
-    public function getLogo()
+    public function getPassword()
     {
-        return $this->logo;
+        return $this->password;
     }
 
     /**
-     * Add CompanyDelegate
-     * @param CompanyDelegate $companyDelegate
-     *
-     * @return Company
+     * @param $id
+     * @return  CompanyDelegate
      */
-    public function addCompanyDelegate($companyDelegate)
+    public function setId($id)
     {
-        $this->companyDelegate->add($companyDelegate);
+        $this->id = $id;
 
         return $this;
     }
 
     /**
+     * @param $isDefault
+     *
      * @return CompanyDelegate
      */
-    public function getCompanyDelegate()
+    public function setIsDefault($isDefault)
     {
-        return $this->companyDelegate;
+        $this->isDefault = $isDefault;
+
+        return $this;
     }
+
+    /**
+     * @return integer
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
+    }
+
 
     /**
      * Set created
@@ -271,8 +255,27 @@ class Company
         return $this->updated;
     }
 
-    public function __construct()
+    /**
+     * Set Company
+     *
+     * @param Company $company
+     *
+     * @return CompanyDelegate
+     */
+    public function setCompany($company)
     {
-        $this->companyDelegate = new ArrayCollection();
+        $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * Get company
+     *
+     * @return Company
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 }

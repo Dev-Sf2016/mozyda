@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="categories")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\CategoryRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\CategoryRepository")
  * @UniqueEntity("id")
  * @ORM\HasLifecycleCallbacks()
  */

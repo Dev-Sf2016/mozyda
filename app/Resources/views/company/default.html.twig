@@ -4,6 +4,26 @@
 {% endblock %}
 
 {% block body %}
-    {{ dump(app.user) }}
-    welcome to company default
+
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-8 col-lg-offset-2">
+
+                <a href="{{ path('company_detail') }}">Details</a> |
+                <a href="{{ path('company_delegate_add') }}">Add Delegate</a> |
+                <a href="{{ path('company_upload_discount') }}">Upload discount</a>
+                <a href="{{ path('company_discount_list') }}">List Discount</a> |
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
 {% endblock %}
