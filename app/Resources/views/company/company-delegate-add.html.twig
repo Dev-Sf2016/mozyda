@@ -13,7 +13,7 @@
                 </div>
             {% endif %}
             <div class="panel panel-default">
-                <div class="panel-heading">{{ 'Add Delegate' }}</div>
+                <div class="panel-heading">{{ 'Add Delegate'|trans }}</div>
                 <div class="panel-body">
                     {{ form_start(form) }}
 
@@ -23,7 +23,7 @@
                     {{ form_row(form.password.second) }}
 
                     {#{{ form_row(form.submit) }}#}
-                    <div class="form-group"><button class="btn btn-custom btn-lg btn-block btn" name="company[submit]" id="company_submit" type="submit">Add</button></div>
+                    <div class="form-group"><button class="btn btn-custom btn-lg btn-block btn" name="company[submit]" id="company_submit" type="submit">{{ 'Add Delegate'|trans }}</button></div>
                     {{ form_end(form) }}
                 </div>
             </div>

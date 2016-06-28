@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\admin;
 
-use AppBundle\Entity\User;
+use AppBundle\Entity\Company;
 use AppBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -10,10 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-///**
-//* @Route("/admin/")
-//* @Security("has_role('ROLE_ADMIN')")
-//*/
 class DefaultController extends Controller
 {
     function __construct()
@@ -70,18 +66,18 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/admin/vendors", defaults={"page": 1}, name="admin_vendors")
-     * @Route("admin/vendors/{page}", requirements={"page": "[1-9]\d*"}, name="admin_vendors_paginated")
+     * @Route("/admin/companies", defaults={"page": 1}, name="admin_companies")
+     * @Route("admin/companies/{page}", requirements={"page": "[1-9]\d*"}, name="admin_companies_paginated")
      * @Method("GET")
      * @Cache(smaxage="10")
      */
-    public function vendorsAction($page){
-        $vendors = $this->getDoctrine()->getRepository('AppBundle:User')->getVendors($page);
+    public function companiesAction($page){
+        $companies = $this->getDoctrine()->getRepository('AppBundle:Company')->getCompanies($page);
         return $this->render(
 //            registration/customerregistration.html.twig
-            'admin/index/vendors.html.twig',
+            'admin/index/companies.html.twig',
             array(
-                'vendors' => $vendors
+                'companies' => $companies
             )
         );
     }

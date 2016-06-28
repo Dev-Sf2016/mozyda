@@ -58,6 +58,7 @@ class UserRepository extends EntityRepository implements UserLoaderInterface
             ')
 
         ;
+        var_dump($query);
         $paginator = new Pagerfanta(new DoctrineORMAdapter($query, false));
         $paginator->setMaxPerPage(user::NUM_ITEMS);
         $paginator->setCurrentPage($page);

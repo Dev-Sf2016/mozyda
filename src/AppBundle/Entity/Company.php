@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Company
 {
 
+    const NUM_ITEMS = 10;
 
     /**
      * @ORM\Column(type="integer")

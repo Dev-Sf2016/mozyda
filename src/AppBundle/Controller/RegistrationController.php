@@ -116,19 +116,19 @@ class RegistrationController extends Controller
                 'Invalid user'
             );
         }
-        var_dump($customer);
+//        var_dump($customer);
         $account_active = 0;
         if($customer->getIsActive() == 1){
             $account_active = 1;
-            $this->get('session')->getFlashBag()->add('notice', 'Your Account is already in active state');
+            $this->get('session')->getFlashBag()->add('notice', $this->get('translator')->trans('Your Account is already in active state'));
         }else {
             if ($customer->getActivationCode() == $code) {
                 $customer->setIsActive(1);
                 $customer->setActivationCode('');
                 $em->flush();
-                $this->get('session')->getFlashBag()->add('notice', 'Your Account is Active you can login now');
+                $this->get('session')->getFlashBag()->add('notice', $this->get('translator')->trans('Your Account is Active you can login now'));
             }else{
-                $this->get('session')->getFlashBag()->add('error', 'Invalid activation code');
+                $this->get('session')->getFlashBag()->add('error', $this->get('translator')->trans('Invalid activation code'));
             }
 
         }

@@ -26,6 +26,7 @@ class Customer
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -60,11 +61,13 @@ class Customer
     /**
      * @ORM\Column(name="email", type="string", length=100, unique=true)
      * @Assert\Email()
+     * @Assert\NotBlank()
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank()
      */
     private $password;
 

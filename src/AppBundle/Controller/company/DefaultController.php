@@ -6,12 +6,10 @@ use AppBundle\Entity\Company;
 use AppBundle\Entity\CompanyDelegate;
 use AppBundle\Form\CompanyDelegateType;
 use AppBundle\Form\CompanyType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class DefaultController extends Controller
 {
@@ -59,7 +57,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/company/register", name="company_register")
+     * @Route("/registerCompany", name="company_register")
      * @param Request $request
      *
      * @return Response
