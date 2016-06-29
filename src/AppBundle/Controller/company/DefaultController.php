@@ -4,8 +4,10 @@ namespace AppBundle\Controller\company;
 
 use AppBundle\Entity\Company;
 use AppBundle\Entity\CompanyDelegate;
+use AppBundle\Entity\Discount;
 use AppBundle\Form\CompanyDelegateType;
 use AppBundle\Form\CompanyType;
+use AppBundle\Form\DiscountType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -160,34 +162,76 @@ class DefaultController extends Controller
      * @return Response
      */
     public function companyDetailAction(Request $request){
-        
+        //var_dump($this->getUser()); die(); //->getCompany()->getId();die();
         $em = $this->getDoctrine()->getManager();
-        $company = $em->getRepository('AppBundle:Company')->find($this->getUser()->getCompany()->getId());
+        $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
 
         
         return $this->render(
-            ':company:company-delegate-add.html.twig',
+            ':company:company-detail.html.twig',
             array(
-                'company' =>$company
+                'companyDelegate' =>$companyDelegate
             ));
     }
 
     /**
-     * @Route("/company/upload/discount", name="company_upload_discount")
+     * @Route("/company/add/discount", name="company_add_discount")
      * @param Request $request
      *
      * @return Response
      */
-    public function companyUploadDiscountAction(Request $request){
+    public function companyAddDiscountAction(Request $request){
 
         $em = $this->getDoctrine()->getManager();
-        $company = $em->getRepository('AppBundle:Company')->find($this->getUser()->getCompany()->getId());
+        //$company = $em->getRepository('AppBundle:Company')->find($this->getUser()->getCompany()->getId());
+
+        $discount = new Discount();
+        $form = $this->createForm(DiscountType::class, $discount);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+            $file = $discount->getPromotion();
+            $fileName = sprintf('%s-%s.%s', uniqid(), time(), $file->guessExtension());
+
+            //check director exist or not
+            $upload_dir = $this->getParameter("app.company.discount_path") . "/" . $companyDelegate->getCompany()->getId();
+            if(!is_dir($upload_dir)){
+                mkdir($upload_dir);
+            }
+            // Move the file to the directory where brochures are stored
+            
+            $file->move(
+                $upload_dir,
+                $fileName
+            );
+
+            $discount->setPromotion($fileName);
+
+            
+            
+            
+            $discount->setCompany($companyDelegate->getCompany());
+            
+
+            $em->persist($discount);
+
+            $em->flush();
+
+            $this->addFlash('message', $this->get('translator')->trans('Discount added successfully'));
+
+            $this->redirectToRoute('company_add_discount');
+
+        }
+        else{
+            //var_dump($form->getErrors());die();
+        }
 
 
         return $this->render(
-            ':company:company-delegate-add.html.twig',
+            ':company:company-add-discount.html.twig',
             array(
-                'form' => $company
+                'form' => $form->createView()
             ));
     }
 
@@ -199,14 +243,20 @@ class DefaultController extends Controller
      */
     public function companyDiscountListAction(Request $request){
 
-        $em = $this->getDoctrine()->getManager();
-        $company = $em->getRepository('AppBundle:Company')->find($this->getUser()->getCompany()->getId());
 
+        $em = $this->getDoctrine()->getManager();
+        $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+        
+
+        $discounts = $em->getRepository('AppBundle:Discount')->getDiscountsByCompanyId($companyDelegate->getCompany());
+
+        ///echo "salem";die();
 
         return $this->render(
-            ':company:company-delegate-add.html.twig',
+            ':company:company-list-discount.html.twig',
             array(
-                'form' => $company
+                'company'=>$companyDelegate->getCompany(),
+                'discounts' => $discounts
             ));
     }
 }

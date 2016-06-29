@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <section id="vendoredit-reg" class="container">
+        <div class="row">
+        {% for discount in discounts %}
+            
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                <h3>{{ discount.title }}</h3>
+                <div>
+                    <a href=""><img class="img-responsive" src="{{ asset("files/company/discounts/") }}{{ company.id }}/{{ discount.promotion }}" alt=""></a>
+                </div>
+                <div>{{ 'Start Date'|trans }}: {{ discount.startDate.format('d-M-Y') }}</div>
+                <div>{{ 'End Date'|trans }}: {{ discount.endDate.format('d-M-Y') }}</div>
+            </div>
+            
+        {% endfor %}
+        </div>
+    </section>
+
+
+
+{% endblock %}
