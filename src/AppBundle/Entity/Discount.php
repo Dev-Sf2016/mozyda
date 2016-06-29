@@ -2,22 +2,20 @@
 namespace AppBundle\Entity;
 
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Table(name="company_delegate")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\CompanyDelegateRepository")
- * @UniqueEntity("email")
+ * @ORM\Table(name="discount")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\DiscountRepository")
  * @ORM\HasLifecycleCallbacks()
- *
  */
-class CompanyDelegate
+class Discount
 {
 
+
     /**
+     * @var integer
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -25,38 +23,43 @@ class CompanyDelegate
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=200)
+     * @var string
+     * @ORM\Column(name="title", type="string", length=500)
      *
      * @Assert\NotBlank(message="This field is required")
      */
-    private $name;
+    private $title;
 
     /**
-     * @ORM\Column(name="email", type="string", length=100, unique=true)
+     * @var \DateTime
+     * @ORM\Column(name="start_date", type="datetime")
+     * @Assert\NotBlank()
+     * @Assert\DateTime()
+     */
+    private $startDate;
+
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="end_date", type="datetime")
      * @Assert\NotBlank(message="This field is required")
-     * @Assert\Email()
+     * @Assert\DateTime()
      */
-    private $email;
+    private $endDate;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @var string
+     * @ORM\Column(name="promotion", type="string", length=100, nullable=false)
      *
-     * @Assert\NotBlank(message="This field is required")
-     * @Assert\Length(minMessage="Password must be at least 8 characters", maxMessage="Password must not be grater then 40 characters", min="8", max="40")
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(name="is_default", type="string", length=1, )
      *
+     * @Assert\NotBlank()
+     * @Assert\Image(maxSize="1Mi")
      */
-    private $isDefault;
-
-    
+    private $promotion;
     /**
-    * @ORM\ManyToOne(targetEntity="Company")
-    * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
-    */
+     * @ORM\ManyToOne(targetEntity="Company")
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
     private $company;
 
     /**
@@ -105,107 +108,77 @@ class CompanyDelegate
     }
 
     /**
-     * Set name
+     * Set title
      *
-     * @param string $name
+     * @param string $title
      *
-     * @return Company
+     * @return Discount
      */
-    public function setName($name)
+    public function setTitle($title)
     {
-        $this->name = $name;
+        $this->title = $title;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get title
      *
      * @return string
      */
-    public function getName()
+    public function getTitle()
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**
-     * Set email
+     * Set startDate
      *
-     * @param string $email
+     * @param \DateTime $starDate
      *
-     * @return Company
+     * @return Discount
      */
-    public function setEmail($email)
+    public function setStartDate($starDate)
     {
-        $this->email = $email;
+        $this->startDate = $starDate;
 
         return $this;
     }
 
     /**
-     * Get email
+     * Get startDate
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getEmail()
+    public function getStartDate()
     {
-        return $this->email;
+        return $this->startDate;
     }
 
     /**
-     * Set password
+     * Set endDate
      *
-     * @param string $password
+     * @param \DateTime $endDate
      *
-     * @return Company
+     * @return Discount
      */
-    public function setPassword($password)
+    public function setEndDate($endDate)
     {
-        $this->password = $password;
+        $this->endDate = $endDate;
 
         return $this;
     }
 
     /**
-     * Get password
+     * Get endDate
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getPassword()
+    public function getEndDate()
     {
-        return $this->password;
+        return $this->endDate;
     }
 
-    /**
-     * @param $id
-     * @return  CompanyDelegate
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @param $isDefault
-     *
-     * @return CompanyDelegate
-     */
-    public function setIsDefault($isDefault)
-    {
-        $this->isDefault = $isDefault;
-
-        return $this;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getIsDefault()
-    {
-        return $this->isDefault;
-    }
 
 
     /**
@@ -213,7 +186,7 @@ class CompanyDelegate
      *
      * @param \DateTime $created
      *
-     * @return Company
+     * @return Discount
      */
     public function setCreated($created)
     {
@@ -237,7 +210,7 @@ class CompanyDelegate
      *
      * @param \DateTime $updated
      *
-     * @return Company
+     * @return Discount
      */
     public function setUpdated($updated)
     {
@@ -257,11 +230,29 @@ class CompanyDelegate
     }
 
     /**
-     * Set Company
+     * @param $promotion
      *
-     * @param Company $company
-     *
-     * @return CompanyDelegate
+     * @return Discount
+     */
+    public function setPromotion($promotion)
+    {
+        $this->promotion = $promotion;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPromotion()
+    {
+        return $this->promotion;
+    }
+
+    /**
+     * Set company
+     * @param $company
+     * @return Discount
      */
     public function setCompany($company)
     {
@@ -272,11 +263,11 @@ class CompanyDelegate
 
     /**
      * Get company
-     *
      * @return Company
      */
     public function getCompany()
     {
         return $this->company;
     }
+
 }

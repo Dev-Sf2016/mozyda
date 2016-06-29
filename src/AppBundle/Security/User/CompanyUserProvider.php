@@ -22,15 +22,20 @@ class CompanyUserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
 
-
         $user = $this->em->getRepository('AppBundle:CompanyDelegate')->findByEmail($username);
-
 
         if($user != null){
 
             $company = $user->getCompany();
             
-            $companyUser = new CompanyUser($user->getEmail(), $user->getPassword(), $user->getName(), $company->getUrl(),$company->getLogo(), $company->getIsActive());
+            $companyUser = new CompanyUser(
+                $user->getEmail(),
+                $user->getPassword(),
+                $user->getName(),
+                $company->getUrl(),
+                $company->getLogo(),
+                $company->getIsActive(),
+                $user->getIsDefault());
             $companyUser->setId($user->getId());
 
             return $companyUser;

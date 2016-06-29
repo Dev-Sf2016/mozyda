@@ -16,6 +16,7 @@ class CompanyUser implements EquatableInterface, AdvancedUserInterface
     private $salt;
     private $url;
     private $logo;
+    private $isDefault;
     /**
      * The equality comparison should neither be done by referential equality
      * nor by comparing identities (i.e. getId() === getId()).
@@ -26,12 +27,18 @@ class CompanyUser implements EquatableInterface, AdvancedUserInterface
      * Also implementation should consider that $user instance may implement
      * the extended user interface `AdvancedUserInterface`.
      *
-     * @param UserInterface $user
-     *
-     * @return bool
+     * CompanyUser constructor.
+     * @param $email
+     * @param $password
+     * @param $name
+     * @param $url
+     * @param $logo
+     * @param $isActive
+     * @param string $salt
+     * @param integer $isDefault
+     * @param array $roles
      */
-
-    public function __construct($email, $password,$name,$url,$logo,$isActive,$salt="",$roles=array('ROLE_COMPANY'))
+    public function __construct($email, $password,$name,$url,$logo,$isActive,$salt="", $isDefault=0, $roles=array('ROLE_COMPANY'))
     {
         $this->email = $email;
         $this->password = $password;
@@ -41,6 +48,7 @@ class CompanyUser implements EquatableInterface, AdvancedUserInterface
         $this->isActive = $isActive;
         $this->url = $url;
         $this->logo = $logo;
+        $this->isDefault = $isDefault;
 
     }
     public function isEqualTo(UserInterface $user)
