@@ -1,0 +1,56 @@
+body{
+    background-image: url("../../template/images/bg.jpg");
+    background-repeat: no-repeat;
+}
+.bottom-align-text {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.relative{
+    position: relative;
+}
+.top-menu{
+    /*background-image: url("../../template/images/manu-bg.png");*/
+    background-repeat: repeat-x;
+    height: 104px;
+}
+.company-logo{
+    background-color: #ffffff;
+    min-height: 170px;
+}
+.company-logo .img-responsive{
+    margin:0 auto;
+}
+
+
+
+.thumbnail_container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    margin-bottom:20px;
+}
+
+.thumbnail {
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+.thumbnail img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.thumbnail_container img{
+    max-height:100%;
+    max-width:100%;
+}
+.col-md-2.padding5{
+    padding-left: 5px;
+    padding-right:5px;
+}

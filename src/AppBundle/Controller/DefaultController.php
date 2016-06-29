@@ -11,16 +11,27 @@ class DefaultController extends Controller
 {
 
     /**
-     * @Route("/", name="homepage", defaults={"_locale" ="en"})
+     * @Route("/", name="homepage")
      */
     public function indexAction(Request $request)
     {
-        $locale = $request->getLocale();
-        $translated = $this->get('translator')->trans('Symfony is great');
-        echo $translated;
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
-        ]);
+        $companies = $this->companies();
+        return $this->render('default/index.html.twig', array(
+            'companies' => $companies
+            )
+        );
+    }
+
+    public function companies()
+    {
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Company');
+        $query = $repository->createQueryBuilder('c')
+            ->orderBy('c.id', 'DESC')
+            ->setMaxResults(6)
+            ->getQuery();
+
+        $companies = $query->getresult();
+        return $companies;
     }
    
 }
