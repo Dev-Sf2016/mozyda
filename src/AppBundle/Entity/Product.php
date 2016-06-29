@@ -185,7 +185,7 @@ class Product
      *
      * @return Product
      */
-    public function setPrice(\double $price)
+    public function setPrice( $price)
     {
         $this->price = $price;
 
@@ -209,7 +209,7 @@ class Product
      *
      * @return Product
      */
-    public function setSpecialPrice(\double $specialPrice)
+    public function setSpecialPrice( $specialPrice)
     {
         $this->specialPrice = $specialPrice;
 
