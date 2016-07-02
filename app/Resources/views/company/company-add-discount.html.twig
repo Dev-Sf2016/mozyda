@@ -31,6 +31,16 @@
     </div>
     </section>
 
+    <script>
+        $(document).ready(function() {
+            $('.js-datepicker').datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+        });
+    </script>
 
-
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('default/js/jquery-ui.js') }}"></script>
+    <link href="{{ asset('default/css/jquery-ui.css') }}" rel="stylesheet"/>
 {% endblock %}

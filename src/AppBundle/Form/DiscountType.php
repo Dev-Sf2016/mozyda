@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Date;
+//use Symfony\Component\Form\Extension\Core\Type\Date;
 
 class DiscountType extends AbstractType
 {
@@ -21,8 +22,22 @@ class DiscountType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, array('label'=>'Enter title'))
-            ->add('startDate', DateType::class, array('label'=>"Start Date"))
-            ->add('endDate', DateType::class, array("label"=>"End Date"))
+            ->add('startDate', DateType::class,
+                array(
+                    'label'=>"Start Date",
+                    'widget' =>'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker'],
+//                ));
+                ))
+            ->add('endDate', DateType::class,
+                array(
+                    "label"=>"End Date",
+                    'widget' =>'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker'],
+
+                ))
             ->add('promotion', FileType::class, array("label" => "Select Image", 'data_class'=>null) )
             //->add('created', 'datetime')
             //->add('updated', 'datetime')

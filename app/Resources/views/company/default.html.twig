@@ -8,7 +8,195 @@
 
     <div class="container">
         <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="panel panel-default panel-login">
+                    <div class="panel-heading text-center">
+                        <h2 class="panel-heading-text">
+                            {{ 'Welcome'|trans }} {{ app.user.name }}
+                        </h2>
+                    </div>
+                    <div class="panel-body">
 
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div id="exTab1" class="">
+                                    <ul class="nav nav-pills">
+                                        <li class="active">
+                                            <a href="#1a" data-toggle="tab">{{ 'Details'|trans }}</a>
+                                        </li>
+                                        <li>
+                                            <a href="#2a" data-toggle="tab">{{ 'Add Delegate'|trans }}</a>
+                                        </li>
+                                        <li>
+                                            <a href="#3a" data-toggle="tab">{{ 'Upload Discount' }}</a>
+                                        </li>
+                                        <li>
+                                            <a href="#4a" data-toggle="tab">{{ 'List Discount' }}</a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content clearfix">
+                                        <div class="tab-pane active" id="1a">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-6">{{ 'Company Name'|trans }}:</div>
+                                                        <div class="col-md-6">{{ company_delegate.company.name }}</div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-6">{{ 'Email'|trans }}:</div>
+                                                        <div class="col-md-6">{{ company_delegate.email }}</div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-6">{{ 'Website'|trans }}:</div>
+                                                        <div class="col-md-6">{{ company_delegate.company.url }}</div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-6">{{ 'Logo'|trans }}:</div>
+                                                        <div class="col-md-6"><img
+                                                                    src="{{ asset("files/company/logo/") }}{{ company_delegate.company.logo }}"
+                                                                    alt="" width="150" height="150"></div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="tab-pane" id="2a">
+                                            {% for tab in app.session.flashBag.get('tab') %}
+                                                <script type="text/javascript">
+
+                                                    $( document ).ready(function() {
+                                                        $('.nav-pills a[href="#{{ tab }}"]').tab('show');
+                                                    });
+
+                                                </script>
+
+                                            {% endfor %}
+                                            <div class="row">
+
+
+                                                {% if app.session.flashBag.has('delegate_success') %}
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-centered clearfix">
+                                                        <div class="row">
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-centered clearfix">
+                                                                <div class="alert alert-success">
+                                                                    {% for message in app.session.flashBag.get('delegate_success') %}
+                                                                        {{ message }}
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+
+
+                                                {{ form_start(form_deleg,{'attr': {'novalidate': 'novalidate'}}) }}
+                                                {% if not form_deleg.vars.valid %}
+                                                    <script type="text/javascript">
+                                                        $('.nav-pills a[href="#2a"]').tab('show');
+                                                    </script>
+
+                                                {% endif %}
+                                                <div class="col-md-6">
+
+                                                    {{ form_row(form_deleg.name) }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_row(form_deleg.email) }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_row(form_deleg.password.first) }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_row(form_deleg.password.second) }}
+                                                </div>
+
+                                                {#{{ form_row(form.submit) }}#}
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <button class="btn btn-default pull-right"
+                                                                name="company[submit]" id="company_submit"
+                                                                type="submit">{{ 'Add Delegate'|trans }}</button>
+                                                    </div>
+                                                </div>
+                                                {{ form_end(form_deleg) }}
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="3a">
+
+                                            <div class="row">
+
+
+                                                {% if app.session.flashBag.has('discount_success') %}
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-centered clearfix">
+                                                        <div class="row">
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-centered clearfix">
+                                                                <div class="alert alert-success">
+                                                                    {% for message in app.session.flashBag.get('discount_success') %}
+                                                                        {{ message }}
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+
+
+                                                {{ form_start(form_discount,{'attr': {'novalidate': 'novalidate'}}) }}
+
+                                                {% if not form_discount.vars.valid %}
+                                                    <script type="text/javascript">
+                                                        $('.nav-pills a[href="#3a"]').tab('show');
+                                                    </script>
+
+                                                {% endif %}
+
+                                                <div class="col-md-6">
+                                                    {{ form_row(form_discount.title) }}
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_row(form_discount.startDate) }}
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_row(form_discount.endDate) }}
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {{ form_row(form_discount.promotion) }}
+
+                                                </div>
+                                                <div class="col-md-12">
+                                                    {{ form_row(form_discount.submit,{'attr':{'class':'pull-right'}}) }}
+
+                                                </div>
+                                                {{ form_end(form_discount) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane" id="4a">
+                                            {% include 'company/company-list-discount.html' %}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-8 col-lg-offset-2">
 
                 <a href="{{ path('company_detail') }}">{{ 'Company Details'|trans }}</a> |
@@ -26,4 +214,16 @@
 
 
 
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.js-datepicker').datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+        });
+    </script>
+    <script type="text/javascript" src="{{ asset('default/js/jquery-ui.js') }}"></script>
+    <link href="{{ asset('default/css/jquery-ui.css') }}" rel="stylesheet"/>
 {% endblock %}

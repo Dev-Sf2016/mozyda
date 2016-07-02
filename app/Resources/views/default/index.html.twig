@@ -1,12 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div id="wrapper">
-        <div id="container">
 
-            dump
+    <div class="row">
+        <div class="col-md-12 heading-stores">
+            {{ 'New Discounts'|trans }}
+        </div>
+    </div>
+    <div class="row row_discounts">
+        {% for discount in discounts %}
+            <div class="col-md-3 padding5">
+                <div class="thumbnail_container">
+                    <div class="thumbnail">
+                        <img src="{{ asset('files/company/discounts/' ~ discount.company.id ~ '/' ~ discount.promotion) }}"/>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
-
+    <div class="row">
+                <div class="col-md-12 heading-stores">
+                        {{ 'New Stores'|trans }}
+                </div>
+            </div>
             <div class="row">
                 {% for company in companies %}
                     <div class="col-md-2 padding5">
@@ -18,8 +35,6 @@
                     </div>
                 {% endfor %}
             </div>
-        </div>
-    </div>
 {% endblock %}
 
 {% block stylesheets %}

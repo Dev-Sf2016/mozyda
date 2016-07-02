@@ -24,8 +24,8 @@ class CompanyType extends AbstractType
             ->add('companyDelegate', CollectionType::class, array(
                 'entry_type'=>CompanyDelegateType::class,
                 'allow_add'=>false
-            ))
-            ->add('submit', SubmitType::class, array('label'=>'Save', 'attr'=>array('class'=>'btn btn-custom btn-lg btn-block')));
+            ));
+//            ->add('submit', SubmitType::class, array('label'=>'Save', 'attr'=>array('class'=>'btn btn-custom btn-lg btn-block')));
     }
 
     public function configureOptions(OptionsResolver $resolver)

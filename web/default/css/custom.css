@@ -1,6 +1,12 @@
 body{
+    background-color: #0f0f0f;
+}
+.wrapper{
     background-image: url("../../template/images/bg.jpg");
     background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+
 }
 .bottom-align-text {
     position: absolute;
@@ -50,7 +56,115 @@ body{
     max-height:100%;
     max-width:100%;
 }
-.col-md-2.padding5{
+.padding5{
     padding-left: 5px;
     padding-right:5px;
 }
+.row.eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display:         flex;
+    flex-wrap: wrap;
+}
+.row.eq-height .col-md-8.col-sm-4 {
+    display: flex;
+    flex-direction: column;
+}
+
+.row .top-menu {
+    background-image: url("../../template/images/menu-bg.png");
+    background-repeat: repeat-x;
+    height: 99px;
+    text-align: center;
+}
+.col-md-3.top-menu > a {
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 95px;
+    text-shadow: 2px 2px 5px #575a49;
+}
+/*@media (min-width:@screen-sm-min) {*/
+    .static-menu .row{
+        margin-top: 110px;
+    }
+/*}*/
+
+.footer-divider{
+    height: 33px;
+    background-image: url("../../template/images/footer-divider.png");
+}
+.footer{
+    padding-top: 25px;
+}
+.social-links li a img{
+    width: 40px;
+    height: 40px;
+}
+.navbar-nav.social-links > li > a{
+    padding: 0 7px 0 0;
+}
+.navbar-nav.social-links > li > a:hover, .nav.footer-links a:hover{
+    background-color: #0f0f0f;
+}
+.copyright, .footer-links a {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 40px;
+    padding: 12px;
+}
+.heading-stores{
+    height: 52px;
+    background-image: url("../../template/images/company-h.png");
+    background-repeat: repeat-x;
+    color: #1295f1;
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 46px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+header{margin-bottom: 15px;}
+.row_discounts .thumbnail{
+    background: none;
+    border: 0px;
+}
+.panel-login .panel-body, .panel-login .panel-heading{
+background-color: #ffffff;
+    opacity: 0.7;
+}
+.panel-login .panel-heading{
+    border: 0px;
+}
+.panel.panel-login, .panel.panel-heading{
+    background: none;
+}
+h2.panel-heading-text{
+    margin: 0px 70px;
+    background-image: url("../../template/images/h2-bg.png");
+    background-repeat: repeat-x;
+    height: 66px;
+    box-shadow: 10px 10px 5px #888888;
+    color: #008059;
+    line-height: 60px;
+}
+.signup{
+    background: url("../../template/images/footer-sub.png");
+    background-repeat: repeat-x;
+    height: 52px;
+    line-height: 49px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    font-weight: bold;
+}
+#exTab1 .tab-content {
+    color : white;
+    background-color: #428bca;
+    padding : 5px 15px;
+}
+#exTab1 .nav-pills > li > a {
+    border-radius: 0;
+}
+

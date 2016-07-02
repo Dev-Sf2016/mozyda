@@ -31,19 +31,17 @@ class Discount
     private $title;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="start_date", type="datetime")
+     * @ORM\Column(name="start_date", type="date")
      * @Assert\NotBlank()
-     * @Assert\DateTime()
+     * @Assert\Date()
      */
     private $startDate;
 
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="end_date", type="datetime")
+     * @ORM\Column(name="end_date", type="date")
      * @Assert\NotBlank(message="This field is required")
-     * @Assert\DateTime()
+     * @Assert\Date()
      */
     private $endDate;
 
@@ -134,7 +132,7 @@ class Discount
     /**
      * Set startDate
      *
-     * @param \DateTime $starDate
+     * @param \Date $starDate
      *
      * @return Discount
      */
@@ -148,7 +146,7 @@ class Discount
     /**
      * Get startDate
      *
-     * @return \DateTime
+     * @return \Date
      */
     public function getStartDate()
     {
@@ -158,7 +156,7 @@ class Discount
     /**
      * Set endDate
      *
-     * @param \DateTime $endDate
+     * @param \Date $endDate
      *
      * @return Discount
      */
@@ -172,7 +170,7 @@ class Discount
     /**
      * Get endDate
      *
-     * @return \DateTime
+     * @return \Date
      */
     public function getEndDate()
     {
