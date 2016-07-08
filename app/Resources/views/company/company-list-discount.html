@@ -1,0 +1,30 @@
+    <section id="vendoredit-reg">
+        <div class="row">
+        {% for discount in discounts %}
+
+            <!--<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">-->
+                <!--<h3>{{ discount.title }}</h3>-->
+                <!--<div>-->
+                    <!--<a href=""><img class="img-responsive" src="{{ asset("files/company/discounts/") }}{{ company_del.company.id }}/{{ discount.promotion }}" alt=""></a>-->
+                <!--</div>-->
+                <!--<div>{{ 'Start Date'|trans }}: {{ discount.startDate.format('d-M-Y') }}</div>-->
+                <!--<div>{{ 'End Date'|trans }}: {{ discount.endDate.format('d-M-Y') }}</div>-->
+            <!--</div>-->
+
+            <div class="col-md-3 padding5">
+                <h3>{{ discount.title }}</h3>
+                <div class="thumbnail_container">
+                    <div class="thumbnail">
+                        <img class="img-responsive" src="{{ asset("files/company/discounts/") }}{{ company_del.company.id }}/{{ discount.promotion }}" alt=""></a>
+                    </div>
+                </div>
+                <div>{{ 'Start Date'|trans }}: {{ discount.startDate.format('d-M-Y') }}</div>
+                <div>{{ 'End Date'|trans }}: {{ discount.endDate.format('d-M-Y') }}</div>
+
+<br />
+<br />
+            </div>
+            
+        {% endfor %}
+        </div>
+    </section>

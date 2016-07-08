@@ -38,6 +38,11 @@ services:
 #        tags:
 #            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 #            - { name: kernel.event_subscriber }
+    appBundle.eventListeners.localeRewriteListener:
+        class: AppBundle\EventListener\LocaleRewriteListener
+        arguments: ["@router", "%kernel.default_locale%", "%locale_supported%"]
+        tags:
+          - { name: kernel.event_subscriber }
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

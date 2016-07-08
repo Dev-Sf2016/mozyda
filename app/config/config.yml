@@ -10,6 +10,7 @@ parameters:
     locale: ar
     app.company.logo_path: "%kernel.root_dir%/../web/files/company/logo"
     app.company.discount_path: "%kernel.root_dir%/../web/files/company/discounts"
+    locale_supported: ['en','es','zh']
 framework:
     #esi:             ~
     translator:      { fallbacks: "%locale%" }

@@ -35,6 +35,7 @@ class CompanyUserProvider implements UserProviderInterface
                 $company->getUrl(),
                 $company->getLogo(),
                 $company->getIsActive(),
+                null,
                 $user->getIsDefault());
             $companyUser->setId($user->getId());
 

@@ -146,6 +146,14 @@ class CustomerUser implements EquatableInterface, AdvancedUserInterface
     {
         return $this->name;
     }
+    public function getCity()
+    {
+        return $this->city;
+    }
+    public function getNationality()
+    {
+        return $this->nationality;
+    }
 
     /**
      * @param $id

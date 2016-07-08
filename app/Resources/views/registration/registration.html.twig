@@ -1,0 +1,238 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default panel-login">
+                <div class="panel-heading text-center">
+                    <h2 class="panel-heading-text">
+                        {{ 'Register As customer'|trans }}
+                    </h2>
+                </div>
+                <div class="panel-body">
+                    {#{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}#}
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
+                            {% for flashMessage in app.session.flashbag.get('cust_error') %}
+                                <div class="alert alert-danger">
+                                    {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+
+                            {% for flashMessage in app.session.flashbag.get('success_cust') %}
+                                <div class="alert alert-success">
+                                    {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                            {#{% if error %}#}
+                            {#<div class="alert alert-danger">#}
+                            {#{{ error.messageKey|trans(error.messageData, 'security') }}#}
+                            {#</div>#}
+
+                            {#{% endif %}#}
+
+                            {% for flashMessage in app.session.flashbag.get('notice') %}
+
+                                {{ flashMessage }}
+                                form_errors(formCust)
+
+                            {% endfor %}
+
+                            {{ form_start(formCust,{'attr': {'novalidate': 'novalidate', 'class':'form-horizontal'}}) }}
+                            <div class="form-group {% if(form_errors(formCust.email)) %} has-error {% endif %}">
+                                {{ form_label(formCust.email,formCust.email, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formCust.email) }}
+                                </div>
+                                {{ form_errors(formCust.email) }}
+                            </div>
+
+
+                            <div class="form-group {% if(form_errors(formCust.loyality_id)) %} has-error {% endif %}">
+                                {{ form_label(formCust.loyality_id,formCust.loyality_id, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formCust.loyality_id) }}
+                                </div>
+                                {{ form_errors(formCust.loyality_id) }}
+                            </div>
+
+
+                            <div class="form-group {% if(form_errors(formCust.name)) %} has-error {% endif %}">
+                                {{ form_label(formCust.name,formCust.name, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formCust.name) }}
+                                </div>
+                                {{ form_errors(formCust.name) }}
+                            </div>
+
+
+                            <div class="form-group {% if(form_errors(formCust.nationality)) %} has-error {% endif %}">
+                                {{ form_label(formCust.nationality,formCust.nationality, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formCust.nationality) }}
+                                </div>
+                                {{ form_errors(formCust.nationality) }}
+                            </div>
+
+
+                            <div class="form-group {% if(form_errors(formCust.city)) %} has-error {% endif %}">
+                                {{ form_label(formCust.city,formCust.city, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formCust.city) }}
+                                </div>
+                                {{ form_errors(formCust.city) }}
+                            </div>
+
+
+                            <div class="form-group {% if(form_errors(formCust.password.first)) %} has-error {% endif %}">
+                                {{ form_label(formCust.password.first,formCust.password.first, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formCust.password.first) }}
+                                </div>
+                                {{ form_errors(formCust.password.first) }}
+                            </div>
+
+
+                            <div class="form-group {% if(form_errors(formCust.password.second)) %} has-error {% endif %}">
+                                {{ form_label(formCust.password.second,formCust.password.second, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formCust.password.second) }}
+                                </div>
+                                {{ form_errors(formCust.password.second) }}
+                            </div>
+
+
+                            {#{{ form_row(formCust.loyality_id) }}#}
+                            {#{{ form_row(formCust.name) }}#}
+                            {#{{ form_row(formCust.nationality) }}#}
+                            {#{{ form_row(formCust.city) }}#}
+                            {#{{ form_row(formCust.password.first) }}#}
+                            {#{{ form_row(formCust.password.second) }}#}
+
+                            <button type="submit" class="btn btn-default pull-right">{{ 'Register!'|trans }}</button>
+
+                            {{ form_end(formCust) }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default panel-login">
+                <div class="panel-heading text-center">
+                    <h2 class="panel-heading-text">
+                        {{ 'Register as Company'|trans }}
+                    </h2>
+                </div>
+                <div class="panel-body">
+                    {#{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}#}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            {% for flashMessage in app.session.flashbag.get('company_error') %}
+                                <div class="alert alert-danger">
+                                    {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+
+                            {% for flashMessage in app.session.flashbag.get('success_comp') %}
+                                <div class="alert alert-success">
+                                    {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+
+                            {#{% if error %}#}
+                            {#<div class="alert alert-danger">#}
+                            {#{{ error.messageKey|trans(error.messageData, 'security') }}#}
+                            {#</div>#}
+
+                            {#{% endif %}#}
+
+                            {{ form_start(formComp,{'attr': {'novalidate': 'novalidate', 'class':'form-horizontal'}}) }}
+                            <div class="form-group {% if(form_errors(formComp.name)) %} has-error {% endif %}">
+                                {{ form_label(formComp.name,formComp.name, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formComp.name) }}
+                                </div>
+                                {{ form_errors(formComp.name) }}
+                            </div>
+
+                            <div class="form-group {% if(form_errors(formComp.url)) %} has-error {% endif %}">
+                                {{ form_label(formComp.url,formComp.url, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formComp.url) }}
+                                </div>
+                                {{ form_errors(formComp.url) }}
+                            </div>
+
+                            <div class="form-group {% if(form_errors(formComp.logo)) %} has-error {% endif %}">
+                                {{ form_label(formComp.logo,formComp.logo, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formComp.logo) }}
+                                </div>
+                                {{ form_errors(formComp.logo) }}
+                            </div>
+
+                            <div class="form-group {% if(form_errors(formComp.companyDelegate.children[0].name)) %} has-error {% endif %}">
+                                {{ form_label(formComp.companyDelegate.children[0].name,formComp.companyDelegate.children[0].name, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formComp.companyDelegate.children[0].name) }}
+                                </div>
+                                {{ form_errors(formComp.companyDelegate.children[0].name) }}
+                            </div>
+
+                            <div class="form-group {% if(form_errors(formComp.companyDelegate.children[0].email)) %} has-error {% endif %}">
+                                {{ form_label(formComp.companyDelegate.children[0].email,formComp.companyDelegate.children[0].email, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formComp.companyDelegate.children[0].email) }}
+                                </div>
+                                {{ form_errors(formComp.companyDelegate.children[0].email) }}
+                            </div>
+
+
+                            <div class="form-group {% if(form_errors(formComp.companyDelegate.children[0].password.first)) %} has-error {% endif %}">
+                                {{ form_label(formComp.companyDelegate.children[0].password.first,formComp.companyDelegate.children[0].password.first, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formComp.companyDelegate.children[0].password.first) }}
+                                </div>
+                                {{ form_errors(formComp.companyDelegate.children[0].password.first) }}
+                            </div>
+
+
+                            <div class="form-group {% if(form_errors(formComp.companyDelegate.children[0].password.second)) %} has-error {% endif %}">
+                                {{ form_label(formComp.companyDelegate.children[0].password.second,formComp.companyDelegate.children[0].password.second, {'label_attr':{'class':'col-md-3'}}) }}
+                                <div class="col-md-9">
+                                    {{ form_widget(formComp.companyDelegate.children[0].password.second) }}
+                                </div>
+                                {{ form_errors(formComp.companyDelegate.children[0].password.second) }}
+                            </div>
+
+                            {#{{ form_row(formComp.name) }}#}
+                            {#{{ form_row(formComp.url) }}#}
+                            {#{{ form_row(formComp.logo) }}#}
+
+                            {#{{ form_row(form.companyDelegate.children[0].name) }}#}
+                            {#{{ form_row(form.companyDelegate.children[0].email) }}#}
+                            {#{{ form_row(form.companyDelegate.children[0].password.first) }}#}
+                            {#{{ form_row(form.companyDelegate.children[0].password.second) }}#}
+                            <button type="submit" class="btn btn-default pull-right">{{ 'Register!'|trans }}</button>
+                            {{ form_end(formComp) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="signup text-center">
+                {{ 'Have an account'|trans }} <a href="{{ path('account_login') }}">{{ 'Login'|trans }}</a>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

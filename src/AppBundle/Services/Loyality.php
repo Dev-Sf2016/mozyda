@@ -49,5 +49,22 @@ class Loyality{
             return array('status' => false);
         }
     }
+
+    public function getTransHistory($id){
+        $info = array(
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' ),
+          array('Store' => 'Extra Store', 'InvoiceAmount'=> '234.33 SAR', 'PointsGained'=>'20', 'Date'=> '2016-05-22: 08:22:10' )
+        );
+
+        return $info;
+    }
 }
 ?>

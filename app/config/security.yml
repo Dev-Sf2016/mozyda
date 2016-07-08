@@ -44,7 +44,7 @@ security:
             security: false
 
         customer_area:
-            context: customer_area
+            context: my_context
             anonymous: ~
             pattern: ^/(%app_locales%)/customer/*
             form_login:
@@ -57,7 +57,7 @@ security:
                 target: customer_login
 
         company_area:
-            context: company_area
+            context: my_context
             anonymous: ~
             pattern: ^/(%app_locales%)/company/*
             form_login:
@@ -70,7 +70,7 @@ security:
                 target: company_login
 
         admin_area:
-            context: admin_area
+            context: my_context
             anonymous: ~
             pattern: ^/(%app_locales%)/admin/*
             form_login:
