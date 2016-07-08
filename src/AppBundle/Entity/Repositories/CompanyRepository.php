@@ -30,4 +30,22 @@ class CompanyRepository extends EntityRepository
         $paginator->setCurrentPage($page);
         return $paginator;
     }
+
+    /**
+     * @param Company $company
+     * @return Company
+     */
+    public function persistCompany(Company $company){
+
+        if($company->getId() !== null){
+            $this->_em->merge($company);
+        }
+        else{
+            $this->_em->persist($company);
+        }
+
+        $this->_em->flush();
+
+        return $company;
+    }
 }

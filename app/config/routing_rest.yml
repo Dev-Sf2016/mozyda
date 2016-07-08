@@ -1,0 +1,5 @@
+#company
+company:
+    type: rest
+    resource: AppBundle\Rest\Controller\CompanyController
+    name_prefix: api_

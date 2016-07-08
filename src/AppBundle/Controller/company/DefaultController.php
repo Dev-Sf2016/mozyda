@@ -16,7 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class DefaultController extends Controller
 {
     /**
-     * @Route("company/login", name="company_login")
+     * @Route("/company/login", name="company_login")
      */
     public function loginAction(Request $request)
     {
