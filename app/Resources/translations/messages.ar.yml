@@ -1,26 +1,84 @@
-Symfony is great: "symfony is great"
-Register As customer: "Register As customer"
-SignUp for Customer Account: "SignUp for Customer Account"
-Please provide information below to register: "Please provide information below to register"
-Email: "my email"
-Loyality id: "Loyality id"
-City: "city "
-Name: "Name"
-Nationality: "Nationality"
-Password: "Password"
-Repeat Password: "Repeat Password"
-Invalid activation code: "Invalid activation code"
-Your Account is Active you can login now: "Your Account is Active you can login now"
-Your Account is already in active state: "Your Account is already in active state"
-Mazaya Web Application Company Login: "Mazaya Web Application Company Login"
-Please provide information below to login: "Please provide information below to login"
-Login: "Login"
-Company Details: "Company Details"
-Add Delegate: "Add Delegate"
-Upload discount: "Upload discount"
-List Discount: "List Discount"
-Delegate Name: "Delegate Name"
-Confirm Password: "Confirm Password"
-Mazaya Web Application Customer Login: "Mazaya Web Application Customer Login"
-Invalid credentials.: "Invalid credentials."
-Bad credentials.: "Invalid user/password"
+'Symfony is great': 'symfony is great'
+'Register As customer': 'التسجيل كعميل'
+'SignUp for Customer Account': 'التسجيل كصاحب محل'
+'Please provide information below to register': 'نرجو مليء نموذج التسجيل التالي لاتمام التسجيل'
+Email: 'البريد الالكتروني'
+'Loyality id': 'رقم بطاقة مزايا'
+City: 'المدينة '
+Name: 'الاسم'
+Nationality: الجنسية
+Password: 'كلمة المرور'
+'Repeat Password': 'تغيير كلمة المرور'
+'Invalid activation code': 'كود التفعيل غير صحيح'
+'Your Account is Active you can login now': 'تم تفعيل حسابك بنجاح .. يمكنك الدخول الان'
+'Your Account is already in active state': 'حسابك غير مفعل حاليا'
+'Mazaya Web Application Company Login': 'تسجيل الدخول'
+'Please provide information below to login': 'نرجو امدادنا بالبيانات ادناه لتسجيل الدخول'
+Login: الدخول
+'Company Details': 'تفاصيل بيانات الشركة'
+'Add Delegate': 'اضافة مفوض'
+'Upload discount': 'رفع عرض او خصم معين'
+'List Discount': 'قائمة العروض'
+'Delegate Name': 'اسم المفوض'
+'Confirm Password': 'تاكيد كلمة المرور'
+'Mazaya Web Application Customer Login': 'الدخول كعميل'
+'Invalid credentials.': 'البيانات غير صحيحه'
+'Bad credentials.': 'خطا بالبريد الالكتروني او كلمة المرور'
+'Manage Companies': 'اداة الشركات'
+'Company Name': 'اسم الشركة'
+'Creation Date': 'تاريخ التسجيل'
+Status: الحالة
+Actions: ادارة
+Active: 'مفعل'
+'In Active': 'غير مفعل'
+Edit: تعديل
+Stores: 'المحلات والفرروع'
+Discounts: 'الخصومات والعروض'
+Account: الحساب
+'Add Discount': 'اضافة عرض'
+'Start Date': 'تاريخ بدء العرض'
+'End Date': 'تاريخ انتهاء العرض'
+Welcome: 'مرحبا'
+Logout: خروج
+Details: التفاصيل
+Website: 'الموقع'
+Logo: اللوجو
+'Loyalty Points': 'النقاط المكتسبة'
+'Transaction list': 'قائمة المشتريات'
+'Total Points': 'عدد النقاط الكلي'
+'Store Name': 'اسم الفرع'
+Date: التاريخ
+'Invoice Amount': 'قيمةالفاتورة'
+'Points gained': 'النقاط المكتسبة'
+'Card Status': 'حالة البطاقة'
+'Card Number': 'رقم البطاقة'
+'Login as Customer': 'الدخول كعميل'
+'Login as Company': 'الدخول كصاحب محل'
+'Don''t have an account': 'لا يوجد لديك حساب'
+'Sign up': التسجيل
+'New Discounts': 'العروض الجديدة'
+'New Stores': 'شركاؤنا الجدد'
+'All Discounts': 'كافة العروض'
+'Starting from': 'يبدا من'
+'Valid till': 'صالح الي'
+'All Stores': 'كلا الفروع'
+Register!: تسجيل!
+'Register as Company': 'التسجيل كصاحب محل'
+'Have an account': 'يوجد ليك حساب مسبق'
+About: __About
+Terms: __Terms
+Privacy: __Privacy
+Careers: __Careers
+Apps: __Apps
+'Contact Us': '__Contact Us'
+'Website URL': __website_url
+'Company Logo': __company_logo
+'No file selected.': __nofileselected
+'This field is required': '__This field is required'
+'This field is required ': '__This field is required'
+'Invalid Card Number': '__Invalid Card Number'
+'Card already registered': '__Card already registered'
+'Customer Details': '__Customer Details'
+'Account Activation': 'Account Activation'
+'Invitation to join Mzaaya.com': 'Invitation to join Mzaaya.com'
+'Invitation has been sent sucessfully': 'Invitation has been sent sucessfully'

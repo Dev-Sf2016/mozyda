@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    <section id="store-list" class="container" >
+        <div class="panel panel-default panel-login">
+            <div class="panel-heading text-center">
+                <h2 class="panel-heading-text">
+                    {{ 'All Stores'|trans }}
+                </h2>
+            </div>
+            <div class="panel-body">
+
+        <table class="table table-responsive">
+        {#<div class="row">#}
+            {% for company in companies %}
+            <tr>
+                <td class="cil-md-2">
+                    <div class="thumbnail_container">
+                        <div class="thumbnail">
+                            <img src="{{ asset('files/company/logo/' ~ company.logo) }}"/>
+                        </div>
+                    </div>
+                    {#<img src="{{ asset('files/company/logo/' ~ company.logo) }}"/></td>#}
+                <td class="col-md-6">
+                    <h2>{{ company.name }}</h2>
+                    <h3>{{ company.url }}</h3>
+
+                </td>
+                <td class="col-md-4"><a href="{{ url('all_store_discounts', {'store':company.id}) }}"> View Available Discounts</a></td>
+                </tr>
+                {#<div class="col-md-2 padding5">#}
+                    {#<div class="thumbnail_container">#}
+                        {#<div class="thumbnail">#}
+                            {#<img src="{{ asset('files/company/logo/' ~ company.logo) }}"/>#}
+                            {#{{ company.name }}#}
+                        {#</div>#}
+                    {#</div>#}
+                {#</div>#}
+            {% endfor %}
+
+
+        {#</div>#}
+            </table>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="navigation text-center">
+                    {{ pagerfanta(companies, 'twitter_bootstrap3', { routeName: 'list_stores_paginated' }) }}
+                </div>
+            </div>
+
+
+        </div>
+        </div>
+            </div></section>
+    </section>
+{% endblock %}

@@ -12,7 +12,7 @@
                 <div class="panel panel-default panel-login">
                     <div class="panel-heading text-center">
                         <h2 class="panel-heading-text">
-                            {{ 'Welcome'|trans }} {{ app.user.name }}
+                            {{ 'Welcome'|trans }} {{ app.user.name }} ( <a href="{{ url('company_logout') }}" >{{ 'Logout'|trans }}</a>)
                         </h2>
                     </div>
                     <div class="panel-body">
@@ -69,6 +69,7 @@
 
                                                 </div>
 
+
                                             </div>
 
                                         </div>
@@ -76,7 +77,7 @@
                                             {% for tab in app.session.flashBag.get('tab') %}
                                                 <script type="text/javascript">
 
-                                                    $( document ).ready(function() {
+                                                    $(document).ready(function () {
                                                         $('.nav-pills a[href="#{{ tab }}"]').tab('show');
                                                     });
 

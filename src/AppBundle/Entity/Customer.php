@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -26,7 +27,7 @@ class Customer
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="This field is required")
      */
     private $name;
 
@@ -61,13 +62,13 @@ class Customer
     /**
      * @ORM\Column(name="email", type="string", length=100, unique=true)
      * @Assert\Email()
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="This field is required")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="This field is required")
      */
     private $password;
 
@@ -84,6 +85,16 @@ class Customer
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
     private $updated;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CustomerInvitation", mappedBy="customer")
+     */
+    private $customerInvitations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CustomerRefferalPointHistory", mappedBy="customer")
+     */
+    private $customerRefferalPointsHistory;
 
     /**
      * Triggered on insert
@@ -357,4 +368,78 @@ class Customer
         return $this->activationCode;
     }
 
+    public function __construct()
+    {
+        $this->customerRefferals = new ArrayCollection();
+        $this->customerRefferalPointsHistory = new ArrayCollection();
+    }
+
+
+    /**
+     * Add customerRefferal
+     *
+     * @param \AppBundle\Entity\CustomerInvitation $customerInvitation
+     *
+     * @return Customer
+     */
+    public function addCustomerInvitation(\AppBundle\Entity\CustomerInvitation $customerInvitation)
+    {
+        $this->customerInvitations[] = $customerInvitation;
+
+        return $this;
+    }
+
+    /**
+     * Remove customerRefferal
+     *
+     * @param \AppBundle\Entity\CustomerInvitation $customerInvitation
+     */
+    public function removeCustomerRefferal(\AppBundle\Entity\CustomerInvitation $customerInvitation)
+    {
+        $this->customerInvitations->removeElement($customerInvitation);
+    }
+
+    /**
+     * Get customerRefferals
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCustomerInvitations()
+    {
+        return $this->customerInvitations;
+    }
+
+    /**
+     * Add customerRefferalPointsHistory
+     *
+     * @param \AppBundle\Entity\CustomerRefferalPointHistory $customerRefferalPointsHistory
+     *
+     * @return Customer
+     */
+    public function addCustomerRefferalPointsHistory(\AppBundle\Entity\CustomerRefferalPointHistory $customerRefferalPointsHistory)
+    {
+        $this->customerRefferalPointsHistory[] = $customerRefferalPointsHistory;
+
+        return $this;
+    }
+
+    /**
+     * Remove customerRefferalPointsHistory
+     *
+     * @param \AppBundle\Entity\CustomerRefferalPointHistory $customerRefferalPointsHistory
+     */
+    public function removeCustomerRefferalPointsHistory(\AppBundle\Entity\CustomerRefferalPointHistory $customerRefferalPointsHistory)
+    {
+        $this->customerRefferalPointsHistory->removeElement($customerRefferalPointsHistory);
+    }
+
+    /**
+     * Get customerRefferalPointsHistory
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCustomerRefferalPointsHistory()
+    {
+        return $this->customerRefferalPointsHistory;
+    }
 }

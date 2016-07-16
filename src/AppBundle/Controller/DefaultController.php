@@ -78,8 +78,6 @@ class DefaultController extends Controller
 
         }
         // this function displays the form and check if user is already logged in then forward it to ccustomer or company page
-        echo "000";
-        var_dump($this->getUser());
         return $this->render('default/accountlogin.html.twig', array(
             )
         );

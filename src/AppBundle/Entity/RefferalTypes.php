@@ -2,20 +2,21 @@
 namespace AppBundle\Entity;
 
 
+
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Table(name="discount")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\DiscountRepository")
+ * @ORM\Table(name="refferal_types")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\RefferalTypesRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity("id")
  */
-class Discount
+class RefferalTypes
 {
-
-    const NUM_ITEMS = 10;
     /**
-     * @var integer
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,43 +24,16 @@ class Discount
     private $id;
 
     /**
-     * @var string
-     * @ORM\Column(name="title", type="string", length=500)
-     *
+     * @ORM\Column(name="criteria", type="string", length=255)
      * @Assert\NotBlank(message="This field is required")
      */
-    private $title;
+    private $criteria;
 
     /**
-     * @ORM\Column(name="start_date", type="date")
-     * @Assert\NotBlank()
-     * @Assert\Date()
-     */
-    private $startDate;
-
-
-    /**
-     * @ORM\Column(name="end_date", type="date")
+     * @ORM\Column(name="points", type="float", length=10)
      * @Assert\NotBlank(message="This field is required")
-     * @Assert\Date()
      */
-    private $endDate;
-
-    /**
-     * @var string
-     * @ORM\Column(name="promotion", type="string", length=100, nullable=false)
-     *
-     *
-     * @Assert\NotBlank()
-     * @Assert\Image(maxSize="1Mi")
-     */
-    private $promotion;
-    /**
-     * @ORM\ManyToOne(targetEntity="Company")
-     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
-     */
-    private $company;
-
+    private $points;
     /**
      * @var \DateTime
      *
@@ -94,7 +68,6 @@ class Discount
         $this->updated = new \DateTime("now");
     }
 
-
     /**
      * Get id
      *
@@ -106,85 +79,83 @@ class Discount
     }
 
     /**
-     * Set title
+     * Set customer
      *
-     * @param string $title
+     * @param \AppBundle\Entity\Customer $customer
      *
-     * @return Discount
+     * @return CustomerRefferal
      */
-    public function setTitle($title)
+    public function setCustomer(\AppBundle\Entity\Customer $customer = null)
     {
-        $this->title = $title;
+        $this->customer = $customer;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Get customer
+     *
+     * @return \AppBundle\Entity\Customer
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return CustomerRefferal
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
      *
      * @return string
      */
-    public function getTitle()
+    public function getEmail()
     {
-        return $this->title;
+        return $this->email;
     }
 
     /**
-     * Set startDate
+     * Set status
      *
-     * @param \Date $starDate
+     * @param string $status
      *
-     * @return Discount
+     * @return CustomerRefferal
      */
-    public function setStartDate($starDate)
+    public function setStatus($status)
     {
-        $this->startDate = $starDate;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Get startDate
+     * Get status
      *
-     * @return \Date
+     * @return string
      */
-    public function getStartDate()
+    public function getStatus()
     {
-        return $this->startDate;
+        return $this->status;
     }
-
-    /**
-     * Set endDate
-     *
-     * @param \Date $endDate
-     *
-     * @return Discount
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    /**
-     * Get endDate
-     *
-     * @return \Date
-     */
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
-
-
 
     /**
      * Set created
      *
      * @param \DateTime $created
      *
-     * @return Discount
+     * @return CustomerRefferal
      */
     public function setCreated($created)
     {
@@ -208,7 +179,7 @@ class Discount
      *
      * @param \DateTime $updated
      *
-     * @return Discount
+     * @return CustomerRefferal
      */
     public function setUpdated($updated)
     {
@@ -228,44 +199,50 @@ class Discount
     }
 
     /**
-     * @param $promotion
+     * Set criteria
      *
-     * @return Discount
+     * @param string $criteria
+     *
+     * @return RefferalTypes
      */
-    public function setPromotion($promotion)
+    public function setCriteria($criteria)
     {
-        $this->promotion = $promotion;
+        $this->criteria = $criteria;
 
         return $this;
     }
 
     /**
+     * Get criteria
+     *
      * @return string
      */
-    public function getPromotion()
+    public function getCriteria()
     {
-        return $this->promotion;
+        return $this->criteria;
     }
 
     /**
-     * Set company
-     * @param $company
-     * @return Discount
+     * Set points
+     *
+     * @param float $points
+     *
+     * @return RefferalTypes
      */
-    public function setCompany($company)
+    public function setPoints($points)
     {
-        $this->company = $company;
+        $this->points = $points;
 
         return $this;
     }
 
     /**
-     * Get company
-     * @return Company
+     * Get points
+     *
+     * @return float
      */
-    public function getCompany()
+    public function getPoints()
     {
-        return $this->company;
+        return $this->points;
     }
-
 }

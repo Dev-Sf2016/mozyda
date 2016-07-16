@@ -20,7 +20,6 @@ class CustomerUserProvider implements UserProviderInterface
 
     public function loadUserByUsername($username)
     {
-        
         /**
          * @var \AppBundle\Entity\Customer
          */
@@ -32,13 +31,10 @@ class CustomerUserProvider implements UserProviderInterface
             ->getQuery()
             ->getOneOrNullResult();
 
-        var_dump($user);
-//        die('---');
         if($user != null){
 
             $customerUser = new CustomerUser($user->getEmail(), $user->getPassword(), $user->getName(), $user->getLoyalityId(), $user->getCity(), $user->getNationality(), $user->getIsActive());
-            $customerUser->setId($user->getId())
-                ;
+            $customerUser->setId($user->getId());
 
             return $customerUser;
         }
