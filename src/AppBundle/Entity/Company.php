@@ -16,6 +16,7 @@ class Company
 {
 
     const NUM_ITEMS = 10;
+    const NUM_ITEMS_FR = 10;
 
     /**
      * @ORM\Column(type="integer")

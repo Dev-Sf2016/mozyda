@@ -1,4 +1,5 @@
 <?php
 
-echo new \DateTime("now");
+echo "welcome";
+phpinfo();
 ?>

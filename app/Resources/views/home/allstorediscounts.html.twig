@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    <section id="store-list" class="container" >
+        <div class="panel panel-default panel-login">
+            <div class="panel-heading text-center">
+                <h2 class="panel-heading-text">
+                    {{ 'All Discounts'|trans }}({{ company.name }})
+                </h2>
+            </div>
+            <div class="panel-body">
+
+
+        <table class="table table-responsive">
+            {% for discount in discounts %}
+            <tr>
+                <td class="cil-md-2">
+                    <div class="thumbnail_container">
+                        <div class="thumbnail">
+                            <img class="img-responsive" src="{{ asset("files/company/discounts/") }}{{ discount.company.id }}/{{ discount.promotion }}" alt="">
+                        </div>
+                    </div>
+                    {#<img src="{{ asset('files/company/logo/' ~ company.logo) }}"/></td>#}
+                <td class="col-md-4">
+                    <h4>{{ 'Starting from '|trans }}: {{ discount.startDate.date | date("Y-m-d")}}</h4> <br />
+                    <h4>{{ 'Valid till '|trans }}: {{ discount.endDate.date | date("Y-m-d")}}</h4>
+                </td>
+                <td class="col-md-6">
+                    <h2>{{ discount.company.name }}</h2>
+                    <h3>{{ discount.company.url }}</h3>
+                    <h3>{{ discount.id }}</h3>
+
+                </td>
+                </tr>
+            {% endfor %}
+
+
+            </table>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="navigation text-center">
+                    {{ pagerfanta(discounts, 'twitter_bootstrap3', { routeName: 'all_store_discounts_paginated',routeParams: {'store':6} }) }}
+                </div>
+            </div>
+
+
+        </div>
+        </div>
+            </div></section>
+    </section>
+{% endblock %}

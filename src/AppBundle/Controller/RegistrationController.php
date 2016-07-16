@@ -16,10 +16,12 @@ use Symfony\Component\Form\FormError;
 class RegistrationController extends Controller
 {
     /**
-     * @Route("/register", name="register")
+     * @Route("/register", defaults={"inv_id": 0}, name="register")
+     * @Route("/register/{inv_id}/", requirements={"inv_id": "[1-9]\d*"}, name="register_invited")
      */
-    public function register(Request $request)
+    public function register(Request $request,$inv_id)
     {
+        echo "invitation id is ".$inv_id;
         // register customer
         $customer = new Customer();
         $formCust = $this->createForm(CustRegForm::class, $customer);
@@ -40,7 +42,7 @@ class RegistrationController extends Controller
                 $customer->setPassword($password);
                 $password = '000';
                 $customer->setPassword($password);
-                $em = $this->getDoctrine()->getManager();
+//                $em = $this->getDoctrine()->getManager();
                 $customer->setIsActive(0);
                 $customer->setActivationCode(date('himsymd') . rand(0, 3000));
                 $em = $this->getDoctrine()->getManager();
@@ -50,7 +52,7 @@ class RegistrationController extends Controller
 
                 // send code via email to user to activate
                 $message = \Swift_Message::newInstance()
-                    ->setSubject('Account Activation')
+                    ->setSubject($this->get('translator')->trans('Account Activation'))
                     ->setFrom('send@example.com')
                     ->setTo($customer->getEmail())
                     ->setBody(
@@ -202,13 +204,13 @@ class RegistrationController extends Controller
             $loyality = $this->get('app.loyality');
             $cardStatus = $loyality->checkCardStatus($id);
             if ($cardStatus) {
-                return array('status' => true, 'msg' => 'OK');
+                return array('status' => true, 'msg' => $this->get('translator')->trans('OK'));
             } else {
-                return array('status' => false, 'msg' => "Invalid Card Number");
+                return array('status' => false, 'msg' => $this->get('translator')->trans("Invalid Card Number"));
             }
 
         } else {
-            return array('status' => false, 'msg' => "card already registered");
+            return array('status' => false, 'msg' => $this->get('translator')->trans("Card already registered"));
         }
     }
 

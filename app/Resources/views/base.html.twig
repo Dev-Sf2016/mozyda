@@ -1,21 +1,25 @@
-<!DOCTYPE html>
-<html>
+b<!DOCTYPE html>
+<html {% if(app.request.getLocale() == 'ar') %}dir="rtl"{% endif %} lang="{{ app.request.getLocale() }}">
 <head>
     <meta charset="UTF-8"/>
-    <title>{% block title %}Mozyda!{% endblock %}</title>
+    <title>{% block title %}Mazaya!{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
     <link href="{{ asset('default/fonts/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"/>
 
     <link href="{{ asset('default/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('default/css/custom.css') }}" rel="stylesheet"/>
+    {% if(app.request.getLocale() == 'ar') %}
+        <link href="{{ asset('default/css/rtl.css') }}" rel="stylesheet"/>
+    {% endif %}
+
 
     <script type="text/javascript" src="{{ asset('default/js/jquery-2.2.3.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('default/bootstrap/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('default/js/custom.js') }}"></script>
 
 </head>
-<body>
+<body {% if(app.request.getLocale() == 'ar') %}dir="rtl"{% endif %}>
 <div class="wrapper">
     <header>
         <div class="container">
@@ -27,12 +31,13 @@
                 </div>
                 <div class="col-md-8 col-sm-4 static-menu">
                     <div class="row">
-                        <div class="col-md-3"></div>
+                        <div class="col-md-3">{% embed "includes/language_switcher.twig" %}
+                            {% endembed %}</div>
                         <div class="col-md-3 top-menu">
-                            <a href="#">{{ 'Stores'|trans }}</a>
+                            <a href="{{ path('list_stores') }}">{{ 'Stores'|trans }}</a>
                         </div>
                         <div class="col-md-3 top-menu">
-                            <a href="#">{{ 'Discounts'|trans }}</a>
+                            <a href="{{ path('all_discounts') }}">{{ 'Discounts'|trans }}</a>
                         </div>
                         <div class="col-md-3 top-menu">
                             <a href="{{ path('account_login') }}">{{ 'Account'|trans }}</a>
@@ -40,6 +45,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </header>
     {#{% block topmenu %}#}
@@ -47,6 +53,9 @@
     {#{% endembed %}#}
     {#{% endblock %}#}
     <div class="container">
+        {% embed "includes/messages.twig" %}
+        {% endembed %}
+
         {% block body %}{% endblock %}
     </div>
 </div>

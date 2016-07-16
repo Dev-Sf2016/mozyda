@@ -59,7 +59,6 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $companyDelegateData = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
-//        var_dump($companyDelegate);
         // add delegate functionality
 
         $companyDelegate = new CompanyDelegate();
@@ -347,8 +346,10 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+        $em->initializeObject($companyDelegate->getCompany());
 //        echo "<br />current logged in user is".$this->getUser()->getId()."<br />";
-//        var_dump($companyDelegate);
+        echo "below is delegate";
+        var_dump($companyDelegate);
         $discounts = $em->getRepository('AppBundle:Discount')->getDiscountsByCompanyId($companyDelegate->getCompany());
 
         ///echo "salem";die();
