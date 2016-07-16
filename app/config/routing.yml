@@ -6,8 +6,8 @@ app:
         _locale: '%app_locales%'
     defaults: {_locale: 'en'}
 
-rest :
-  type : rest
-  resource : "routing_rest.yml"
-  prefix : /api
+rest:
+    type: rest
+    resource: "routing_rest.yml"
+    prefix : /{_locale}/api
 

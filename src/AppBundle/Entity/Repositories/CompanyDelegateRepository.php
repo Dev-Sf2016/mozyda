@@ -17,7 +17,7 @@ class CompanyDelegateRepository extends EntityRepository
      * @param $email
      * @return string
      *
-     * @return CompanyDelegate|null
+     * @return null|CompanyDelegate
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByEmail($email)
@@ -31,5 +31,37 @@ class CompanyDelegateRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param $company
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findDefaultDelegateByCompany($company){
+        return $this->_em->createQueryBuilder()
+            ->select('c')
+            ->from('AppBundle:CompanyDelegate', 'c')
+            ->where('c.company = :company')
+            ->andWhere('c.isDefault = 1')
+            ->setParameter('company', $company)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param CompanyDelegate $delegate
+     * @return CompanyDelegate
+     */
+    public function persistDelegate($delegate){
+        if($delegate->getId() !== null){
+            $this->_em->merge($delegate);
+        }
+        else{
+            $this->_em->persist($delegate);
+        }
+
+        $this->_em->flush();
+
+        return $delegate;
+    }
     
 }

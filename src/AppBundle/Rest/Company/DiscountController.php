@@ -1,9 +1,10 @@
 <?php
 
-namespace AppBundle\Rest\Controller;
+namespace AppBundle\Rest\Company;
 
 
 use AppBundle\Entity\Company;
+use AppBundle\Entity\CompanyDelegate;
 use AppBundle\Exception\InvalidFormException;
 use AppBundle\Form\CompanyType;
 use AppBundle\Rest\Codes;
@@ -13,34 +14,33 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class CompanyController
- * @package AppBundle\Rest\Controller
- * @RouteResource("Company", pluralize=false)
+ * Class DiscountController
+ * @package AppBundle\Controller\Rest\Company
+ * @RouteResource("company/discount", pluralize=false)
  */
-class CompanyController extends FOSRestController
+class DiscountController extends FOSRestController
 {
     /**
-     *
      * @param $id
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getAction($id)
-    {
-        $companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
+    public function getAction($id){
 
-        $company = null;
+        $discountRepository = $this->getDoctrine()->getRepository('AppBundle:Discount');
+
+        $discount = null;
         try{
-            $company = $companyRepository->find($id);
+            $discount = $discountRepository->find($id);
         }
         catch (\Exception $e){
-            $company = null;
+            $discount = null;
         }
 
-        if(!$company){
-            $view = $this->view(array('success'=>false, 'message'=>$this->get('translator')->trans('Record not found')));
+        if(!$discount){
+            $view = $this->view(['message'=>$this->get('translator')->trans('Record not found')], Codes::HTTP_NOT_FOUND );
         }
         else {
-            $view = $this->view(array('success' => true, 'company' => $company), 200);
+            $view = $this->view(['discount'=> $discount],  Codes::HTTP_OK );
         }
 
         return $this->handleView($view);
@@ -50,15 +50,16 @@ class CompanyController extends FOSRestController
      *
      */
     public function cgetAction(){
-        $companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
-        $companies = null;
-        $companies = $companyRepository->findAll();
 
-        if(!$companies){
-            $view = $this->view(array('success'=>false, 'message'=>$this->get('translator')->trans('Records not found')));
+        $discountsRepository = $this->getDoctrine()->getRepository('AppBundle:Discount');
+
+        $discounts = $discountsRepository->findAll();
+
+        if(!$discounts){
+            $view = $this->view(['message'=>$this->get('translator')->trans('Records not found')], Codes::HTTP_NOT_FOUND);
         }
         else {
-            $view = $this->view(array('success' => true, 'companies' => $companies), 200);
+            $view = $this->view(['discounts' => $discounts, 'baseurl'=>'http://mozyda.dev/files/company/discounts/'], Codes::HTTP_OK);
         }
 
         return $this->handleView($view);
@@ -70,20 +71,25 @@ class CompanyController extends FOSRestController
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function postAction(Request $request){
         //$companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
+
         try{
-            $company = $this->createNewType($request);
+            $discount = $this->createNewType($request);
 
             $routeOptions = [
-                'id'=>$company->getId(),
+                'id'=>$discount->getId(),
                 '_format'=>$request->get('_format')
             ];
 
             $this->redirectView('api_get_company', $routeOptions, Codes::HTTP_CREATED);
         }
         catch(InvalidFormException $e){
-            $view = $this->view(array('success'=>false, 'message'=>$this->get('translator')->trans('Invalid form')));
+            $view = $this->view(['form'=>$e->getForm()], Codes::HTTP_BADE_REQUEST);
             return $this->handleView($view);
         }
 
@@ -99,6 +105,9 @@ class CompanyController extends FOSRestController
         $parameters = $request->request->all();
         $company = new Company();
 
+        $companyDelegate = new CompanyDelegate();
+        $company->addCompanyDelegate($companyDelegate);
+
         $persistedCompany = $this->processForm($company, $parameters, 'POST');
 
         return $persistedCompany;
@@ -113,7 +122,7 @@ class CompanyController extends FOSRestController
      * @return Company|mixed
      */
     private function processForm(Company $company, array $parameters, $method='PUT'){
-        $form = $this->createForm(CompanyType::class, $company, ['method'=>$method] );
+        $form = $this->createForm(CompanyType::class, $company, ['method'=>$method, 'csrf_protection'=>false] );
         $form->submit($parameters, 'PATCH' !== $method);
 
         if($form->isValid()){
@@ -132,6 +141,7 @@ class CompanyController extends FOSRestController
     /**
      * @param Request $request
      * @param $id
+     * @return \FOS\RestBundle\View\View
      */
     public function patchAction(Request $request, $id){
 

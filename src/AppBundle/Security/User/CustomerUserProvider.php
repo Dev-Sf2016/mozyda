@@ -20,7 +20,7 @@ class CustomerUserProvider implements UserProviderInterface
 
     public function loadUserByUsername($username)
     {
-        echo ('--loaduser');
+        
         /**
          * @var \AppBundle\Entity\Customer
          */
