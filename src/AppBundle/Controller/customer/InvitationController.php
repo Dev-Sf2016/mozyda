@@ -26,7 +26,7 @@ class InvitationController extends Controller
             );
 
 
-            $customerInvitation->setCustomer($customer);
+            $customerInvitation->setRefferer($customer);
             $em = $this->getDoctrine()->getManager();
             $em->persist($customerInvitation);
             $em->flush();

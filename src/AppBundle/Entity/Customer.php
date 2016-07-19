@@ -45,6 +45,7 @@ class Customer
 
     /**
      * @ORM\Column(name="loyality_id", type="string", length=100, unique=true)
+     * @Assert\NotBlank(message="This field is required")
      */
     private $loyalityId;
 
@@ -87,7 +88,7 @@ class Customer
     private $updated;
 
     /**
-     * @ORM\OneToMany(targetEntity="CustomerInvitation", mappedBy="customer")
+     * @ORM\OneToMany(targetEntity="CustomerInvitation", mappedBy="refferer")
      */
     private $customerInvitations;
 
@@ -95,6 +96,17 @@ class Customer
      * @ORM\OneToMany(targetEntity="CustomerRefferalPointHistory", mappedBy="customer")
      */
     private $customerRefferalPointsHistory;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Customer", mappedBy="reffered_by")
+     */
+    private $refferer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Customer", inversedBy="refferer")
+     * @ORM\JoinColumn(name="refferer_id", referencedColumnName="id")
+     */
+    private $reffered_by;
 
     /**
      * Triggered on insert
@@ -117,6 +129,12 @@ class Customer
     }
 
 
+    public function __construct()
+    {
+        $this->customerInvitations = new ArrayCollection();
+        $this->customerRefferalPointsHistory = new ArrayCollection();
+        $this->refferer = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -150,6 +168,54 @@ class Customer
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set isActive
+     *
+     * @param integer $isActive
+     *
+     * @return Customer
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return integer
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set activationCode
+     *
+     * @param string $activationCode
+     *
+     * @return Customer
+     */
+    public function setActivationCode($activationCode)
+    {
+        $this->activationCode = $activationCode;
+
+        return $this;
+    }
+
+    /**
+     * Get activationCode
+     *
+     * @return string
+     */
+    public function getActivationCode()
+    {
+        return $this->activationCode;
     }
 
     /**
@@ -321,62 +387,7 @@ class Customer
     }
 
     /**
-     * Set isActive
-     *
-     * @param integer $isActive
-     *
-     * @return Customer
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return integer
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * Set activationCode
-     *
-     * @param integer $activationCode
-     *
-     * @return Customer
-     */
-    public function setActivationCode($activationCode)
-    {
-        $this->activationCode = $activationCode;
-
-        return $this;
-    }
-
-    /**
-     * Get activationCode
-     *
-     * @return integer
-     */
-    public function getActivationCode()
-    {
-        return $this->activationCode;
-    }
-
-    public function __construct()
-    {
-        $this->customerRefferals = new ArrayCollection();
-        $this->customerRefferalPointsHistory = new ArrayCollection();
-    }
-
-
-    /**
-     * Add customerRefferal
+     * Add customerInvitation
      *
      * @param \AppBundle\Entity\CustomerInvitation $customerInvitation
      *
@@ -390,17 +401,17 @@ class Customer
     }
 
     /**
-     * Remove customerRefferal
+     * Remove customerInvitation
      *
      * @param \AppBundle\Entity\CustomerInvitation $customerInvitation
      */
-    public function removeCustomerRefferal(\AppBundle\Entity\CustomerInvitation $customerInvitation)
+    public function removeCustomerInvitation(\AppBundle\Entity\CustomerInvitation $customerInvitation)
     {
         $this->customerInvitations->removeElement($customerInvitation);
     }
 
     /**
-     * Get customerRefferals
+     * Get customerInvitations
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -441,5 +452,63 @@ class Customer
     public function getCustomerRefferalPointsHistory()
     {
         return $this->customerRefferalPointsHistory;
+    }
+
+    /**
+     * Add refferer
+     *
+     * @param \AppBundle\Entity\Customer $refferer
+     *
+     * @return Customer
+     */
+    public function addRefferer(\AppBundle\Entity\Customer $refferer)
+    {
+        $this->refferer[] = $refferer;
+
+        return $this;
+    }
+
+    /**
+     * Remove refferer
+     *
+     * @param \AppBundle\Entity\Customer $refferer
+     */
+    public function removeRefferer(\AppBundle\Entity\Customer $refferer)
+    {
+        $this->refferer->removeElement($refferer);
+    }
+
+    /**
+     * Get refferer
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRefferer()
+    {
+        return $this->refferer;
+    }
+
+    /**
+     * Set refferedBy
+     *
+     * @param \AppBundle\Entity\Customer $refferedBy
+     *
+     * @return Customer
+     */
+    public function setRefferedBy(\AppBundle\Entity\Customer $refferedBy = null)
+    {
+        $this->reffered_by = $refferedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get refferedBy
+     *
+     * @return \AppBundle\Entity\Customer
+     */
+    public function getRefferedBy()
+    {
+        return $this->reffered_by;
     }
 }

@@ -22,6 +22,7 @@ class CustomerRefferalPointHistory
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Customer", inversedBy="customerRefferalPointsHistory")
      * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")

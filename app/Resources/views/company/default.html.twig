@@ -131,6 +131,12 @@
                                                                 type="submit">{{ 'Add Delegate'|trans }}</button>
                                                     </div>
                                                 </div>
+                                                <script type="text/javascript" src="{{ asset('default/js/jquery.validate.js') }}"></script>
+                                                <script type="text/javascript" src="{{ asset('default/js/jquery.validate.defaults.symfony.js') }}"></script>
+                                                <script>
+                                                    {{ form_jquery_validation(form_deleg) }}
+                                                </script>
+
                                                 {{ form_end(form_deleg) }}
                                             </div>
                                         </div>
@@ -183,6 +189,9 @@
                                                     {{ form_row(form_discount.submit,{'attr':{'class':'pull-right'}}) }}
 
                                                 </div>
+                                                <script>
+                                                    {{ form_jquery_validation(form_discount) }}
+                                                </script>
                                                 {{ form_end(form_discount) }}
                                             </div>
                                         </div>
@@ -197,15 +206,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-8 col-lg-offset-2">
-
-                <a href="{{ path('company_detail') }}">{{ 'Company Details'|trans }}</a> |
-                <a href="{{ path('company_delegate_add') }}">{{ 'Add Delegate'|trans }}</a> |
-                <a href="{{ path('company_add_discount') }}">{{ 'Upload discount'|trans }}</a>
-                <a href="{{ path('company_discount_list') }}">{{ 'List Discount'|trans }}</a> |
-
-
             </div>
 
         </div>

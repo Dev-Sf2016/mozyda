@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Validator\Constraints\Email;
 
 class CustRegForm extends AbstractType
 {
@@ -22,10 +23,18 @@ class CustRegForm extends AbstractType
             ->add('city', TextType::class)
             ->add('nationality', TextType::class)
             ->add('name', TextType::class)
+            ->add('refferer_email', EmailType::class,
+                array(
+                    'mapped'=>false,
+                    'constraints' =>
+                        array(
+                            new Email(),
+                        )
+                ))
             ->add('password', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'first_options' => array('label' => 'Password'),
-                'second_options' => array('label' => 'Repeat Password')
+                'second_options' => array('label' => 'Confirm Password')
                 )
             )
 //            ->add('is_active', ChoiceType::class, array(

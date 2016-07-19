@@ -167,4 +167,26 @@ h2.panel-heading-text{
 #exTab1 .nav-pills > li > a {
     border-radius: 0;
 }
+.required:after {
+    content: " * ";
+    color: red;
+}
+span.help-block, label.error, li.error{
+    color: #a94442;
+}
+li.error{
+    list-style: none;
+}
+.actions i.fa.fa-trash{
+    color: #a94442;
+}
+.actions i.fa.fa-edit{
+    color: #000000;
+}
+.modal-backdrop{
+    top:inherit;
+}
+.modal-content{
+    color: #0f0f0f;
+}
 

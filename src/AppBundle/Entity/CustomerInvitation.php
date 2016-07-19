@@ -28,7 +28,7 @@ class CustomerInvitation
      * @ORM\ManyToOne(targetEntity="Customer", inversedBy="customerInvitation")
      * @ORM\JoinColumn(name="refferer_id", referencedColumnName="id")
      */
-    private $customer;
+    private $refferer;
     /**
      * @ORM\Column(name="reffered_email", type="string", length=100)
      * @Assert\Email()
@@ -84,35 +84,11 @@ class CustomerInvitation
     }
 
     /**
-     * Set customer
-     *
-     * @param \AppBundle\Entity\Customer $customer
-     *
-     * @return CustomerRefferal
-     */
-    public function setCustomer(\AppBundle\Entity\Customer $customer = null)
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
-    /**
-     * Get customer
-     *
-     * @return \AppBundle\Entity\Customer
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
-    }
-
-    /**
      * Set email
      *
      * @param string $email
      *
-     * @return CustomerRefferal
+     * @return CustomerInvitation
      */
     public function setEmail($email)
     {
@@ -136,7 +112,7 @@ class CustomerInvitation
      *
      * @param string $status
      *
-     * @return CustomerRefferal
+     * @return CustomerInvitation
      */
     public function setStatus($status)
     {
@@ -160,7 +136,7 @@ class CustomerInvitation
      *
      * @param \DateTime $created
      *
-     * @return CustomerRefferal
+     * @return CustomerInvitation
      */
     public function setCreated($created)
     {
@@ -184,7 +160,7 @@ class CustomerInvitation
      *
      * @param \DateTime $updated
      *
-     * @return CustomerRefferal
+     * @return CustomerInvitation
      */
     public function setUpdated($updated)
     {
@@ -208,7 +184,7 @@ class CustomerInvitation
      *
      * @param \AppBundle\Entity\Customer $refferer
      *
-     * @return CustomerInvitationr
+     * @return CustomerInvitation
      */
     public function setRefferer(\AppBundle\Entity\Customer $refferer = null)
     {

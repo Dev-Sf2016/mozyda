@@ -15,28 +15,66 @@ use Symfony\Component\Form\FormError;
 
 class RegistrationController extends Controller
 {
+
     /**
      * @Route("/register", defaults={"inv_id": 0}, name="register")
      * @Route("/register/{inv_id}/", requirements={"inv_id": "[1-9]\d*"}, name="register_invited")
      */
-    public function register(Request $request,$inv_id)
+    public function register(Request $request, $inv_id)
     {
-        echo "invitation id is ".$inv_id;
+//        echo "invitation id is ".$inv_id;
+        $em = $this->getDoctrine()->getManager();
+        // if there is inv_id display the invitor email in the box
         // register customer
         $customer = new Customer();
+
         $formCust = $this->createForm(CustRegForm::class, $customer);
+        if ($inv_id != 0) { // purpose is only to show the invitor email in the refferer email box from invitations table
+            $inv_by = $em->getRepository('AppBundle:CustomerInvitation')->findOneBy(array('id' => $inv_id));
+            $inv_by_details = $em->getRepository('AppBundle:Customer')->findOneBy(array('id' => $inv_by->getRefferer()));
+            $formCust->get('refferer_email')->setData($inv_by_details->getEmail());
+            $formCust->get('email')->setData($inv_by->getEmail());
+
+        }
+
         $formCust->handleRequest($request);
         //because it is expecting the entity to implement userinterface
         $customerUser = new CustomerUser($customer->getEmail(), $customer->getPassword(), $customer->getName(), $customer->getLoyalityId(), $customer->getCity(), $customer->getNationality(), $customer->getIsActive());
         $success = '';
         if ($formCust->isSubmitted() && $formCust->isValid()) {
+            $referrer_email = '';
+
+            if ($formCust['refferer_email']->getData() != '') {
+                $referrer_email = $formCust['refferer_email']->getData();
+                echo "<br />the referrer_email is" . $referrer_email;
+            }
+//            die('--');
+
+
             //if form is valid we need to check the loyality number by api and in the db if it is already registered
             $cardStatus = $this->checkLoyalityCard($customer->getLoyalityId());
+
+//            die('--');
+            $saveForm = true;
             if (!$cardStatus['status']) {
                 $error = new FormError($cardStatus['msg']);
                 $formCust->get('loyality_id')->addError($error);
+                $saveForm = false;
 
-            } else {
+            }
+            if ($referrer_email != '') {
+                $reffererInfo = $this->getRefferer($referrer_email);
+                if ($reffererInfo['error'] != '') {
+                    $error = new FormError($reffererInfo['error']);
+                    $formCust->get('refferer_email')->addError($error);
+                    $saveForm = false;
+                }else{
+
+                    $customer->setRefferedBy($reffererInfo['refferer']);
+                }
+                var_dump($customer);
+            }
+            if ($saveForm) {
                 $password = $this->get('security.password_encoder')
                     ->encodePassword($customerUser, $customer->getPassword());
                 $customer->setPassword($password);
@@ -45,7 +83,7 @@ class RegistrationController extends Controller
 //                $em = $this->getDoctrine()->getManager();
                 $customer->setIsActive(0);
                 $customer->setActivationCode(date('himsymd') . rand(0, 3000));
-                $em = $this->getDoctrine()->getManager();
+
 
                 $em->persist($customer);
                 $em->flush();
@@ -85,6 +123,7 @@ class RegistrationController extends Controller
 
         $formComp->handleRequest($request);
 
+
         if ($formComp->isSubmitted() && $formComp->isValid()) {
 
             $file = $company->getLogo();
@@ -123,6 +162,26 @@ class RegistrationController extends Controller
 //                'success' => $success
             )
         );
+    }
+
+    //function to fetch refferer id from referrer email
+    public function getRefferer($email)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $refferer = $em->getRepository('AppBundle:Customer')->findOneBy(
+            array(
+                'email' => $email
+            ));
+        if (!empty($refferer)) {
+            $arr = array('refferer_id' => $refferer->getId(), 'error' => '','refferer'=>$refferer);
+        } else {
+            $arr = array('refferer_id' => '', 'error' => $this->get('translator')->trans('Invalid refferer email'));
+
+        }
+        return $arr;
+
+
     }
 
     /**
