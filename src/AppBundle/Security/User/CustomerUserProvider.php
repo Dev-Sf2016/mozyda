@@ -34,8 +34,7 @@ class CustomerUserProvider implements UserProviderInterface
         if($user != null){
 
             $customerUser = new CustomerUser($user->getEmail(), $user->getPassword(), $user->getName(), $user->getLoyalityId(), $user->getCity(), $user->getNationality(), $user->getIsActive());
-            $customerUser->setId($user->getId())
-                ;
+            $customerUser->setId($user->getId());
 
             return $customerUser;
         }

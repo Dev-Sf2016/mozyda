@@ -35,7 +35,7 @@ framework:
     http_method_override: true
     assets: ~
     serializer:
-         enabled: true
+        enabled: true
 
 # Twig Configuration
 twig:
@@ -93,3 +93,35 @@ boekkooi_jquery_validation:
             required_group: false
     twig:
         enabled: true # Register the twig extension
+
+#Rest config
+fos_rest:
+    routing_loader:
+        default_format: json
+    param_fetcher_listener: true
+    view:
+        view_response_listener: "force"
+        formats:
+            json: true
+            xml:  true
+        templating_formats:
+            html: true
+    format_listener:
+        rules:
+            - { path: ^/(%app_locales%)/api/, priorities: [ json, xml ], fallback_format: json, prefer_extension: true }
+            - { path: ^/, priorities: ['text/html', '*/*'], fallback_format: html, prefer_extension: false}
+    exception:
+        codes:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
+            'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+            'AppBundle\Exception\BadRequestDataException': HTTP_BAD_REQUEST
+        messages:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': true
+            #'SGalinski\TypoScriptBackendBundle\Exception\BadRequestDataException': true
+    allowed_methods_listener: false
+    access_denied_listener:
+        json: true
+    body_listener: true
+    disable_csrf_role: ROLE_API
+
+

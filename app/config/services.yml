@@ -46,3 +46,18 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+
+
+    wsse.security.authentication.provider:
+        class: AppBundle\Security\Authentication\Provider\WsseProvider
+        arguments:
+            - app.company_user_provider
+            - '@cache.app'
+            - ''
+        public: false
+
+    wsse.security.authentication.listener:
+        class: AppBundle\Security\Firewall\WsseListener
+        arguments: ['@security.token_storage', '@security.authentication.manager']
+        public: false

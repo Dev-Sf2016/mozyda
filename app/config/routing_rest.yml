@@ -1,0 +1,15 @@
+#company
+company:
+    type: rest
+    resource: AppBundle\Rest\Company\CompanyController
+    name_prefix: api_
+
+#discount:
+#    type: rest
+#    resource: AppBundle\Rest\Company\DiscountController
+#    name_prefix: api_
+#
+#delegate:
+#    type: rest
+#    resource: AppBundle\Rest\Company\DelegateController
+#    name_prefix: api_

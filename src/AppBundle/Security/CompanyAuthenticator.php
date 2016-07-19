@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\SimpleFormAuthenticatorInterface;
 
-class AdminAuthenticator implements SimpleFormAuthenticatorInterface{
+class CompanyAuthenticator implements SimpleFormAuthenticatorInterface{
 
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {

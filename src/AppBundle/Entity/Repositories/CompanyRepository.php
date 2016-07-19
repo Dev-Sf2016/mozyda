@@ -33,6 +33,24 @@ class CompanyRepository extends EntityRepository
     }
 
     /**
+     * @param Company $company
+     * @return Company
+     */
+    public function persistCompany(Company $company){
+
+        if($company->getId() !== null){
+            $this->_em->merge($company);
+        }
+        else{
+            $this->_em->persist($company);
+        }
+
+        $this->_em->flush();
+
+        return $company;
+    }
+
+    /**
      * @param int $page
      *
      * @return Pagerfanta
