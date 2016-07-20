@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Entity\Repositories;
 
 use AppBundle\Entity\Company;
@@ -25,7 +24,7 @@ class CompanyRepository extends EntityRepository
             ')
 
         ;
-        $this->getEntityManager()->initializeObject($query->getCompany());
+//        $this->getEntityManager()->initializeObject($query->getCompany());
         $paginator = new Pagerfanta(new DoctrineORMAdapter($query, false));
         $paginator->setMaxPerPage(Company::NUM_ITEMS);
         $paginator->setCurrentPage($page);

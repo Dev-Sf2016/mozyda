@@ -1,8 +1,6 @@
 <?php
 namespace AppBundle\Entity;
 
-
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +14,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Customer
 {
-
+    const NUM_ITEMS = 10;
+    const NUM_ITEMS_FR = 10;
 
     /**
      * @ORM\Column(type="integer")
