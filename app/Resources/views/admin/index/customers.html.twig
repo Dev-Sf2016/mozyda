@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 
-    this is the body
-    {{ dump(customers) }}
 
     <section id="vendor-list" class="container" >
 
@@ -17,7 +15,7 @@
                         <table class="table table-striped table-responsive">
                             <thead>
                             <tr>
-                                <th><i class="fa fa-newspaper-o"></i> {{ 'Vendor Email'|trans }}</th>
+                                <th><i class="fa fa-newspaper-o"></i> {{ 'Customer Email'|trans }}</th>
                                 <th><i class="fa fa-calendar"></i> {{ 'Creation Date'|trans }}</th>
                                 <th><i class="fa fa-calendar"></i> {{ 'Name'|trans }}</th>
                                 <th><i class="fa fa-cog"></i> {{ 'Status'|trans }}</th>
