@@ -103,7 +103,7 @@ class RegistrationController extends Controller
                     );
 
 //                echo $message;
-//        $this->get('mailer')->send($message);
+        $this->get('mailer')->send($message);
 
 
 //                $this->get('session')->getFlashBag()->add('notice', 'You have registered Sucessfully, Please follow the email to activate your account');
