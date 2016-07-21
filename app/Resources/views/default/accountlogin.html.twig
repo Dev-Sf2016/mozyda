@@ -18,7 +18,7 @@
 
                             {% for flashMessage in app.session.flashbag.get('cust_error') %}
                                 <div class="alert alert-danger">
-                                    {{ flashMessage }}
+                                    {{ flashMessage|trans }}
                                 </div>
                             {% endfor %}
                             {#{% if error %}#}
@@ -45,6 +45,7 @@
                                     <input type="hidden" name="_target_path" value="/account" />
                                 #}
                                 <input type="hidden" name="login_type" value="customer"/>
+                                <a href="{{ url('forgot_customer_password') }}">{{ 'Forgot your password'|trans }}</a>
                                 <button type=" submit" class="btn btn-default pull-right">{{ 'Login'|trans }}</button>
                             </form>
                         </div>
@@ -67,7 +68,7 @@
 
                             {% for flashMessage in app.session.flashbag.get('company_error') %}
                                 <div class="alert alert-danger">
-                                    {{ flashMessage }}
+                                    {{ flashMessage|trans }}
                                 </div>
                             {% endfor %}
                             {#{% if error %}#}
@@ -88,6 +89,7 @@
                                            placeholder="{{ 'Password'|trans }}"/>
                                 </div>
                                 <input type="hidden" name="login_type" value="company"/>
+                                <a href="{{ url('forgot_company_password') }}">{{ 'Forgot your password'|trans }}</a>
                                 <button type="submit" class="btn btn-default pull-right">{{ 'Login'|trans }}</button>
 
                                 {#

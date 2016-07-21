@@ -12,6 +12,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 class RegistrationController extends Controller
 {
@@ -95,7 +102,6 @@ class RegistrationController extends Controller
                     ->setTo($customer->getEmail())
                     ->setBody(
                         $this->renderView(
-                        // app/Resources/views/Emails/registration.html.twig
                             'emails/registration.html.twig',
                             array('id' => $customer->getId(), 'code' => $customer->getActivationCode())
                         ),
@@ -110,8 +116,6 @@ class RegistrationController extends Controller
                 $this->addFlash('success_cust', $this->get('translator')->trans('You have registered Sucessfully, Please follow the email to activate your account'));
             }
         } else {
-            $string = (string)$formCust->getErrors(true, false);
-//            echo $string;
         }
         //end of register customer
 
@@ -303,14 +307,349 @@ class RegistrationController extends Controller
             }
 
         }
-
-        return $this->render(
-            'registration/customeractivation.html.twig',
-            array(
-                'account_active' => $account_active
-            ));
+        return $this->redirectToRoute('register');
+//        return $this->render(
+//            'registration/customeractivation.html.twig',
+//            array(
+//                'account_active' => $account_active
+//            ));
     }
 
+    /**
+     * @Route("/forgot/customer/password", name="forgot_customer_password")
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function forgotCustomerPasswordAction(Request $request){
+
+//        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+//            return $this->redirectToRoute('homepage');
+//        }
+
+        $form = $this->createFormBuilder(null, array('attr'=>array('novalidate'=>'novalidate')))
+            //->setAttribute('novalidate', 'novalidate')
+            ->setAction($this->get('router')->getGenerator()->generate('forgot_customer_password'))
+            ->add('email', RepeatedType::class, array(
+                'invalid_message'=>'Email and confirm email must match',
+                'first_options'=> array('label'=>'Enter Your email'),
+                'second_options'=> array('label'=>'Confirm your email'),
+                'constraints'=>array(
+                    new Assert\NotBlank(),
+                    new Assert\Email()
+                ),
+                'type'=>TextType::class
+            ))
+            ->add('save', SubmitType::class, array('label'=>'submit'))
+            ->getForm();
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            //save the form
+            $formData = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $customer = $em->getRepository('AppBundle:Customer')->findOneBy(array("email"=>$formData['email']));
+
+            if($customer == null){
+                $this->addFlash('error', $this->get('translator')->trans('User does not exist'));
+            }
+            else{
+
+                //$token = hash('sha256', uniqid(mt_rand(), true), true);
+                $time = time();
+                $token =   uniqid() . md5($formData['email'] . time() . rand(111111, 999999));
+                $link = $this->generateUrl('reset_customer_password', array('time'=>$time, 'token'=>$token), UrlGenerator::ABSOLUTE_URL);
+
+                $customer->setData(serialize(array('time'=>$time, 'token'=>$token)));
+
+                $em->persist($customer);
+                $em->flush();
+
+                //Send email to the use
+                $message = \Swift_Message::newInstance()
+                    ->setSubject($this->get('translator')->trans('Forgot Password'))
+                    ->setFrom($this->getParameter('email_from'))
+                    ->setTo($formData['email'])
+                    ->setBody(
+                        $this->renderView(
+                            'emails/forgot-customer-password-email.twig',
+                            array(
+                                'name'=>$customer->getName(),
+                                'link'=>$link
+                            )
+                        ),
+                        'text/html'
+                    );
+                $this->get('mailer')->send($message);
+
+                $this->addFlash('success', $this->get('translator')->trans('An email is send to you please check your inbox.'));
+            }
+
+
+
+//            return $this->redirectToRoute('forgot_customer_password');
+        }
+        return $this->render(
+            'registration/forgot-customer-password.html.twig',
+            array(
+                'form'=>$form->createView()
+            )
+        );
+    }
+
+    /**
+     * @Route("/forgot/company/password", name="forgot_company_password")
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function forgotCompanyPasswordAction(Request $request){
+
+//        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+//            return $this->redirectToRoute('homepage');
+//        }
+
+        $form = $this->createFormBuilder(null, array('attr'=>array('novalidate'=>'novalidate')))
+            //->setAttribute('novalidate', 'novalidate')
+            ->setAction($this->get('router')->getGenerator()->generate('forgot_company_password'))
+            ->add('email', RepeatedType::class, array(
+                'invalid_message'=>'Email and confirm email must match',
+                'first_options'=> array('label'=>'Enter Your email'),
+                'second_options'=> array('label'=>'Confirm your email'),
+                'constraints'=>array(
+                    new Assert\NotBlank(),
+                    new Assert\Email()
+                ),
+                'type'=>TextType::class
+            ))
+            ->add('save', SubmitType::class, array('label'=>'submit'))
+            ->getForm();
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            //save the form
+            $formData = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $companyDel = $em->getRepository('AppBundle:CompanyDelegate')->findOneBy(array("email"=>$formData['email']));
+
+            if($companyDel == null){
+                $this->addFlash('error', $this->get('translator')->trans('User does not exist'));
+            }
+            else{
+
+                //$token = hash('sha256', uniqid(mt_rand(), true), true);
+                $time = time();
+                $token =   uniqid() . md5($formData['email'] . time() . rand(111111, 999999));
+                $link = $this->generateUrl('reset_company_password', array('time'=>$time, 'token'=>$token), UrlGenerator::ABSOLUTE_URL);
+
+                $companyDel->setData(serialize(array('time'=>$time, 'token'=>$token)));
+
+                $em->persist($companyDel);
+                $em->flush();
+
+                //Send email to the use
+                $message = \Swift_Message::newInstance()
+                    ->setSubject($this->get('translator')->trans('Forgot Password'))
+                    ->setFrom($this->getParameter('email_from'))
+                    ->setTo($formData['email'])
+                    ->setBody(
+                        $this->renderView(
+                            'emails/forgot-customer-password-email.twig',
+                            array(
+                                'name'=>$companyDel->getName(),
+                                'link'=>$link
+                            )
+                        ),
+                        'text/html'
+                    );
+//                echo $message;
+                $this->get('mailer')->send($message);
+
+                $this->addFlash('success', $this->get('translator')->trans('An email is send to you please check your inbox.'));
+            }
+
+
+
+//            return $this->redirectToRoute('forgot_company_password');
+        }
+        return $this->render(
+            'registration/forgot-company-password.html.twig',
+            array(
+                'form'=>$form->createView()
+            )
+        );
+    }
+
+
+    /**
+     * @Route("/reset/customer/password/{time}/{token}", name="reset_customer_password")
+     * @param Request $request
+     * @param $time
+     * @param $token
+     *
+     * @return Response
+     */
+    public function resetCustomerPasswordAction(Request $request, $time, $token){
+
+//        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+//            return $this->redirectToRoute('homepage');
+//        }
+        $viewData = array();
+        $em = $this->getDoctrine()->getManager();
+        $time = (integer)$time;
+        $dataValue = serialize(array('time'=>$time, 'token'=>$token));
+        $customer = $em->getRepository('AppBundle:Customer')->findOneBy(array("data"=>$dataValue));
+
+        if($customer == null){
+            return $this->redirectToRoute('homepage');
+        }
+        else{
+            $data = unserialize($customer->getData());
+            if(strtotime('+1 day', $data['time']) > time()){
+                $form = $this->createFormBuilder(array('attr'=>array('novalidate'=>'novalidate')))
+                    ->add('password', RepeatedType::class, array(
+                        'type'=>PasswordType::class,
+                        'constraints' => array(
+                            new Assert\NotBlank(),
+                            new Assert\Length(array('minMessage'=>'Password must be at least 8 characters', 'maxMessage'=>'Password must not be greater then 40 characters', 'min'=>8, 'max'=>40))
+                        ),
+                        'invalid_message'=>'Password and confirm password must match',
+                        'first_options'=>array('label'=>'Enter New Password'),
+                        'second_options'=>array('label'=>'Confirm Password'),
+                        'second_name'=>'confirmPassword'
+                    ))
+                    ->add('submit', SubmitType::class, array('label'=>'Submit'))
+                    ->getForm();
+
+                $form->handleRequest($request);
+                if($form->isSubmitted() && $form->isValid()){
+
+                    $formData = $form->getData();
+
+                    $customer->setPassword(md5($formData['password']));
+                    $customer->setData('');
+                    $em->persist($customer);
+                    $em->flush();
+                    $email_message = \Swift_Message::newInstance()
+                        ->setSubject($this->get('translator')->trans('Password Changed'))
+                        ->setTo($customer->getEmail())
+                        ->setFrom($this->getParameter("email_from"))
+                        ->setBody(
+                            $this->renderView(
+                                'emails\reset-customer-password-email.twig',
+                                array(
+                                    'name'=>$customer->getName(),
+                                    'password'=>$formData['password']
+                                )
+                            ),
+                            'text/html'
+                        );
+
+                    $this->get('mailer')->send($email_message);
+                    $this->addFlash('success', $this->get('translator')->trans('Your password is reset successfully'));
+
+
+
+
+                }
+
+                $viewData['form'] = $form->createView();
+            }
+            else{
+                $this->addFlash('error', $this->get('translator')->trans('Link expired'));
+            }
+        }
+
+        return $this->render(
+            'registration/reset-customer-password.html.twig',
+            $viewData
+        );
+    }
+
+    /**
+     * @Route("/reset/company/password/{time}/{token}", name="reset_company_password")
+     * @param Request $request
+     * @param $time
+     * @param $token
+     *
+     * @return Response
+     */
+    public function resetCompanyPasswordAction(Request $request, $time, $token){
+
+//        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+//            return $this->redirectToRoute('homepage');
+//        }
+        $viewData = array();
+        $em = $this->getDoctrine()->getManager();
+        $time = (integer)$time;
+        $dataValue = serialize(array('time'=>$time, 'token'=>$token));
+        $companyDel = $em->getRepository('AppBundle:CompanyDelegate')->findOneBy(array("data"=>$dataValue));
+
+        if($companyDel == null){
+            return $this->redirectToRoute('homepage');
+        }
+        else{
+            $data = unserialize($companyDel->getData());
+            if(strtotime('+1 day', $data['time']) > time()){
+                $form = $this->createFormBuilder(array('attr'=>array('novalidate'=>'novalidate')))
+                    ->add('password', RepeatedType::class, array(
+                        'type'=>PasswordType::class,
+                        'constraints' => array(
+                            new Assert\NotBlank(),
+                            new Assert\Length(array('minMessage'=>'Password must be at least 8 characters', 'maxMessage'=>'Password must not be greater then 40 characters', 'min'=>8, 'max'=>40))
+                        ),
+                        'invalid_message'=>'Password and confirm password must match',
+                        'first_options'=>array('label'=>'Enter New Password'),
+                        'second_options'=>array('label'=>'Confirm Password'),
+                        'second_name'=>'confirmPassword'
+                    ))
+                    ->add('submit', SubmitType::class, array('label'=>'Submit'))
+                    ->getForm();
+
+                $form->handleRequest($request);
+                if($form->isSubmitted() && $form->isValid()){
+
+                    $formData = $form->getData();
+
+                    $companyDel->setPassword(md5($formData['password']));
+                    $companyDel->setData('');
+                    $em->persist($companyDel);
+                    $em->flush();
+                    $email_message = \Swift_Message::newInstance()
+                        ->setSubject($this->get('translator')->trans('Password Changed'))
+                        ->setTo($companyDel->getEmail())
+                        ->setFrom($this->getParameter("email_from"))
+                        ->setBody(
+                            $this->renderView(
+                                'emails\reset-company-password-email.twig',
+                                array(
+                                    'name'=>$companyDel->getName(),
+                                    'password'=>$formData['password']
+                                )
+                            ),
+                            'text/html'
+                        );
+
+                    $this->get('mailer')->send($email_message);
+                    $this->addFlash('success', $this->get('translator')->trans('Your password is reset successfully'));
+
+
+
+
+                }
+
+                $viewData['form'] = $form->createView();
+            }
+            else{
+                $this->addFlash('error', $this->get('translator')->trans('Link expired'));
+            }
+        }
+
+        return $this->render(
+            'registration/reset-company-password.html.twig',
+            $viewData
+        );
+    }
     /**
      * @Route("/vendorRegistration", name="vendor_registration")
      */

@@ -62,24 +62,40 @@ Date: التاريخ
 'Starting from': 'يبدا من'
 'Valid till': 'صالح الي'
 'All Stores': 'كلا الفروع'
-Register!: تسجيل!
+Register!: "تسجيل!"
 'Register as Company': 'التسجيل كصاحب محل'
 'Have an account': 'يوجد ليك حساب مسبق'
-About: __About
-Terms: __Terms
-Privacy: __Privacy
-Careers: __Careers
-Apps: __Apps
-'Contact Us': '__Contact Us'
-'Website URL': __website_url
-'Company Logo': __company_logo
-'No file selected.': __nofileselected
-'This field is required': '__This field is required'
-'This field is required ': '__This field is required'
-'Invalid Card Number': '__Invalid Card Number'
-'Card already registered': '__Card already registered'
-'Customer Details': '__Customer Details'
-'Account Activation': 'Account Activation'
-'Invitation to join Mzaaya.com': 'Invitation to join Mzaaya.com'
-'Invitation has been sent sucessfully': 'Invitation has been sent sucessfully'
-'Refferer email': '__Refferer email'
+About: من نحن
+Terms: الشروط والأحكام
+Privacy: الامان
+Careers: التوظيف
+Apps: التطبيقات
+'Contact Us': 'اتتصل بنا'
+'Website URL': رابط موقع الشركة
+'Company Logo': شعار الشركة
+'No file selected.': لم يتم اختيار ملف
+'This field is required': 'حقل مطلوب'
+'This field is required ': 'حقل مطلوب'
+'Invalid Card Number': 'خطا برقم بطاقة مزايا'
+'Card already registered': 'هذه البطاقة مسجله من قبل'
+'Customer Details': 'تفاصيل بيانات العميل'
+'Account Activation': 'تفعيل الحساب'
+'Invitation to join Mzaaya.com': 'دعوة لزيارة موقع مزايا'
+'Invitation has been sent sucessfully': 'تم ارسال الدعوة بنجاح'
+'Refferer email': 'البريد الالكتروني لمن قام بدعوتك'
+'You have registered Sucessfully, Please follow the email to activate your account': 'تم التسجيل بنجاح يمكنك الدخول الان'
+'Enter Your email': '__Enter Your email'
+'Confirm your email': '__Confirm your email'
+'User does not exist': '__User does not exist'
+'Forgot Password': '__Forgot Password'
+'An email is send to you please check your inbox.': '__An email is send to you please check your inbox.'
+'Password must be at least 8 characters': '__Password must be at least 8 characters'
+'Password must not be greater then 40 characters': '__Password must not be greater then 40 characters'
+'Password and confirm password must match': '__Password and confirm password must match'
+'Enter New Password': '__Enter New Password'
+'Confirm Password': '__Confirm Password'
+'Password Changed': '__Password Changed'
+'Your password is reset successfully': '__Your password is reset successfully'
+'Link expired': '__Link expired'
+'Bad credentials.': '__Bad credentials'
+

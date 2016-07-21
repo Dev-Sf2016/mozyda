@@ -35,7 +35,11 @@ class Customer
      */
     private $isActive;
 
-
+    /**
+     * @var string
+     * @ORM\Column(name="data", type="string", length=150, nullable=true)
+     */
+    private $data;
     /**
      * @ORM\Column(name="activation_code", type="string", length=100)
      */
@@ -509,5 +513,29 @@ class Customer
     public function getRefferedBy()
     {
         return $this->reffered_by;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return Customer
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

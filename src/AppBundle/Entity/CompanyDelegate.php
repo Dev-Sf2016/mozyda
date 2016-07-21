@@ -51,7 +51,12 @@ class CompanyDelegate
      *
      */
     private $isDefault;
-
+    
+    /**
+     * @var string
+     * @ORM\Column(name="data", type="string", length=150, nullable=true)
+     */
+    private $data;
     
     /**
     * @ORM\ManyToOne(targetEntity="Company")
@@ -278,5 +283,29 @@ class CompanyDelegate
     public function getCompany()
     {
         return $this->company;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return CompanyDelegate
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }
