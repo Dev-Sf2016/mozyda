@@ -75,7 +75,6 @@ class RegistrationController extends Controller
 
                     $customer->setRefferedBy($reffererInfo['refferer']);
                 }
-                var_dump($customer);
             }
             if ($saveForm) {
                 $password = $this->get('security.password_encoder')
