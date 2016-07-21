@@ -38,7 +38,7 @@ class LocaleRewriteListener implements EventSubscriberInterface
      */
     private $localeRouteParam;
 
-    public function __construct(RouterInterface $router, $defaultLocale = 'en', array $supportedLocales = array('en'), $localeRouteParam = '_locale')
+    public function __construct(RouterInterface $router, $defaultLocale = 'ar', array $supportedLocales = array('ar'), $localeRouteParam = '_locale')
     {
         $this->router = $router;
         $this->routeCollection = $router->getRouteCollection();
@@ -78,7 +78,8 @@ class LocaleRewriteListener implements EventSubscriberInterface
 
             //If no locale from browser or locale not in list of known locales supported then set to defaultLocale set in config.yml
             if($locale==""  || $this->isLocaleSupported($locale)==false){
-                $locale = $request->getDefaultLocale();
+//                $locale = $request->getDefaultLocale();
+                $locale = $this->defaultLocale;
             }
 
             $event->setResponse(new RedirectResponse("/app_dev.php/".$locale.$path));
