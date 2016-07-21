@@ -99,4 +99,6 @@ Apps: التطبيقات
 'Link expired': '__Link expired'
 'Bad credentials.': '__Bad credentials'
 'Forgot your password': 'نسيت كلمه مرور'
-
+'Delegate is added successfully': '__Delegate is added successfully'
+'Discount start date is greater then end date': '__Discount start date is greater then end date'
+'Discount added successfully': '__Discount added successfully'
