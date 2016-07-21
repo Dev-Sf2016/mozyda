@@ -495,7 +495,7 @@ class RegistrationController extends Controller
         $customer = $em->getRepository('AppBundle:Customer')->findOneBy(array("data"=>$dataValue));
 
         if($customer == null){
-            return $this->redirectToRoute('homepage');
+//            return $this->redirectToRoute('homepage');
         }
         else{
             $data = unserialize($customer->getData());
