@@ -53,15 +53,11 @@ class RegistrationController extends Controller
 
             if ($formCust['refferer_email']->getData() != '') {
                 $referrer_email = $formCust['refferer_email']->getData();
-                echo "<br />the referrer_email is" . $referrer_email;
             }
-//            die('--');
-
 
             //if form is valid we need to check the loyality number by api and in the db if it is already registered
             $cardStatus = $this->checkLoyalityCard($customer->getLoyalityId());
 
-//            die('--');
             $saveForm = true;
             if (!$cardStatus['status']) {
                 $error = new FormError($cardStatus['msg']);
@@ -85,7 +81,6 @@ class RegistrationController extends Controller
                 $password = $this->get('security.password_encoder')
                     ->encodePassword($customerUser, $customer->getPassword());
                 $customer->setPassword($password);
-                $password = '000';
                 $customer->setPassword($password);
 //                $em = $this->getDoctrine()->getManager();
                 $customer->setIsActive(0);
