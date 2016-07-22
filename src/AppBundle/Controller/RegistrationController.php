@@ -6,6 +6,7 @@ use AppBundle\Entity\CompanyDelegate;
 use AppBundle\Form\CompanyType;
 use AppBundle\Form\CustRegForm;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\CustomerInvitation;
 use AppBundle\Security\User\CustomerUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
