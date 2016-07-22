@@ -32,11 +32,10 @@ class InvitationController extends Controller
             // send invitation email
             $message = \Swift_Message::newInstance()
                 ->setSubject($this->get('translator')->trans('Invitation to join Mzaaya.com'))
-                ->setFrom('send@example.com')
-                ->setTo('welcome@gmail.com')
+                ->setFrom($this->getParameter("email_from"))
+                ->setTo($customerInvitation->getEmail())
                 ->setBody(
                     $this->renderView(
-                    // app/Resources/views/Emails/registration.html.twig
                         'emails/invitation.html.twig',
                         array('id' => $customerInvitation->getId(),
                                 'email' => $customerInvitation->getEmail(),

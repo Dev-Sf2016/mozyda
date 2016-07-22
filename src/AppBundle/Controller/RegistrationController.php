@@ -92,7 +92,7 @@ class RegistrationController extends Controller
                 // send code via email to user to activate
                 $message = \Swift_Message::newInstance()
                     ->setSubject($this->get('translator')->trans('Account Activation'))
-                    ->setFrom('send@example.com')
+                    ->setFrom($this->getParameter("email_from"))
                     ->setTo($customer->getEmail())
                     ->setBody(
                         $this->renderView(
@@ -218,7 +218,7 @@ class RegistrationController extends Controller
                 // send code via email to user to activate
                 $message = \Swift_Message::newInstance()
                     ->setSubject('Account Activation')
-                    ->setFrom('send@example.com')
+                    ->setFrom($this->getParameter("email_from"))
                     ->setTo($customer->getEmail())
                     ->setBody(
                         $this->renderView(
