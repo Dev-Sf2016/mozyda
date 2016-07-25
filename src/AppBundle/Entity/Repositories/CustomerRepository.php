@@ -1,6 +1,9 @@
 <?php
-
 namespace AppBundle\Entity\Repositories;
+use AppBundle\Entity\Customer;
+use Doctrine\ORM\EntityRepository;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 /**
  * CustomerRepository
@@ -10,4 +13,42 @@ namespace AppBundle\Entity\Repositories;
  */
 class CustomerRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param int $page
+     *
+     * @return Pagerfanta
+     */
+    public function getCustomers($page = 1)
+    {
+        $query =  $this->getEntityManager()
+            ->createQuery('
+                SELECT c
+                FROM AppBundle:Customer c
+            ')
+
+        ;
+//        $this->getEntityManager()->initializeObject($query->getCompany());
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($query, false));
+        $paginator->setMaxPerPage(Customer::NUM_ITEMS);
+        $paginator->setCurrentPage($page);
+        return $paginator;
+    }
+
+    /**
+     * @param Customer $customer
+     * @return Customer
+     */
+    public function persistCustomer(Customer $customer){
+
+        if($customer->getId() !== null){
+            $this->_em->merge($customer);
+        }
+        else{
+            $this->_em->persist($customer);
+        }
+
+        $this->_em->flush();
+
+        return $customer;
+    }
 }

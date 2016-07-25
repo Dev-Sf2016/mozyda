@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\admin;
 
 use AppBundle\Entity\Company;
+use AppBundle\Entity\Customer;
 use AppBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -53,7 +54,6 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         // replace this example code with whatever you need
-        echo "this is admin_home";
         return $this->render('admin/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
         ]);
@@ -74,7 +74,6 @@ class DefaultController extends Controller
     public function companiesAction($page){
         $companies = $this->getDoctrine()->getRepository('AppBundle:Company')->getCompanies($page);
         return $this->render(
-//            registration/customerregistration.html.twig
             'admin/index/companies.html.twig',
             array(
                 'companies' => $companies
@@ -88,38 +87,37 @@ class DefaultController extends Controller
      * @Cache(smaxage="10")
      */
     public function customersAction($page){
-        $vendors = $this->getDoctrine()->getRepository('AppBundle:User')->getCustomers($page);
+        $customers = $this->getDoctrine()->getRepository('AppBundle:Customer')->getCustomers($page);
         return $this->render(
-//            registration/customerregistration.html.twig
-            'admin/index/vendors.html.twig',
+            'admin/index/customers.html.twig',
             array(
-                'vendors' => $vendors
+                'customers' => $customers
             )
         );
     }
     /**
      * Displays a form to edit an existing user vendor entity.
      *
-     * @Route("admin/vendor/{id}/edit", requirements={"id": "\d+"}, name="admin_vendor_edit")
+     * @Route("admin/company/{id}/edit", requirements={"id": "\d+"}, name="admin_company_edit")
      * @Method({"GET", "POST"})
      */
-    public function vendoreditAction(User $user, Request $request)
+    public function vendoreditAction(Company $company, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $editForm = $this->createForm(\AppBundle\Form\Vendor::class, $user);
-        $deleteForm = $this->createDeleteForm($user);
+        $editForm = $this->createForm(\AppBundle\Form\CompanyEdit::class, $company);
+        $deleteForm = $this->createDeleteForm($company);
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 //            die('form is submitted');
-            $em->persist($user);
+            $em->persist($company);
             $em->flush();
-            $this->addFlash('notice', 'Vendor updated sucessfully');
-            return $this->redirectToRoute('admin_vendors');
+            $this->addFlash('notice', $this->get('translator')->trans('Company Deleted Sucessfully'));
+            return $this->redirectToRoute('admin_customers');
         }
         return $this->render(
             'admin/index/vendoredit.html.twig',
             array(
-                'user' => $user,
+                'company' => $company,
                 'form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView()
             ));

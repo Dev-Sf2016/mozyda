@@ -1,2 +1,8 @@
-'This field is required': '__This field is required'
 'Please select logo': '__ Please select logo'
+'Bad credentials.': '__Bad credentials.'
+'This field is required': 'حقل مطلوب'
+'This field is required ': 'حقل مطلوب'
+'Password must be at least 8 characters': '__Password must be at least 8 characters'
+'Password must not be greater then 40 characters': '__Password must not be greater then 40 characters'
+'Password and confirm password must match': '__Password and confirm password must match'
+

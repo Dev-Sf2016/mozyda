@@ -20,7 +20,6 @@ class AdminUserProvider implements UserProviderInterface
 
     public function loadUserByUsername($username)
     {
-//        die ('--loaduser');
         /**
          * @var \AppBundle\Entity\Company
          */
@@ -32,8 +31,6 @@ class AdminUserProvider implements UserProviderInterface
             ->getQuery()
             ->getOneOrNullResult();
 
-        var_dump($user);
-//        die('---');
         if($user != null){
 
             $adminUser = new AdminUser($user->getEmail(), $user->getPassword());
