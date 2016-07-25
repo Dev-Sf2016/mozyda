@@ -21,7 +21,7 @@ class CompanyType extends AbstractType
         $builder->add('name', TextType::class, array('label'=> 'Company Name'))
             ->add('url', TextType::class, array('label' => 'Website URL'))
             ->add('logo', FileType::class, array('label' => 'Company Logo'))
-            ->add('companyDelegate', CollectionType::class, array(
+                ->add('companyDelegate', CollectionType::class, array(
                 'entry_type'=>CompanyDelegateType::class,
                 'allow_add'=>false
             ));

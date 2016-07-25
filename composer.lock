@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ab2125fb5c0d521752940d5e47bd6d65",
-    "content-hash": "ca0a11aa134f0c30ad75402943e297f4",
+    "hash": "8051bb06de63ed1901b1fea48cb13ffb",
+    "content-hash": "be6f5c75f4faddd84f3f22520d05f0ce",
     "packages": [
         {
             "name": "boekkooi/jquery-validation-bundle",
@@ -839,6 +839,60 @@
                 "orm"
             ],
             "time": "2016-01-05 21:34:58"
+        },
+        {
+            "name": "escapestudios/wsse-authentication-bundle",
+            "version": "2.2.1",
+            "target-dir": "Escape/WSSEAuthenticationBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/djoos/EscapeWSSEAuthenticationBundle.git",
+                "reference": "58c80314a04c84eeaac3d318e975196a7c17db4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/djoos/EscapeWSSEAuthenticationBundle/zipball/58c80314a04c84eeaac3d318e975196a7c17db4f",
+                "reference": "58c80314a04c84eeaac3d318e975196a7c17db4f",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "~2.2",
+                "php": ">=5.3.9",
+                "symfony/framework-bundle": "~2.3|~3.0",
+                "symfony/security-bundle": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "symfony/finder": "~2.3|~3.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Escape\\WSSEAuthenticationBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Joos",
+                    "email": "david.joos@escapestudios.com"
+                },
+                {
+                    "name": "Community contributors",
+                    "homepage": "https://github.com/djoos/EscapeWSSEAuthenticationBundle/graphs/contributors"
+                }
+            ],
+            "description": "Symfony2 bundle to implement WSSE authentication",
+            "homepage": "https://github.com/djoos/EscapeWSSEAuthenticationBundle",
+            "keywords": [
+                "Authentication",
+                "bundle",
+                "wsse"
+            ],
+            "time": "2016-04-18 15:56:08"
         },
         {
             "name": "friendsofsymfony/rest-bundle",

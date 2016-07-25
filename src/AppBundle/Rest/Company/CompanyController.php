@@ -13,6 +13,7 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * Class CompanyController
@@ -21,6 +22,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class CompanyController extends FOSRestController
 {
+    public function __construct()
+    {
+        /*
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //var_dump($user);die();
+        $token = $this->get('security.token_storage')->getToken();
+        if(!$token->isAuthenticated()){
+            throw new AuthenticationException();
+        }
+*/
+    }
+
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response

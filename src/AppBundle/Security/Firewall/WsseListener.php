@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\NonceExpiredException;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use AppBundle\Security\Authentication\Token\WsseUserToken;
 
@@ -43,7 +44,11 @@ class WsseListener implements ListenerInterface
             $this->tokenStorage->setToken($authToken);
 
             return;
-        } catch (AuthenticationException $failed) {
+        }
+        catch(NonceExpiredException $expiredException) {
+            return;
+        }
+        catch (AuthenticationException $failed) {
             // ... you might log something here
 
             // To deny the authentication clear the token. This will redirect to the login page.
@@ -52,12 +57,13 @@ class WsseListener implements ListenerInterface
             // if ($token instanceof WsseUserToken && $this->providerKey === $token->getProviderKey()) {
             //     $this->tokenStorage->setToken(null);
             // }
-            // return;
+            return;
         }
 
         // By default deny authorization
         $response = new Response();
         $response->setStatusCode(Response::HTTP_FORBIDDEN);
         $event->setResponse($response);
+        return;
     }
 }

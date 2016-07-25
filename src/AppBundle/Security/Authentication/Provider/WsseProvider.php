@@ -31,6 +31,7 @@ class WsseProvider implements AuthenticationProviderInterface
 
         if ($user && $isValid) {
             $authenticatedToken = new WsseUserToken($user->getRoles());
+
             $authenticatedToken->setUser($user);
 
             return $authenticatedToken;
@@ -58,11 +59,11 @@ class WsseProvider implements AuthenticationProviderInterface
             return false;
         }
 
-        //echo strtotime($created) ."<br>" . time();
-//die();
+        $salem = time() - strtotime($created) ."<br>" . time();
+
         // Expire timestamp after 5 minutes
         if (time() - strtotime($created) > 300) {
-            //return false;
+            return false;
         }
 
         // Try to fetch the cache item from pool
@@ -71,21 +72,14 @@ class WsseProvider implements AuthenticationProviderInterface
         // Validate that the nonce is *not* in cache
         // if it is, this could be a replay attack
         if ($cacheItem->isHit()) {
-           // throw new NonceExpiredException('Previously used nonce detected');
+            throw new NonceExpiredException('Previously used nonce detected');
         }
 
         // Store the item in cache for 5 minutes
         $cacheItem->set(null)->expiresAfter(300);
         $this->cachePool->save($cacheItem);
 
-        /*echo "nonce: " . $nonce . "<br>";
-        echo "base64decode-nonce:  " . base64_encode($nonce) . "<br>";
-        echo "date: ".$created. "<br>";
-        echo "md5password: ".$secret. "<br>";
-        echo "sh1 of nonce + date + md5password: ".sha1(base64_encode($nonce).$created.$secret). "<br>";
-        echo "base64encodeof sh1: ".base64_encode(sha1(base64_encode($nonce).$created.$secret));
-        die();*/
-
+      
         // Validate Secret
         $expected = base64_encode(sha1(base64_encode($nonce).$created.$secret));
         //echo json_encode(['expected'=>$expected, 'orignal'=>$digest]);die();

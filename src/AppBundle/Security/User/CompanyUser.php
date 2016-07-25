@@ -38,7 +38,7 @@ class CompanyUser implements EquatableInterface, AdvancedUserInterface
      * @param integer $isDefault
      * @param array $roles
      */
-    public function __construct($email, $password,$name,$url,$logo,$isActive,$salt="", $isDefault=0, $roles=array('ROLE_COMPANY'))
+    public function __construct($email, $password,$name,$url,$logo,$isActive,$salt="", $isDefault=0, $roles=array('ROLE_COMPANY', 'ROLE_API'))
     {
         $this->email = $email;
         $this->password = $password;
