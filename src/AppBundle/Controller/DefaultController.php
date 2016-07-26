@@ -72,6 +72,9 @@ class DefaultController extends Controller
                 case 'ROLE_CUSTOMER':
                     return $this->redirectToRoute('customer_home');
                     break;
+                case 'ROLE_ADMIN':
+                    return $this->redirectToRoute('admin_home');
+                    break;
                 default:
                     break;
                 endswitch;

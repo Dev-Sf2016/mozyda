@@ -1,4 +1,3 @@
-<br />to activate click this link
-<br />id = {{ id }}
-<br />code = {{ code }}
-<a href="{{ url('customer_activation',{'id':id,'code':code}) }}">click here </a>
+{{ "Hi"|trans }} {{ name }} <br />
+{{ "Thank you for registration with Mzaaya.com"|trans }}<br />
+{{ "Please follow the link to activate your account"|trans }} <a href="{{ url('customer_activation',{'id':id,'code':code}) }}">{{ "click here"|trans }}</a>

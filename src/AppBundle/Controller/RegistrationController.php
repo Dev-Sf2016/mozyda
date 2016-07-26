@@ -10,6 +10,7 @@ use AppBundle\Entity\CustomerInvitation;
 use AppBundle\Security\User\CustomerUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormError;
@@ -98,7 +99,11 @@ class RegistrationController extends Controller
                     ->setBody(
                         $this->renderView(
                             'emails/registration.html.twig',
-                            array('id' => $customer->getId(), 'code' => $customer->getActivationCode())
+                            array(
+                                'id' => $customer->getId(),
+                                'code' => $customer->getActivationCode(),
+                                'name' => $customer->getName()
+                            )
                         ),
                         'text/html'
                     );
@@ -108,7 +113,7 @@ class RegistrationController extends Controller
 
 
 //                $this->get('session')->getFlashBag()->add('notice', 'You have registered Sucessfully, Please follow the email to activate your account');
-                $this->addFlash('success_cust', $this->get('translator')->trans('You have registered Sucessfully, Please follow the email to activate your account'));
+                $this->addFlash('success_cust', $this->get('translator')->trans('You have registered Sucessfully, Please activate your account form your mail'));
             }
         } else {
         }
@@ -302,7 +307,7 @@ class RegistrationController extends Controller
             }
 
         }
-        return $this->redirectToRoute('register');
+        return $this->redirectToRoute('account_login');
 //        return $this->render(
 //            'registration/customeractivation.html.twig',
 //            array(
@@ -325,15 +330,11 @@ class RegistrationController extends Controller
         $form = $this->createFormBuilder(null, array('attr'=>array('novalidate'=>'novalidate')))
             //->setAttribute('novalidate', 'novalidate')
             ->setAction($this->get('router')->getGenerator()->generate('forgot_customer_password'))
-            ->add('email', RepeatedType::class, array(
-                'invalid_message'=>'Email and confirm email must match',
-                'first_options'=> array('label'=>'Enter Your email'),
-                'second_options'=> array('label'=>'Confirm your email'),
+            ->add('email', EmailType::class, array(
                 'constraints'=>array(
                     new Assert\NotBlank(),
                     new Assert\Email()
-                ),
-                'type'=>TextType::class
+                )
             ))
             ->add('save', SubmitType::class, array('label'=>'submit'))
             ->getForm();
@@ -407,15 +408,11 @@ class RegistrationController extends Controller
         $form = $this->createFormBuilder(null, array('attr'=>array('novalidate'=>'novalidate')))
             //->setAttribute('novalidate', 'novalidate')
             ->setAction($this->get('router')->getGenerator()->generate('forgot_company_password'))
-            ->add('email', RepeatedType::class, array(
-                'invalid_message'=>'Email and confirm email must match',
-                'first_options'=> array('label'=>'Enter Your email'),
-                'second_options'=> array('label'=>'Confirm your email'),
+            ->add('email', EmailType::class, array(
                 'constraints'=>array(
                     new Assert\NotBlank(),
                     new Assert\Email()
-                ),
-                'type'=>TextType::class
+                )
             ))
             ->add('save', SubmitType::class, array('label'=>'submit'))
             ->getForm();
