@@ -38,11 +38,13 @@ class RegistrationController extends Controller
         $customer = new Customer();
 
         $formCust = $this->createForm(CustRegForm::class, $customer);
+        $disable_invitedby = false;
         if ($inv_id != 0) { // purpose is only to show the invitor email in the refferer email box from invitations table
             $inv_by = $em->getRepository('AppBundle:CustomerInvitation')->findOneBy(array('id' => $inv_id));
             $inv_by_details = $em->getRepository('AppBundle:Customer')->findOneBy(array('id' => $inv_by->getRefferer()));
             $formCust->get('refferer_email')->setData($inv_by_details->getEmail());
             $formCust->get('email')->setData($inv_by->getEmail());
+            $disable_invitedby = true;
 
         }
 
@@ -155,7 +157,7 @@ class RegistrationController extends Controller
 
             $this->addFlash('success_comp', $this->get('translator')->trans('Company is registered successfully'));
 
-//            return $this->redirectToRoute('company_register');
+            return $this->redirectToRoute('register');
         }
         // end of register company
         return $this->render(
@@ -163,6 +165,7 @@ class RegistrationController extends Controller
             array(
                 'formCust' => $formCust->createView(),
                 'formComp' => $formComp->createView(),
+                'disable_invitedby' => $disable_invitedby
 //                'success' => $success
             )
         );

@@ -5,11 +5,13 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="company")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repositories\CompanyRepository")
+ * @UniqueEntity("name", message="This company is already registered.")
  * @ORM\HasLifecycleCallbacks()
  */
 class Company
@@ -39,8 +41,7 @@ class Company
 
 
     /**
-     * @ORM\Column(name="url", type="string", length=150)
-     * @Assert\NotBlank(message="This field is required")
+     * @ORM\Column(name="url", type="string", length=150, nullable=true)
      * @Assert\Url()
      */
     private $url;

@@ -37,7 +37,6 @@
                             {% for flashMessage in app.session.flashbag.get('notice') %}
 
                                 {{ flashMessage }}
-                                form_errors(formCust)
 
                             {% endfor %}
 
@@ -265,7 +264,9 @@
     <script>
         {{ form_jquery_validation(formComp) }}
     </script>
-
-
-
+{% if(disable_invitedby) %}
+    <script type="text/javascript">
+    $('#cust_reg_form_refferer_email').attr('readonly','readonly');
+    </script>
+{% endif %}
 {% endblock %}

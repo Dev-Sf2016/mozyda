@@ -9,8 +9,7 @@
             <div class="panel panel-default panel-login">
                 <div class="panel-heading text-center">
                     <h2 class="panel-heading-text">
-                        {{ 'Welcome'|trans }} {{ app.user.name }} ( <a
-                                href="{{ url('customer_logout') }}">{{ 'Logout'|trans }}</a> )
+                        {{ 'Welcome'|trans }} {{ app.user.name }}
                     </h2>
                 </div>
                 <div class="panel-body">
@@ -19,8 +18,11 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="pull-right">
-                                <a href="{{ url('customer_invite') }}" class="text-center">{{ 'Invite Friends'| trans }} </a>
-                            </div>
+                                <a href="{{ url('customer_invite') }}"
+                                   class="text-center">{{ 'Invite Friends'| trans }} </a>
+                            </div><br class="clear" />
+                            <div class="pull-right">
+                                <a href="{{ url('customer_logout') }}">{{ 'Logout'|trans }}</a></div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
