@@ -271,10 +271,10 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="admin_company_delete")
+     * @Route("admin/company/delete/{id}", name="admin_company_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Company $company)
+    public function companyDeleteAction(Request $request, Company $company)
     {
         $form = $this->createCompanyDeleteForm($company);
         $form->handleRequest($request);
@@ -288,6 +288,15 @@ class DefaultController extends Controller
             );
             foreach ($delegates as $delegate) {
                 $entityManager->remove($delegate);
+                $entityManager->flush();
+
+            }
+            // delete all discounts
+            $discounts = $entityManager->getRepository('AppBundle:Discount')->findBy(
+                array('company' => $company)
+            );
+            foreach ($discounts as $discount) {
+                $entityManager->remove($discount);
                 $entityManager->flush();
 
             }
