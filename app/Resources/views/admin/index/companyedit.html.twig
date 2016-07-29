@@ -1,0 +1,119 @@
+{% extends 'admin/index.html.twig' %}
+{% block admin_subheading %} Update Company {% endblock %}
+{% block adminbody %}
+
+    <div class="row">
+
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+
+                            {{ form_end(form) }}
+                            <div class="form-group">
+                                <!-- delete form -->
+                                {#{{ dump(delete_form) }}#}
+                                {#{{ form_start(delete_form,  { 'attr' : {'id':"form_del"} }) }}#}
+
+                                {#<link href="{{ asset('default/bootstrap-dialog/bootstrap-dialog.min.css') }}" rel="stylesheet" />#}
+                                {#<script src="{{ asset('default/bootstrap-dialog/bootstrap-dialog.min.js') }}"></script>#}
+
+                                {#<input type="submit" value="Delete" class="btn btn-lg btn-block btn-danger" />#}
+                                {#{{ form_end(delete_form) }}#}
+                                <script>
+
+                                    jQuery('#form_del').submit(function (e) {
+                                        var currentForm = this;
+                                        e.preventDefault();
+                                        BootstrapDialog.confirm("Are you sure?", function (result) {
+                                            if (result) {
+                                                currentForm.submit();
+                                            }
+                                        });
+                                    });
+                                    //    BootstrapDialog.confirm('Hi Apple, are you sure?');
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                            <div class="thumbnail_container">
+                                <div class="thumbnail">
+                                    <img src="{{ asset('files/company/logo/' ~ existing_logo) }}"/>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <fieldset title="Delegate" >
+                                <legend>{{ 'Delegation'|trans }}</legend>
+
+                                {{ form_start(form_delegation, {'attr': {'novalidate': 'novalidate'}}) }}
+                                {{ form_end(form_delegation) }}
+                            </fieldset>
+
+                            <button class="btn btn btn-danger btn-lg btn-block " id="deleteCompany">{{ 'Delete Company'|trans }}</button>
+                            </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal for delete company -->
+
+
+
+
+    <div class="modal fade" id="confirmDialog" role="dialog" aria-labelledby="deleteDialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    {{ "Delete Company"|trans }}
+
+
+                    <!-- delete form -->
+                    {{ form_start(delete_company_form,  { 'attr' : {'id':"form_del"} }) }}
+
+                    {{ form_end(delete_company_form) }}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="delete">
+                        {{ 'OK'|trans }}
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        {{ 'Cancel'|trans }}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        (function ($) {
+            $('#deleteCompany').on('click', function (e) {
+                e.preventDefault();
+                $('#confirmDialog').modal();
+            });
+
+            $('#delete').on('click', function (e) {
+                alert('---');
+                $('#form_del').submit();
+            });
+        })(jQuery);
+    </script>
+
+{% endblock %}

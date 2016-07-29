@@ -48,7 +48,6 @@ class Company
 
     /**
      * @ORM\Column(name="logo", type="string", length=64)
-     * @Assert\NotBlank(message="Please select logo")
      * @Assert\Image(
      *     maxSize="1Mi",
      *     maxSizeMessage="Maximum Image size allowed is 1Mi"

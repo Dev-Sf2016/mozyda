@@ -37,7 +37,8 @@ class RegistrationController extends Controller
         // register customer
         $customer = new Customer();
 
-        $formCust = $this->createForm(CustRegForm::class, $customer);
+        $formCust = $this->createForm(CustRegForm::class, $customer, array(
+            'validation_groups' => array('registration')));
         $disable_invitedby = false;
         if ($inv_id != 0) { // purpose is only to show the invitor email in the refferer email box from invitations table
             $inv_by = $em->getRepository('AppBundle:CustomerInvitation')->findOneBy(array('id' => $inv_id));
@@ -52,6 +53,10 @@ class RegistrationController extends Controller
         //because it is expecting the entity to implement userinterface
         $customerUser = new CustomerUser($customer->getEmail(), $customer->getPassword(), $customer->getName(), $customer->getLoyalityId(), $customer->getCity(), $customer->getNationality(), $customer->getIsActive());
         $success = '';
+
+//        $errors = $formCust->validate($customer, null, array('registration'));
+//        var_dump($errors);
+
         if ($formCust->isSubmitted() && $formCust->isValid()) {
             $referrer_email = '';
 
@@ -60,7 +65,8 @@ class RegistrationController extends Controller
             }
 
             //if form is valid we need to check the loyality number by api and in the db if it is already registered
-            $cardStatus = $this->checkLoyalityCard($customer->getLoyalityId());
+            $loyality = $this->get('app.loyality');
+            $cardStatus = $loyality->checkLoyalityCard($customer->getLoyalityId());
 
             $saveForm = true;
             if (!$cardStatus['status']) {
@@ -124,6 +130,7 @@ class RegistrationController extends Controller
         // register company
         $company = new Company();
         $companyDelegate = new CompanyDelegate();
+//        var_dump($companyDelegate); die('--');
         $company->addCompanyDelegate($companyDelegate);
         $formComp = $this->createForm(CompanyType::class, $company);
 
@@ -154,6 +161,43 @@ class RegistrationController extends Controller
             $companyDelegate->setCompany($company);
             $em->persist($companyDelegate);
             $em->flush();
+            // send email to the company 
+            $message = \Swift_Message::newInstance()
+                ->setSubject($this->get('translator')->trans('Account Created at Mzaaya.com'))
+                ->setFrom($this->getParameter("email_from"))
+                ->setTo($companyDelegate->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'emails/company-registration.html.twig',
+                        array(
+
+                            'name' => $company->getName()
+                        )
+                    ),
+                    'text/html'
+                );
+
+//                echo $message;
+            $this->get('mailer')->send($message);
+
+            // send email to admin
+            $message = \Swift_Message::newInstance()
+                ->setSubject($this->get('translator')->trans('New company registration'))
+                ->setFrom($this->getParameter("email_from"))
+                ->setTo($this->getParameter("admin_email"))
+                ->setBody(
+                    $this->renderView(
+                        'emails/admin-company-registration.html.twig',
+                        array(
+                            'email' => $companyDelegate->getEmail(),
+                            'name' => $company->getName()
+                        )
+                    ),
+                    'text/html'
+                );
+
+//                echo $message;
+            $this->get('mailer')->send($message);
 
             $this->addFlash('success_comp', $this->get('translator')->trans('Company is registered successfully'));
 
@@ -205,7 +249,8 @@ class RegistrationController extends Controller
         $success = '';
         if ($form->isSubmitted() && $form->isValid()) {
             //if form is valid we need to check the loyality number by api and in the db if it is already registered
-            $cardStatus = $this->checkLoyalityCard($customer->getLoyalityId());
+            $loyality = $this->get('app.loyality');
+            $cardStatus = $loyality->checkLoyalityCard($customer->getLoyalityId());
             if (!$cardStatus['status']) {
                 $error = new FormError($cardStatus['msg']);
                 $form->get('loyality_id')->addError($error);
@@ -257,28 +302,7 @@ class RegistrationController extends Controller
         );
     }
 
-    public function checkLoyalityCard($id)
-    {
-        // check if loyality card is alreayd registered to a user in our website db
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppBundle:Customer')->findOneBy(
-            array('loyalityId' => $id)
-        );
-        if (!$user) {
-            // this card is not registered
-            // check from POS service
-            $loyality = $this->get('app.loyality');
-            $cardStatus = $loyality->checkCardStatus($id);
-            if ($cardStatus) {
-                return array('status' => true, 'msg' => $this->get('translator')->trans('OK'));
-            } else {
-                return array('status' => false, 'msg' => $this->get('translator')->trans("Invalid Card Number"));
-            }
 
-        } else {
-            return array('status' => false, 'msg' => $this->get('translator')->trans("Card already registered"));
-        }
-    }
 
     /**
      * @Route("/activateCustomer/{id}/{code}", name="customer_activation")

@@ -21,6 +21,7 @@ class CompanyRepository extends EntityRepository
             ->createQuery('
                 SELECT c
                 FROM AppBundle:Company c
+                ORDER BY c.id DESC
             ')
 
         ;

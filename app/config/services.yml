@@ -9,6 +9,7 @@ services:
         arguments: ['@doctrine.orm.entity_manager']
     app.loyality:
         class: AppBundle\Services\Loyality
+        arguments: ['@doctrine.orm.entity_manager','@translator']
     app.customer_user_provider:
         class: AppBundle\Security\User\CustomerUserProvider
         arguments: ["@doctrine.orm.entity_manager"]

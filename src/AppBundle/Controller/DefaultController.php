@@ -30,6 +30,7 @@ class DefaultController extends Controller
     {
         $repository = $this->getDoctrine()->getRepository('AppBundle:Company');
         $query = $repository->createQueryBuilder('c')
+            ->where('c.isActive = 1')
             ->orderBy('c.id', 'DESC')
             ->setMaxResults(6)
             ->getQuery();
