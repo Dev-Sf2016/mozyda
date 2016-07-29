@@ -41,18 +41,24 @@ class DefaultController extends Controller
 
     public function latestDiscounts()
     {
+        $em = $this->getDoctrine()->getEntityManager();
+        $activeCompanies = $em->getRepository('AppBundle:Company')->findBy(
+            array('isActive'=>1)
+        );
         $repository = $this->getDoctrine()->getRepository('AppBundle:Discount');
         $query = $repository->createQueryBuilder('d')
             ->where('d.startDate <= :todaydate')
+            ->andWhere('d.company IN (:active_companies)')
             ->andWhere('d.endDate >= :todaydate')
             ->orderBy('d.id', 'DESC')
             ->setMaxResults(4)
             ->setParameter('todaydate', date('Y-m-d'))
+            ->setParameter('active_companies', $activeCompanies)
             ->getQuery();
 
-        //echo $query->getSQL()."<br>";var_dump($query->getParameter('todaydate'));die();
         $discounts = $query->getresult();
         return $discounts;
+
     }
 
 
