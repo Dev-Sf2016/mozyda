@@ -15,3 +15,12 @@
 .nav.navbar-nav.social-links{
     margin: 10px -10px;
 }
+th{
+    text-align: right;
+}
+.nav-pills > li {
+    float: right;
+}
+.nav {
+    padding-right: 0px;
+}

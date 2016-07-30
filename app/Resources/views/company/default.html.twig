@@ -12,12 +12,17 @@
                 <div class="panel panel-default panel-login">
                     <div class="panel-heading text-center">
                         <h2 class="panel-heading-text">
-                            {{ 'Welcome'|trans }} {{ app.user.name }} ( <a href="{{ url('company_logout') }}" >{{ 'Logout'|trans }}</a>)
+                            {{ 'Welcome'|trans }} {{ app.user.name }}
                         </h2>
                     </div>
                     <div class="panel-body">
 
                         <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="pull-right">
+                                    <a href="{{ url('company_logout') }}">{{ 'Logout'|trans }}</a></div>
+                            </div>
+
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div id="exTab1" class="">
                                     <ul class="nav nav-pills">
@@ -28,10 +33,10 @@
                                             <a href="#2a" data-toggle="tab">{{ 'Add Delegate'|trans }}</a>
                                         </li>
                                         <li>
-                                            <a href="#3a" data-toggle="tab">{{ 'Upload Discount' }}</a>
+                                            <a href="#3a" data-toggle="tab">{{ 'Upload Discount'|trans }}</a>
                                         </li>
                                         <li>
-                                            <a href="#4a" data-toggle="tab">{{ 'List Discount' }}</a>
+                                            <a href="#4a" data-toggle="tab">{{ 'List Discount'|trans }}</a>
                                         </li>
                                     </ul>
 

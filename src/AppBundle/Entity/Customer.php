@@ -48,7 +48,7 @@ class Customer
 
     /**
      * @ORM\Column(name="loyality_id", type="string", length=100, unique=true)
-     * @Assert\NotBlank(message="This field is required")
+     * @Assert\NotBlank(message="This field is required", groups={"registration"})
      */
     private $loyalityId;
 
@@ -66,13 +66,13 @@ class Customer
     /**
      * @ORM\Column(name="email", type="string", length=100, unique=true)
      * @Assert\Email()
-     * @Assert\NotBlank(message="This field is required")
+     * @Assert\NotBlank(message="This field is required",groups={"registration"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Assert\NotBlank(message="This field is required")
+     * @Assert\NotBlank(message="This field is required", groups={"registration"})
      */
     private $password;
 

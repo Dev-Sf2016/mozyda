@@ -26,7 +26,7 @@
                     <h3>{{ company.url }}</h3>
 
                 </td>
-                <td class="col-md-4"><a href="{{ url('all_store_discounts', {'store':company.id}) }}"> View Available Discounts</a></td>
+                <td class="col-md-4"><a href="{{ url('all_store_discounts', {'store':company.id}) }}"> {{ 'View Available Discounts'|trans }}</a></td>
                 </tr>
                 {#<div class="col-md-2 padding5">#}
                     {#<div class="thumbnail_container">#}

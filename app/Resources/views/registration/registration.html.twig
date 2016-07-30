@@ -37,7 +37,6 @@
                             {% for flashMessage in app.session.flashbag.get('notice') %}
 
                                 {{ flashMessage }}
-                                form_errors(formCust)
 
                             {% endfor %}
 
@@ -260,12 +259,14 @@
     <script type="text/javascript" src="{{ asset('default/js/jquery.validate.js') }}"></script>
     <script type="text/javascript" src="{{ asset('default/js/jquery.validate.defaults.js') }}"></script>
     <script>
-        {{ form_jquery_validation(formCust) }}
+        {#{{ form_jquery_validation(formCust) }}#}
     </script>
     <script>
         {{ form_jquery_validation(formComp) }}
     </script>
-
-
-
+{% if(disable_invitedby) %}
+    <script type="text/javascript">
+    $('#cust_reg_form_refferer_email').attr('readonly','readonly');
+    </script>
+{% endif %}
 {% endblock %}

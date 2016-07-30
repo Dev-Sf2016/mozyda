@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CustRegForm extends AbstractType
 {
@@ -34,7 +35,8 @@ class CustRegForm extends AbstractType
             ->add('password', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'first_options' => array('label' => 'Password'),
-                'second_options' => array('label' => 'Confirm Password')
+                'second_options' => array('label' => 'Confirm Password'),
+                    
                 )
             )
 //            ->add('is_active', ChoiceType::class, array(

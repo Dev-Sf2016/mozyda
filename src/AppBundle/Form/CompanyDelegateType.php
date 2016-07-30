@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class   CompanyDelegateType extends AbstractType
 {
@@ -23,7 +24,11 @@ class   CompanyDelegateType extends AbstractType
                     'type' => PasswordType::class,
                     'invalid_message'=>'Password and confirm password are not same',
                     'first_options' => array('label' => 'Password'),
-                    'second_options' => array('label' => 'Confirm Password')
+                    'second_options' => array('label' => 'Confirm Password'),
+                    'constraints' => array(
+
+                        new Assert\NotBlank()
+                    )
                 )
             );
             //->add('submit', SubmitType::class, array('label'=>'Save', 'attr'=>array('class'=>'btn btn-custom btn-lg btn-block')));

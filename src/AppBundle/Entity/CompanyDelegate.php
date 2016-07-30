@@ -40,8 +40,6 @@ class CompanyDelegate
 
     /**
      * @ORM\Column(type="string", length=64)
-     *
-     * @Assert\NotBlank(message="This field is required")
      * @Assert\Length(minMessage="Password must be at least 8 characters", maxMessage="Password must not be grater then 40 characters", min="8", max="40")
      */
     private $password;

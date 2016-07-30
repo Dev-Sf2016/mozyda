@@ -5,4 +5,5 @@
 'Password must be at least 8 characters': '__Password must be at least 8 characters'
 'Password must not be greater then 40 characters': '__Password must not be greater then 40 characters'
 'Password and confirm password must match': '__Password and confirm password must match'
-
+'Maximum Image size allowed is 1Mi': '__Maximum Image size allowed is 1Mi'
+'Password and confirm password are not same': '__Password and confirm password are not same'
