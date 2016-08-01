@@ -62,7 +62,7 @@ class DefaultController extends Controller
         // add delegate functionality
 
         $companyDelegate = new CompanyDelegate();
-        var_dump($companyDelegateData);
+//        var_dump($companyDelegateData);
 
         $formDeleg = $this->createForm(CompanyDelegateType::class, $companyDelegate);
 
