@@ -29,9 +29,11 @@
                                         <li class="active">
                                             <a href="#1a" data-toggle="tab">{{ 'Details'|trans }}</a>
                                         </li>
+                                        {% if(company_delegate.isDefault == '1') %}
                                         <li>
                                             <a href="#2a" data-toggle="tab">{{ 'Add Delegate'|trans }}</a>
                                         </li>
+                                        {% endif %}
                                         <li>
                                             <a href="#3a" data-toggle="tab">{{ 'Upload Discount'|trans }}</a>
                                         </li>
@@ -78,6 +80,7 @@
                                             </div>
 
                                         </div>
+                                        {% if(company_delegate.isDefault == '1') %}
                                         <div class="tab-pane" id="2a">
                                             {% for tab in app.session.flashBag.get('tab') %}
                                                 <script type="text/javascript">
@@ -145,6 +148,8 @@
                                                 {{ form_end(form_deleg) }}
                                             </div>
                                         </div>
+                                        {% endif %}
+
                                         <div class="tab-pane" id="3a">
 
                                             <div class="row">

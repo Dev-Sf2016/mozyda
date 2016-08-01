@@ -5,7 +5,7 @@
                 {{ 'Confirm deletion ?'|trans }}
             </div>
             <div class="modal-body">
-                {{ 'Confirm deletion ?'|trans }}
+                {{ 'Delete this coupon ?'|trans }}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -26,7 +26,7 @@
                 </div>
                 <div>{{ 'Start Date'|trans }}: {{ discount.startDate.format('d-M-Y') }}</div>
                 <div>{{ 'End Date'|trans }}: {{ discount.endDate.format('d-M-Y') }}</div>
-                <div class="actions"> <a href="#" ><i class="fa fa-edit"></i></a> || <a href="#" class="discount_del" data-href="delete.php?id=23" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i></a>
+                <div class="actions"> <a href="#" ><i class="fa fa-edit"></i></a> || <a href="#" class="discount_del" data-href="{{ path('company_delete_discount', {'id' : discount.id} )}}" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i></a>
 
                 </div>
 
@@ -45,3 +45,4 @@
         $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
     });
 </script>
+

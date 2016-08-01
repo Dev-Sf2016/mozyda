@@ -1,0 +1,5 @@
+{{ "Hi"|trans }} {{ name }} <br />
+{{ "You have been added as delegate to company"|trans }} {{ company_name }}<br />
+{{ "You can login to %website% using email: %email% and password: %password%."|replace({'%website%': url, '%email%': email, '%password%': password})|trans }}
+<br />
+{{ 'Thanks' }}

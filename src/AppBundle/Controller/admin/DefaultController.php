@@ -117,6 +117,7 @@ class DefaultController extends Controller
         $form = $this->createForm(\AppBundle\Form\CustRegForm::class, $customer);
         $currentPass = $customer->getPassword();
         $currentLoyalityId = $customer->getLoyalityId();
+        $deleteCustomerForm = $this->createCustomerDeleteForm($customer);
         $form->handleRequest($request);
 //        var_dump($customer);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -151,7 +152,8 @@ class DefaultController extends Controller
         return $this->render(
             'admin/index/customeredit.html.twig',
             array(
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'delete_customer_form' => $deleteCustomerForm->createView()
             )
         );
 
@@ -318,6 +320,34 @@ class DefaultController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('admin_company_delete', array('id' => $company->getId())))
+            ->setMethod('DELETE')
+            ->getForm();
+    }
+     /**
+     * @Route("admin/customer/delete/{id}", name="admin_customer_delete")
+     * @Method("DELETE")
+     */
+    public function customerDeleteAction(Request $request,Customer $customer)
+    {
+        $form = $this->createCustomerDeleteForm($customer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            //delete all delegates
+            $entityManager->remove($customer);
+            $entityManager->flush();
+
+            $this->addFlash('notice', $this->get('translator')->trans('Customer Deleted Sucessfully'));
+        }
+
+        return $this->redirectToRoute('admin_customers');
+    }
+
+    private function createCustomerDeleteForm(Customer $customer)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('admin_customer_delete', array('id' => $customer->getId())))
             ->setMethod('DELETE')
             ->getForm();
     }

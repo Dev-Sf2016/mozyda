@@ -25,9 +25,7 @@ class CompanyDelegate
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=200)
-     *
-     * @Assert\NotBlank(message="This field is required")
+     * @ORM\Column(name="name", type="string", length=200, nullable=true)
      */
     private $name;
 

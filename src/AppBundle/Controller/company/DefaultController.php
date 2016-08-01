@@ -62,6 +62,7 @@ class DefaultController extends Controller
         // add delegate functionality
 
         $companyDelegate = new CompanyDelegate();
+        var_dump($companyDelegateData);
 
         $formDeleg = $this->createForm(CompanyDelegateType::class, $companyDelegate);
 
@@ -69,21 +70,44 @@ class DefaultController extends Controller
 
         if ($formDeleg->isSubmitted() && $formDeleg->isValid()) {
 
-
+            $pass = $companyDelegate->getPassword();
             $companyDelegate->setPassword(md5($companyDelegate->getPassword()));
 
             $em = $this->getDoctrine()->getManager();
 
+
             $user = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
 
             $companyDelegate->setCompany($user->getCompany());
-            $companyDelegate->setIsDefault('1');
+            $companyDelegate->setIsDefault('0');
 
             $em->persist($companyDelegate);
             $em->flush();
 
             $this->addFlash('delegate_success', $this->get('translator')->trans('Delegate is added successfully'));
             $this->addFlash('tab', '2a');
+//send email to newly created delegate
+            $message = \Swift_Message::newInstance()
+                ->setSubject($this->get('translator')->trans('Delegation Account created'))
+                ->setFrom($this->getParameter("email_from"))
+                ->setTo($companyDelegate->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'emails/delegate-new-account-added.html.twig',
+                        array(
+
+                            'email' => $companyDelegate->getEmail(),
+                            'name' => $companyDelegate->getName(),
+                            'password' => $pass,
+                            'company_name' => $user->getCompany()->getName(),
+                            'url' => $this->get('router')->generate('account_login')
+                        )
+                    ),
+                    'text/html'
+                );
+
+//                echo $message;
+            $this->get('mailer')->send($message);
 
             return $this->redirectToRoute('company_home');
         }
@@ -269,7 +293,27 @@ class DefaultController extends Controller
                 'companyDelegate' => $companyDelegate
             ));
     }
+    /**
+     * @Route("/company/discount/{id}/delete", requirements={"id": "\d+"},name="company_delete_discount")
+     *
+     */
+    public function deleteDiscountAction($id){
+        $em = $this->getDoctrine()->getEntityManager();
+        $coupon = $em->getRepository('AppBundle:Discount')->find($id);
+        $em->initializeObject($coupon->getCompany());
 
+        $user = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+        $em->initializeObject($user->getCompany());
+        if($user->getCompany() == $coupon->getCompany()){
+            echo "valid";
+            $em->remove($coupon);
+            $em->flush();
+            $this->addFlash('notice', $this->get('translator')->trans('Coupon Deleted Sucessfully'));
+        }
+        return $this->redirectToRoute('account_login');
+
+//        $userCompany = $em->getRepository('AppBundle:Company')->findBy('')
+    }
     /**
      * @Route("/company/add/discount", name="company_add_discount")
      * @param Request $request
@@ -347,9 +391,6 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
         $em->initializeObject($companyDelegate->getCompany());
-//        echo "<br />current logged in user is".$this->getUser()->getId()."<br />";
-//        echo "below is delegate";
-//        var_dump($companyDelegate);
         $discounts = $em->getRepository('AppBundle:Discount')->getDiscountsByCompanyId($companyDelegate->getCompany());
 
         ///echo "salem";die();
@@ -357,12 +398,6 @@ class DefaultController extends Controller
             'discounts' =>$discounts,
             'company' =>$companyDelegate
         );
-//        return $this->render(
-//            ':company:company-list-discount.html.twig',
-//            array(
-//                'company' => $companyDelegate->getCompany(),
-//                'discounts' => $discounts
-//            ));
     }
 
 
