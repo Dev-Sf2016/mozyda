@@ -100,11 +100,14 @@ class DefaultController extends Controller
                             'name' => $companyDelegate->getName(),
                             'password' => $pass,
                             'company_name' => $user->getCompany()->getName(),
-                            'url' => $this->get('router')->generate('account_login')
+                            'url' => $this->generateUrl('account_login', array(), UrlGeneratorInterface::ABSOLUTE_URL)
                         )
-                    ),
-                    'text/html'
-                );
+                    )
+                )
+        ;
+
+
+
 
 //                echo $message;
             $this->get('mailer')->send($message);
@@ -293,18 +296,20 @@ class DefaultController extends Controller
                 'companyDelegate' => $companyDelegate
             ));
     }
+
     /**
      * @Route("/company/discount/{id}/delete", requirements={"id": "\d+"},name="company_delete_discount")
      *
      */
-    public function deleteDiscountAction($id){
+    public function deleteDiscountAction($id)
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $coupon = $em->getRepository('AppBundle:Discount')->find($id);
         $em->initializeObject($coupon->getCompany());
 
         $user = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
         $em->initializeObject($user->getCompany());
-        if($user->getCompany() == $coupon->getCompany()){
+        if ($user->getCompany() == $coupon->getCompany()) {
             echo "valid";
             $em->remove($coupon);
             $em->flush();
@@ -314,6 +319,7 @@ class DefaultController extends Controller
 
 //        $userCompany = $em->getRepository('AppBundle:Company')->findBy('')
     }
+
     /**
      * @Route("/company/add/discount", name="company_add_discount")
      * @param Request $request
@@ -395,8 +401,8 @@ class DefaultController extends Controller
 
         ///echo "salem";die();
         return array(
-            'discounts' =>$discounts,
-            'company' =>$companyDelegate
+            'discounts' => $discounts,
+            'company' => $companyDelegate
         );
     }
 
