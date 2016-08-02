@@ -23,7 +23,7 @@
                 </a>
                 <a href="#" class="discount_del btn btn-sm btn-danger"
                    data-href="{{ path('company_delete_delegate', {'id' : delegate.id} ) }}" data-toggle="modal"
-                   data-target="#confirm-delete">
+                   data-target="#confirm-delete-delegate">
                     <i class="fa fa-trash"></i>{{ 'Delete'|trans }}
                 </a>
             </td>
@@ -47,7 +47,7 @@
 
     </div>
 
-    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal fade" id="confirm-delete-delegate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
