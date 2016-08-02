@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default panel-login">
+                <div class="panel-heading text-center">
+                    <h2 class="panel-heading-text">
+                        {{ 'Update Coupon'|trans }}
+                    </h2>
+                </div>
+                <div class="panel-body">
+                    {#{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}#}
+
+                    <div class="row">
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            {% if app.session.flashBag.has('message') %}
+                                <div class="alert alert-info">
+                                    {% for message in app.session.flashBag.get('message') %}
+                                        {{ message }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">{{ 'Add Discount'|trans }}</div>
+                                <div class="panel-body">
+                                    {#, {'attr': {'target':'iframe'} }#}
+                                    {{ form_start(form) }}
+                                    {{ form_row(form.title) }}
+                                    {{ form_row(form.startDate) }}
+                                    {{ form_row(form.endDate) }}
+                                    {{ form_row(form.promotion) }}
+                                    <img src="{{ asset("files/company/discounts/") }}{{ company_id }}/{{ form.vars.value.promotion }}"
+                                         alt="" width="150" height="150">
+                                    {{ form_end(form) }}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('.js-datepicker').datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+        });
+    </script>
+
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('default/js/jquery-ui.js') }}"></script>
+    <link href="{{ asset('default/css/jquery-ui.css') }}" rel="stylesheet"/>
+{% endblock %}

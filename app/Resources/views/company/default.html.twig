@@ -146,6 +146,10 @@
                                                 </script>
 
                                                 {{ form_end(form_deleg) }}
+                                                <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12" >
+                                                    List all existing delegates
+                                                    {% include ':company:company-list-delegates.html.twig' %}
+                                                </div>
                                             </div>
                                         </div>
                                         {% endif %}
@@ -207,7 +211,7 @@
                                         </div>
 
                                         <div class="tab-pane" id="4a">
-                                            {% include 'company/company-list-discount.html' %}
+                                            {% include 'company/company-list-discount.html.twig' %}
                                         </div>
 
                                     </div>

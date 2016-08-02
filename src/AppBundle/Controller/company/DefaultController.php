@@ -54,9 +54,10 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/company", name="company_home")
+     * @Route("/company", defaults={"page": 1}, name="company_home")
+     * @Route("/company/delegates/{page}", requirements={"page": "[1-9]\d*"}, name="company_home_delegates_paginated")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $page)
     {
         $em = $this->getDoctrine()->getManager();
         $companyDelegateData = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
@@ -104,10 +105,7 @@ class DefaultController extends Controller
                             'url' => $this->generateUrl('account_login', array(), UrlGeneratorInterface::ABSOLUTE_URL)
                         )
                     )
-                )
-        ;
-
-
+                );
 
 
 //                echo $message;
@@ -160,15 +158,23 @@ class DefaultController extends Controller
 //                $this->redirectToRoute('company_add_discount');
             }
         }
+        if($request->get('_route') == 'company_home_delegates_paginated'){
+            $this->addFlash('tab', '2a');
+        }
         //end of add discount functionality
         $all_discounts = $this->companyDiscountList();
+        $all_delegates = null;
+        if ($companyDelegateData->getIsDefault() == 1) {
+            $all_delegates = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate')->getDelegates($page, $companyDelegateData->getCompany());
+        }
 
         return $this->render('company/default.html.twig', array(
             'company_delegate' => $companyDelegateData,
             'form_deleg' => $formDeleg->createView(),
             'form_discount' => $discountForm->createView(),
             'discounts' => $all_discounts['discounts'],
-            'company_del' => $all_discounts['company']
+            'company_del' => $all_discounts['company'],
+            'all_delegates' => $all_delegates
         ));
     }
 
@@ -320,6 +326,32 @@ class DefaultController extends Controller
 
 //        $userCompany = $em->getRepository('AppBundle:Company')->findBy('')
     }
+/**
+     * @Route("/company/delegate/{id}/delete", requirements={"id": "\d+"},name="company_delete_delegate")
+     *
+     */
+    public function deleteDelegateAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $delegate = $em->getRepository('AppBundle:CompanyDelegate')->find($id);
+        $em->initializeObject($delegate->getCompany());
+
+        $user = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+        $em->initializeObject($user->getCompany());
+        if($delegate->getIsDefault() == 1){
+            return $this->redirectToRoute('company_home');
+        }
+        if ($user->getCompany() == $delegate->getCompany()) {
+            echo "valid";
+            $em->remove($delegate);
+            $em->flush();
+            $this->addFlash('notice', $this->get('translator')->trans('Delegate Deleted Sucessfully'));
+            $this->addFlash('tab', '2a');
+        }
+        return $this->redirectToRoute('company_home');
+
+//        $userCompany = $em->getRepository('AppBundle:Company')->findBy('')
+    }
 
     /**
      * @Route("/company/add/discount", name="company_add_discount")
@@ -334,7 +366,8 @@ class DefaultController extends Controller
         //$company = $em->getRepository('AppBundle:Company')->find($this->getUser()->getCompany()->getId());
 
         $discount = new Discount();
-        $form = $this->createForm(DiscountType::class, $discount);
+        $form = $this->createForm(DiscountType::class, $discount, array(
+            'validation_groups' => array('addnewonly')));
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -405,6 +438,65 @@ class DefaultController extends Controller
             'discounts' => $discounts,
             'company' => $companyDelegate
         );
+    }
+
+    /**
+     * @Route("/company/discount/{id}/edit", requirements={"id": "\d+"},name="company_edit_discount")
+     */
+    public function companyDiscountEditAction(Discount $discount, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $existingImg = $discount->getPromotion();
+        $form = $this->createForm(\AppBundle\Form\DiscountType::class, $discount);
+        $form->handleRequest($request);
+        $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+        if ($companyDelegate->getCompany() != $discount->getCompany()) {
+            return $this->redirectToRoute('company_home');
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($discount->getPromotion()) {
+                $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+                $file = $discount->getPromotion();
+                $fileName = sprintf('%s-%s.%s', uniqid(), time(), $file->guessExtension());
+                //delete the old image
+
+                if (file_exists($this->container->getParameter("app.company.discount_path") . '/' . $existingImg)) {
+                    unlink($this->container->getParameter("app.company.discount_path") . '/' . $existingImg);
+                }
+
+                //check director exist or not
+                $upload_dir = $this->getParameter("app.company.discount_path") . "/" . $companyDelegate->getCompany()->getId();
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir);
+                }
+                // Move the file to the directory where brochures are stored
+
+                $file->move(
+                    $upload_dir,
+                    $fileName
+                );
+
+                $discount->setPromotion($fileName);
+            } else {
+                $discount->setPromotion($existingImg);
+            }
+            $em->persist($discount);
+            $em->flush();
+            $this->addFlash('notice', $this->get('translator')->trans('Coupon updated sucessfully'));
+            $this->addFlash('tab', '4a');
+
+            return $this->redirectToRoute('company_home');
+
+        }
+        return $this->render(
+            ':company:company-edit-discount.html.twig',
+            array(
+                'form' => $form->createView(),
+                'company_id' => $discount->getCompany()->getId()
+            ));
+
+
     }
 
 

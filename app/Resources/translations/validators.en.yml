@@ -7,3 +7,4 @@
 'Password and confirm password must match': 'Password and confirm password must match'
 'Maximum Image size allowed is 1Mi': '__Maximum Image size allowed is 1Mi'
 'Password and confirm password are not same': 'Password and confirm password are not same'
+'Discount start date is greater then end date': 'Discount start date is greater then end date'

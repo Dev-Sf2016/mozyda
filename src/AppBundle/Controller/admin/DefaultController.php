@@ -245,8 +245,8 @@ class DefaultController extends Controller
             ->add('save', SubmitType::class, array('label' => 'Save', 'attr' => array("class" => 'btn btn-custom btn-lg btn-block')));
         $formDelegation->handleRequest($request);
         if ($formDelegation->isSubmitted() && $formDelegation->isValid()) {
-            echo "inside submission the posted data is ";
-            var_dump($companyDelegate);
+//            echo "inside submission the posted data is ";
+//            var_dump($companyDelegate);
             if ($companyDelegate->getPassword() == '') {
                 $companyDelegate->setPassword($currentPass);
             } else {
@@ -258,7 +258,7 @@ class DefaultController extends Controller
             $this->addFlash('notice', $this->get('translator')->trans('Delegation Updated Sucessfully'));
             return $this->redirectToRoute('admin_company_edit', array('id' => $company->getId()));
         } else {
-            echo "form is not valid";
+//            echo "form is not valid";
         }
         return $this->render(
             'admin/index/companyedit.html.twig',
