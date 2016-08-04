@@ -42,15 +42,14 @@ class Discount
      * @ORM\Column(name="end_date", type="date")
      * @Assert\NotBlank(message="This field is required")
      * @Assert\Date()
+     * @Assert\Expression(expression="this.getStartDate()<=this.getEndDate()", message="Discount start date is greater then end date")
      */
     private $endDate;
 
     /**
      * @var string
-     * @ORM\Column(name="promotion", type="string", length=100, nullable=false)
-     *
-     *
-     * @Assert\NotBlank()
+     * @ORM\Column(name="promotion", type="string", length=100, nullable=true)
+     * @Assert\NotBlank(message="This field is required", groups={"addnewonly"})
      * @Assert\Image(maxSize="1Mi")
      */
     private $promotion;

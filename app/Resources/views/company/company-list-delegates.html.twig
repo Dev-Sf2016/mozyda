@@ -1,0 +1,66 @@
+<table class="table table-responsive">
+    <thead>
+    <tr>
+        <th><i class="fa fa-newspaper-o"></i> {{ 'Name'|trans }}</th>
+        <th><i class="fa fa-envelope-square"></i> {{ 'Email'|trans }}</th>
+        <th><i class="fa fa-calendar"></i> {{ 'Creation Date'|trans }}</th>
+        <th><i class="fa fa-cogs"></i> {{ 'Actions'|trans }} </th>
+    </tr>
+
+    </thead>
+    {% for delegate in all_delegates %}
+        <tr>
+            <td>{{ delegate.name }}</td>
+
+            <td>{{ delegate.email }}</td>
+            <td>{{ delegate.created|date('y-m-d h:i:s') }}</td>
+            <td>
+
+                <a href="{{ path('company_edit_discount', { id: 1}) }}" class="discount_edit btn btn-sm btn-primary"
+                   data-toggle="modal">
+                    {#data-target="#coupon-edit"#}
+                    <i class="fa fa-edit"></i> {{ 'Edit'|trans }}
+                </a>
+                <a href="#" class="discount_del btn btn-sm btn-danger"
+                   data-href="{{ path('company_delete_delegate', {'id' : delegate.id} ) }}" data-toggle="modal"
+                   data-target="#confirm-delete">
+                    <i class="fa fa-trash"></i>{{ 'Delete'|trans }}
+                </a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="3" align="center">{{ 'No record found'|trans }}</td>
+        </tr>
+    {% endfor %}
+
+
+</table>
+{% if all_delegates.haveToPaginate %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="navigation text-center">
+                {{ pagerfanta(all_delegates, 'twitter_bootstrap3', { routeName: 'company_home_delegates_paginated',routeParams: {} }) }}
+            </div>
+        </div>
+
+
+    </div>
+{% endif %}
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                {{ 'Confirm deletion ?'|trans }}
+            </div>
+            <div class="modal-body">
+                {{ 'Delete this delegate ?'|trans }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans }}</button>
+                <a class="btn btn-danger btn-ok">{{ 'Delete this delegate ?'|trans }}</a>
+            </div>
+        </div>
+    </div>
+</div>

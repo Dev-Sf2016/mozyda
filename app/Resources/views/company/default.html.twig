@@ -29,9 +29,11 @@
                                         <li class="active">
                                             <a href="#1a" data-toggle="tab">{{ 'Details'|trans }}</a>
                                         </li>
+                                        {% if(company_delegate.isDefault == '1') %}
                                         <li>
                                             <a href="#2a" data-toggle="tab">{{ 'Add Delegate'|trans }}</a>
                                         </li>
+                                        {% endif %}
                                         <li>
                                             <a href="#3a" data-toggle="tab">{{ 'Upload Discount'|trans }}</a>
                                         </li>
@@ -78,6 +80,7 @@
                                             </div>
 
                                         </div>
+                                        {% if(company_delegate.isDefault == '1') %}
                                         <div class="tab-pane" id="2a">
                                             {% for tab in app.session.flashBag.get('tab') %}
                                                 <script type="text/javascript">
@@ -143,8 +146,13 @@
                                                 </script>
 
                                                 {{ form_end(form_deleg) }}
+                                                <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12" >
+                                                    {% include ':company:company-list-delegates.html.twig' %}
+                                                </div>
                                             </div>
                                         </div>
+                                        {% endif %}
+
                                         <div class="tab-pane" id="3a">
 
                                             <div class="row">
@@ -202,7 +210,7 @@
                                         </div>
 
                                         <div class="tab-pane" id="4a">
-                                            {% include 'company/company-list-discount.html' %}
+                                            {% include 'company/company-list-discount.html.twig' %}
                                         </div>
 
                                     </div>

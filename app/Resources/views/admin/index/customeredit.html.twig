@@ -24,22 +24,8 @@
                             {% do form.refferer_email.setRendered %}
                             <input type="submit" value="{{ 'Update'|trans }}" class="btn btn-lg btn-block btn-success" />
                             {{ form_end(form) }}
-                            <div class="form-group">
 
-                                <script>
-
-                                    jQuery('#form_del').submit(function (e) {
-                                        var currentForm = this;
-                                        e.preventDefault();
-                                        BootstrapDialog.confirm("Are you sure?", function (result) {
-                                            if (result) {
-                                                currentForm.submit();
-                                            }
-                                        });
-                                    });
-                                    //    BootstrapDialog.confirm('Hi Apple, are you sure?');
-                                </script>
-                            </div>
+                            {#<button class="btn btn btn-danger btn-lg btn-block " id="deleteCustomer">{{ 'Delete Customer'|trans }}</button>#}
                         </div>
 
 
@@ -49,5 +35,54 @@
             </div>
         </div>
     </div>
+
+    <!-- modal for delete customer -->
+
+
+
+
+    <div class="modal fade" id="confirmDialog" role="dialog" aria-labelledby="deleteDialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    {{ "Delete Customer"|trans }}
+
+
+                    <!-- delete form -->
+                    {{ form_start(delete_customer_form,  { 'attr' : {'id':"form_del"} }) }}
+
+                    {{ form_end(delete_customer_form) }}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="delete">
+                        {{ 'OK'|trans }}
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        {{ 'Cancel'|trans }}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        (function ($) {
+            $('#deleteCustomer').on('click', function (e) {
+                e.preventDefault();
+                $('#confirmDialog').modal();
+            });
+
+            $('#delete').on('click', function (e) {
+                $('#form_del').submit();
+            });
+        })(jQuery);
+    </script>
+
 
 {% endblock %}

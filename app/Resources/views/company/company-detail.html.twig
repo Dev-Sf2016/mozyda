@@ -6,9 +6,9 @@
 
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-centered">
             <ul>
-                <li>Company Name: {{ companyDelegate.company.name }}</li>
-                <li>Website: {{ companyDelegate.company.url }}</li>
-                <li>Logo: <img src="{{ asset("files/company/logo/") }}{{ companyDelegate.company.logo }}" alt="" width="150" height="150"> </li>
+                <li>{{ 'Company Name'|trans }}: {{ companyDelegate.company.name }}</li>
+                <li>{{ 'Website:'|trans }} {{ companyDelegate.company.url }}</li>
+                <li>{{ 'Logo'|trans }}: <img src="{{ asset("files/company/logo/") }}{{ companyDelegate.company.logo }}" alt="" width="150" height="150"> </li>
 
             </ul>
         </div>

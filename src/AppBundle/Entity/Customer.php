@@ -66,7 +66,7 @@ class Customer
     /**
      * @ORM\Column(name="email", type="string", length=100, unique=true)
      * @Assert\Email()
-     * @Assert\NotBlank(message="This field is required",groups={"registration"})
+     * @Assert\NotBlank(message="This field is required", groups={"registration"})
      */
     private $email;
 

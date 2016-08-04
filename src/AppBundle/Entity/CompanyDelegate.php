@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class CompanyDelegate
 {
-
+    const NUM_ITEMS = 4;
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -25,9 +25,7 @@ class CompanyDelegate
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=200)
-     *
-     * @Assert\NotBlank(message="This field is required")
+     * @ORM\Column(name="name", type="string", length=200, nullable=true)
      */
     private $name;
 
