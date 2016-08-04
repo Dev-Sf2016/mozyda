@@ -26,7 +26,7 @@ class WsseListener implements ListenerInterface
     {
         $request = $event->getRequest();
         //var_dump($request); die();
-        $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([a-zA-Z0-9+\/]+={0,2})", Created="([^"]+)"/';
+        $wsseRegex = '/UsernameToken Username="([^"]+)", area="(company|customer|anonymous)", PasswordDigest="([^"]+)", Nonce="([a-zA-Z0-9+\/]+={0,2})", Created="([^"]+)"/';
         //echo json_encode(['test'=>$request->headers->get('x-wsse')]);die();
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
             return;
@@ -34,10 +34,10 @@ class WsseListener implements ListenerInterface
 
         $token = new WsseUserToken();
         $token->setUser($matches[1]);
-        
-        $token->digest   = $matches[2];
-        $token->nonce    = $matches[3];
-        $token->created  = $matches[4];
+        $token->area     = $matches[2];
+        $token->digest   = $matches[3];
+        $token->nonce    = $matches[4];
+        $token->created  = $matches[5];
 
         try {
             $authToken = $this->authenticationManager->authenticate($token);

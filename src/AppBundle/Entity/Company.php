@@ -49,7 +49,7 @@ class Company
     /**
      * @ORM\Column(name="logo", type="string", length=64)
      * @Assert\Image(
-     *     maxSize="1Mi",
+     *     maxSize="10Mi",
      *     maxSizeMessage="Maximum Image size allowed is 1Mi"
      * )
      */

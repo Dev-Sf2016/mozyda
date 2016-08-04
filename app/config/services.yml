@@ -37,10 +37,7 @@ services:
 
     wsse.security.authentication.provider:
         class: AppBundle\Security\Authentication\Provider\WsseProvider
-        arguments:
-            - ''
-            - '@cache.app'
-            - ''
+        arguments: ['@doctrine.orm.entity_manager', '@cache.app', '']
         public: false
 
     wsse.security.authentication.listener:

@@ -74,15 +74,16 @@ class HomeController extends FOSRestController{
         $parameters = $request->request->all();
 
         $content = base64_decode($parameters['logo']);
-        $file = tmpfile();
-
-        $metadata = stream_get_meta_data($file);
+        $tmpFile = tmpfile();
+        fwrite($tmpFile, $content);
+        stream_set_blocking($tmpFile, false);
+        $metadata = stream_get_meta_data($tmpFile);
         $path = $metadata['uri'];
-        file_put_contents($path, $content);
+
 
         // the UploadedFile of the user image
         // referencing the temp file (used for validation only)
-        $uploadedFile = new UploadedFile($path, $path, null, null, null, true);
+        $uploadedFile = new UploadedFile($path, $path, 'jpg', null, null, true);
 
 
         $delegate = new CompanyDelegate();
@@ -97,16 +98,17 @@ class HomeController extends FOSRestController{
         $form->submit($parameters, false);
 
         if($form->isValid()){
-            $file = $company->getLogo();
-            $fileName = sprintf('%s-%s.%s', uniqid(), time(), $file->guessExtension());
+
+            $fileName = sprintf('%s-%s.%s', uniqid(), time(), 'jpg');
 
             // Move the file to the directory where brochures are stored
-            $file->move(
+
+            $uploadedFile->move(
 
                 $this->container->getParameter("app.company.logo_path"),
                 $fileName
             );
-
+            fclose($tmpFile);
             $company->setLogo($fileName);
             $company->setIsActive(0);
             $em = $this->getDoctrine()->getManager();

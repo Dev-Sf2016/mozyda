@@ -162,11 +162,11 @@ class CustomerRefferalPointHistory
     /**
      * Set pointsAdded
      *
-     * @param \double $pointsAdded
+     * @param double $pointsAdded
      *
      * @return CustomerRefferalPointHistory
      */
-    public function setPointsAdded(\double $pointsAdded)
+    public function setPointsAdded($pointsAdded)
     {
         $this->pointsAdded = $pointsAdded;
 
@@ -190,7 +190,7 @@ class CustomerRefferalPointHistory
      *
      * @return CustomerRefferalPointHistory
      */
-    public function setPointsReason(\double $pointsReason)
+    public function setPointsReason($pointsReason)
     {
         $this->pointsReason = $pointsReason;
 

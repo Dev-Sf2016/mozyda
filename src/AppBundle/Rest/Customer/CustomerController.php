@@ -21,12 +21,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class CustomerController extends FOSRestController
 {
+    private function isAllowed()
+    {
+        if($this->get('security.token_storage')->getToken()->area == 'customer'){
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id){
-
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
         $customerRepository = $this->getDoctrine()->getRepository('AppBundle:Customer');
 
         $customer = null;

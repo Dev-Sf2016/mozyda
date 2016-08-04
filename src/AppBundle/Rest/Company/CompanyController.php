@@ -22,17 +22,13 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class CompanyController extends FOSRestController
 {
-    public function __construct()
+    private function isAllowed()
     {
-        /*
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        //var_dump($user);die();
-        $token = $this->get('security.token_storage')->getToken();
-        if(!$token->isAuthenticated()){
-            throw new AuthenticationException();
+        if($this->get('security.token_storage')->getToken()->area == 'company'){
+            return true;
         }
-*/
+
+        return false;
     }
 
     /**
@@ -41,6 +37,9 @@ class CompanyController extends FOSRestController
      */
     public function getAction($id){
 
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
         $companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
         $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
         $company = null;

@@ -37,20 +37,15 @@ security:
             id: app.admin_user_provider
 
     firewalls:
-        api_company:
-            provider: companies
-            pattern:   ^/(%app_locales%)/api/company12
-            stateless: true
-            wsse:      { lifetime: 180 }
-#        api_customer:
-#            provider: customers
-#            pattern:   ^/(%app_locales%)/api/customer/*
-#            stateless: true
-#            wsse:      { lifetime: 180 }
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        api:
+            pattern:   ^/(%app_locales%)/api
+            stateless: true
+            wsse:      { lifetime: 180 }
 
         customer_area:
             context: my_context
