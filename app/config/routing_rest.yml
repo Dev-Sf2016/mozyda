@@ -4,10 +4,15 @@ company:
     resource: AppBundle\Rest\Company\CompanyController
     name_prefix: api_
 
-#discount:
-#    type: rest
-#    resource: AppBundle\Rest\Company\DiscountController
-#    name_prefix: api_
+customer:
+    type: rest
+    resource: AppBundle\Rest\Customer\CustomerController
+    name_prefix: api_
+
+home:
+    type: rest
+    resource: AppBundle\Rest\HomeController
+    name_prefix: api_
 #
 #delegate:
 #    type: rest

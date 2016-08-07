@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\NonceExpiredException;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use AppBundle\Security\Authentication\Token\WsseUserToken;
 
@@ -25,7 +26,7 @@ class WsseListener implements ListenerInterface
     {
         $request = $event->getRequest();
         //var_dump($request); die();
-        $wsseRegex = '/UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([a-zA-Z0-9+\/]+={0,2})", Created="([^"]+)"/';
+        $wsseRegex = '/UsernameToken Username="([^"]+)", area="(company|customer|anonymous)", PasswordDigest="([^"]+)", Nonce="([a-zA-Z0-9+\/]+={0,2})", Created="([^"]+)"/';
         //echo json_encode(['test'=>$request->headers->get('x-wsse')]);die();
         if (!$request->headers->has('x-wsse') || 1 !== preg_match($wsseRegex, $request->headers->get('x-wsse'), $matches)) {
             return;
@@ -33,17 +34,21 @@ class WsseListener implements ListenerInterface
 
         $token = new WsseUserToken();
         $token->setUser($matches[1]);
-        
-        $token->digest   = $matches[2];
-        $token->nonce    = $matches[3];
-        $token->created  = $matches[4];
+        $token->area     = $matches[2];
+        $token->digest   = $matches[3];
+        $token->nonce    = $matches[4];
+        $token->created  = $matches[5];
 
         try {
             $authToken = $this->authenticationManager->authenticate($token);
             $this->tokenStorage->setToken($authToken);
 
             return;
-        } catch (AuthenticationException $failed) {
+        }
+        catch(NonceExpiredException $expiredException) {
+            return;
+        }
+        catch (AuthenticationException $failed) {
             // ... you might log something here
 
             // To deny the authentication clear the token. This will redirect to the login page.
@@ -52,12 +57,13 @@ class WsseListener implements ListenerInterface
             // if ($token instanceof WsseUserToken && $this->providerKey === $token->getProviderKey()) {
             //     $this->tokenStorage->setToken(null);
             // }
-            // return;
+            return;
         }
 
         // By default deny authorization
         $response = new Response();
         $response->setStatusCode(Response::HTTP_FORBIDDEN);
         $event->setResponse($response);
+        return;
     }
 }

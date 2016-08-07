@@ -37,15 +37,15 @@ security:
             id: app.admin_user_provider
 
     firewalls:
-        salem_khan:
-            provider: companies
-            pattern:   ^/(%app_locales%)/apib/*
-            stateless: true
-            wsse:      { lifetime: 30 }
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        api:
+            pattern:   ^/(%app_locales%)/api
+            stateless: true
+            wsse:      { lifetime: 180 }
 
         customer_area:
             context: my_context
@@ -92,7 +92,7 @@ security:
         - { path: ^/(%app_locales%)/company, roles: ROLE_COMPANY }
         - { path: ^/(%app_locales%)/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/(%app_locales%)/admin, roles: ROLE_ADMIN }
-        - { path: ^/(%app_locales%)/api, roles: ROLE_API  }
+        - { path: ^/(%app_locales%)/api/, roles: ROLE_API  }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 #        - { path: ^/admin, roles: ROLE_ADMIN }

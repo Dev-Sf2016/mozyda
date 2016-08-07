@@ -82,6 +82,8 @@ class LocaleRewriteListener implements EventSubscriberInterface
                 $locale = $this->defaultLocale;
             }
 
+
+            //TODO: Redirect according to the environment
             $event->setResponse(new RedirectResponse("/app_dev.php/".$locale.$path));
         }
 

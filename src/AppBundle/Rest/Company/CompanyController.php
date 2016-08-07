@@ -13,6 +13,7 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * Class CompanyController
@@ -21,12 +22,24 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class CompanyController extends FOSRestController
 {
+    private function isAllowed()
+    {
+        if($this->get('security.token_storage')->getToken()->area == 'company'){
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id){
 
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
         $companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
         $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
         $company = null;

@@ -2,8 +2,13 @@
 
 namespace AppBundle\Security\Authentication\Provider;
 
+use AppBundle\Security\User\CompanyUser;
+use AppBundle\Security\User\CompanyUserProvider;
+use AppBundle\Security\User\CustomerUserProvider;
+use Doctrine\ORM\EntityManager;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\NonceExpiredException;
@@ -12,25 +17,59 @@ use AppBundle\Security\Authentication\Token\WsseUserToken;
 
 class WsseProvider implements AuthenticationProviderInterface
 {
-    private $userProvider;
+    private $em;
     private $cachePool;
 
-    public function __construct(UserProviderInterface $userProvider, CacheItemPoolInterface $cachePool)
+    public function __construct(EntityManager $entityManager, CacheItemPoolInterface $cachePool)
     {
-        $this->userProvider = $userProvider;
+        $this->em = $entityManager;
         $this->cachePool = $cachePool;
     }
 
+    /**
+     * @param TokenInterface $token
+     * @return WsseUserToken
+     */
     public function authenticate(TokenInterface $token)
     {
 
-        //switch
-        $user = $this->userProvider->loadUserByUsername($token->getUsername());
+        $userProvider = null;
+        if($token->area == 'anonymous'){
+
+            $authenticatedToken = new WsseUserToken(['ROLE_API']);
+            //$authenticatedToken->nonce = $token->nonce;
+            $authenticatedToken->area = $token->area;
+
+            $authenticatedToken->setUser($token->getUser());
+
+            return $authenticatedToken;
+
+
+        }
+        if($token->area == 'company'){
+            $userProvider = new CompanyUserProvider($this->em);
+        }
+        elseif ($token->area == 'customer'){
+            $userProvider = new CustomerUserProvider($this->em);
+        }
+        else{
+            throw new AuthenticationException('The WSSE authentication failed.');
+        }
+
+        try {
+            $user = $userProvider->loadUserByUsername($token->getUsername());
+        }
+        catch(UsernameNotFoundException $e){
+            throw new AuthenticationException('The WSSE authentication failed.');
+        }
 
         $isValid = $this->validateDigest($token->digest, $token->nonce, $token->created, $user->getPassword());
 
         if ($user && $isValid) {
             $authenticatedToken = new WsseUserToken($user->getRoles());
+            //$authenticatedToken->nonce = $token->nonce;
+            $authenticatedToken->area = $token->area;
+
             $authenticatedToken->setUser($user);
 
             return $authenticatedToken;
@@ -58,8 +97,8 @@ class WsseProvider implements AuthenticationProviderInterface
             return false;
         }
 
-        //echo strtotime($created) ."<br>" . time();
-//die();
+        $salem = time() - strtotime($created) ."<br>" . time();
+
         // Expire timestamp after 5 minutes
         if (time() - strtotime($created) > 300) {
             //return false;
@@ -71,21 +110,14 @@ class WsseProvider implements AuthenticationProviderInterface
         // Validate that the nonce is *not* in cache
         // if it is, this could be a replay attack
         if ($cacheItem->isHit()) {
-           // throw new NonceExpiredException('Previously used nonce detected');
+            //throw new NonceExpiredException('Previously used nonce detected');
         }
 
         // Store the item in cache for 5 minutes
         $cacheItem->set(null)->expiresAfter(300);
         $this->cachePool->save($cacheItem);
 
-        /*echo "nonce: " . $nonce . "<br>";
-        echo "base64decode-nonce:  " . base64_encode($nonce) . "<br>";
-        echo "date: ".$created. "<br>";
-        echo "md5password: ".$secret. "<br>";
-        echo "sh1 of nonce + date + md5password: ".sha1(base64_encode($nonce).$created.$secret). "<br>";
-        echo "base64encodeof sh1: ".base64_encode(sha1(base64_encode($nonce).$created.$secret));
-        die();*/
-
+      
         // Validate Secret
         $expected = base64_encode(sha1(base64_encode($nonce).$created.$secret));
         //echo json_encode(['expected'=>$expected, 'orignal'=>$digest]);die();
