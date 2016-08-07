@@ -60,6 +60,12 @@ class DefaultController extends Controller
         return $discounts;
 
     }
+    /**
+     * @Route("/samplemail", name="sample_mail")
+     */
+    public function samplemail(){
+        return $this->render('/emails/sample.html.twig');
+    }
 
 
     /**
