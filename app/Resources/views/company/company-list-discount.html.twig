@@ -1,4 +1,4 @@
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" id="confirm-delete-discount" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -10,7 +10,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans }}</button>
-                <a class="btn btn-danger btn-ok">{{ 'Delete this coupon ?'|trans }}</a>
+                <a class="btn btn-danger btn-ok btn-del-discount">{{ 'Delete this coupon ?'|trans }}</a>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
                         </a> ||
                         <a href="#" class="discount_del"
                            data-href="{{ path('company_delete_discount', {'id' : discount.id} ) }}" data-toggle="modal"
-                           data-target="#confirm-delete">
+                           data-target="#confirm-delete-discount">
                             <i class="fa fa-trash"></i>
                         </a>
 
@@ -83,8 +83,11 @@
     $('#confirm-delete').on('show.bs.modal', function (e) {
         $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
     });
+    $('#confirm-delete-discount').on('show.bs.modal', function (e) {
+        $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
     $('#coupon-edit').on('shown.bs.modal',function(e){      //correct here use 'shown.bs.modal' event which comes in bootstrap3
-        alert('---'+$(e.relatedTarget).data('href'));
+//        alert('---'+$(e.relatedTarget).data('href'));
         $(this).find('iframe').attr('src',$(e.relatedTarget).data('href'))
     })
 </script>

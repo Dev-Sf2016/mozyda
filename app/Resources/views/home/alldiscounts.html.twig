@@ -24,14 +24,14 @@
                                 </div>
                                 {#<img src="{{ asset('files/company/logo/' ~ company.logo) }}"/></td>#}
                             <td class="col-md-4">
-                                <h4>{{ 'Starting from '|trans }}: {{ discount.startDate.date | date("Y-m-d") }}</h4>
+                                <h4>{{ 'Starting from'|trans }}: {{ discount.startDate.date | date("Y-m-d") }}</h4>
                                 <br/>
-                                <h4>{{ 'Valid till '|trans }}: {{ discount.endDate.date | date("Y-m-d") }}</h4>
+                                <h4>{{ 'Valid till'|trans }}: {{ discount.endDate.date | date("Y-m-d") }}</h4>
                             </td>
                             <td class="col-md-6">
                                 <h2>{{ discount.company.name }}</h2>
                                 <h3>{{ discount.company.url }}</h3>
-                                <h3>{{ discount.id }}</h3>
+
 
                             </td>
                         </tr>
