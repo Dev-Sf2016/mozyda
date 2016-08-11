@@ -5,12 +5,15 @@ namespace AppBundle\Rest\Company;
 
 use AppBundle\Entity\Company;
 use AppBundle\Entity\CompanyDelegate;
+use AppBundle\Entity\Discount;
 use AppBundle\Exception\InvalidFormException;
 use AppBundle\Form\CompanyDelegateType;
 use AppBundle\Form\CompanyType;
+use AppBundle\Form\DiscountType;
 use AppBundle\Rest\Codes;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -31,6 +34,21 @@ class CompanyController extends FOSRestController
         return false;
     }
 
+
+    public function getLoginAction(){
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $userInfo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CompanyDelegate')->find($user->getId());
+
+        $userInfo->setPassword('');
+        $view = $this->view(['user'=>$userInfo, 'base_url'=>$this->getParameter('base_url')],  Codes::HTTP_OK );
+
+
+        return $this->handleView($view);
+    }
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -201,7 +219,6 @@ class CompanyController extends FOSRestController
         catch (\Exception $e){
             $discount = null;
         }
-
         if(!$discount){
             $view = $this->view(['message'=>$this->get('translator')->trans('Record not found')], Codes::HTTP_NOT_FOUND );
         }
@@ -220,21 +237,195 @@ class CompanyController extends FOSRestController
     public function cgetDiscountAction($cid){
 
         $discountsRepository = $this->getDoctrine()->getRepository('AppBundle:Discount');
-
         $discounts = $discountsRepository->findAll();
-
         if(!$discounts){
             $view = $this->view(['message'=>$this->get('translator')->trans('Records not found')], Codes::HTTP_NOT_FOUND);
         }
         else {
             $view = $this->view(['discounts' => $discounts, 'base_url'=>'http://mozyda.dev/files/company/discounts'], Codes::HTTP_OK);
         }
-
         return $this->handleView($view);
 
-
     }
-    public function postDiscountAction(){
+
+    /**
+     * @param Request $request
+     * @param $cid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postDiscountAction(Request $request, $cid){
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+
+        $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:CompanyDelegate')->find($userId);
+        $view = null;
+        if($user->getCompany()->getId() == $cid){
+
+            $parameters = $request->request->all();
+
+            $parameters['startDate'] = date('Y-m-d', strtotime($parameters['startDate']));
+            $parameters['endDate'] = date('Y-m-d', strtotime($parameters['endDate']));
+
+            $content = base64_decode($parameters['promotion']);
+            $mimeType = $parameters['mimeType'];
+            unset($parameters['mimeType']);
+            $tmpFile = tmpfile();
+            fwrite($tmpFile, $content);
+            stream_set_blocking($tmpFile, false);
+            $metadata = stream_get_meta_data($tmpFile);
+            $path = $metadata['uri'];
+            $uploadedFile = new UploadedFile($path, $path, $mimeType, null, null, true);
+            $parameters['promotion'] = $uploadedFile;
+            $discount = new Discount();
+            $discount->setCompany($user->getCompany());
+
+            $form = $this->createForm(DiscountType::class, $discount, ['method'=>'POST', 'csrf_protection'=>false]);
+
+            $form->submit($parameters, false);
+
+            if($form->isValid()){
+                // save discount
+                $fileName = sprintf('%s-%s.%s', uniqid(), time(), $uploadedFile->guessExtension());
+                //check director exist or not
+                $upload_dir = $this->getParameter("app.company.discount_path") . "/" . $user->getCompany()->getId();
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir);
+                }
+                $uploadedFile->move($upload_dir, $fileName);
+                $discount->setPromotion($fileName);
+                $em = $this->getDoctrine()->getManager();
+
+                $em->persist($discount);
+                $em->flush();
+
+                $view = $this->view(['message'=>$this->get('translator')->trans('discount is uploaded successfully')], Codes::HTTP_OK);
+            }
+            else{
+                $view = $this->view(['form'=>$form], Codes::HTTP_BADE_REQUEST);
+            }
+
+        }
+        else{
+            $view = $this->view([], Codes::HTTP_FORBIDDEN);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @param $cid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function patchDiscountAction(Request $request, $cid){
+
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+
+        $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:CompanyDelegate')->find($userId);
+
+        $parameters = $request->request->all();
+        $discountId = $parameters['id'];
+        unset($parameters['id']);
+        $discount = $this->getDoctrine()->getRepository('AppBundle:Discount')->find($discountId);
+
+        $view = null;
+        if($user->getCompany()->getId() == $cid && $discount->getCompany()->getId() == $cid){
+
+            $parameters['startDate'] = date('Y-m-d', strtotime($parameters['startDate']));
+            $parameters['endDate'] = date('Y-m-d', strtotime($parameters['endDate']));
+
+            if(isset($parameters['promotion'])){
+                $content = base64_decode($parameters['promotion']);
+                $mimeType = $parameters['mimeType'];
+                unset($parameters['mimeType']);
+                $tmpFile = tmpfile();
+                fwrite($tmpFile, $content);
+                stream_set_blocking($tmpFile, false);
+                $metadata = stream_get_meta_data($tmpFile);
+                $path = $metadata['uri'];
+                $uploadedFile = new UploadedFile($path, $path, $mimeType, null, null, true);
+                $parameters['promotion'] = $uploadedFile;
+            }
+
+            $form = $this->createForm(DiscountType::class, $discount, ['method'=>'PATCH', 'csrf_protection'=>false]);
+
+            $form->submit($parameters, true);
+
+            if($form->isValid()){
+                // save discount
+                if(isset($parameters['promotion'])) {
+                    $fileName = sprintf('%s-%s.%s', uniqid(), time(), $uploadedFile->guessExtension());
+                    //check director exist or not
+                    $upload_dir = $this->getParameter("app.company.discount_path") . "/" . $user->getCompany()->getId();
+                    if (!is_dir($upload_dir)) {
+                        mkdir($upload_dir);
+                    }
+                    $uploadedFile->move($upload_dir, $fileName);
+                    $discount->setPromotion($fileName);
+                }
+                $em = $this->getDoctrine()->getManager();
+
+                $em->persist($discount);
+                $em->flush();
+
+                $view = $this->view(['message'=>$this->get('translator')->trans('discount is updated successfully')], Codes::HTTP_OK);
+            }
+            else{
+                $view = $this->view(['form'=>$form], Codes::HTTP_BADE_REQUEST);
+            }
+
+        }
+        else{
+            $view = $this->view([], Codes::HTTP_FORBIDDEN);
+        }
+
+        return $this->handleView($view);
+    }
+    /**
+     * @param  Request $request
+     * @param $cid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postDelegateAction(Request $request, $cid){
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+
+        $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:CompanyDelegate')->find($userId);
+        $view = null;
+        if($user->getCompany()->getId() == $cid){
+            $delegate = new CompanyDelegate();
+            $parameters = $request->request->all();
+            $form = $this->createForm(CompanyDelegateType::class, $delegate, ['method'=>'POST', 'csrf_protection'=>false]);
+
+            $form->submit($parameters, false);
+
+            if($form->isValid()){
+                // save delegate
+                $delegate->setPassword(md5($delegate->getPassword()));
+                $delegate->setCompany($user->getCompany());
+                $delegate->setIsDefault(0);
+                $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
+                $delegateRepository->persistDelegate($delegate);
+
+                $view = $this->view(['message'=>$this->get('translator')->trans('Delegate is added successfully')], Codes::HTTP_OK);
+            }
+            else{
+                $view = $this->view(['form'=>$form], Codes::HTTP_BADE_REQUEST);
+            }
+
+        }
+        else{
+            $view = $this->view([], Codes::HTTP_FORBIDDEN);
+        }
+
+        return $this->handleView($view);
 
     }
 
@@ -243,65 +434,74 @@ class CompanyController extends FOSRestController
      * @param $cid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postDelegateAction(Request $request, $cid){
-        try{
-                
-            $company = $this->getDoctrine()->getRepository('AppBundle:Company')->find($cid);
-            $delegate = $this->createNewDelegateType($request, $company);
-
-            $routeOptions = [
-                'id'=>$delegate->getId(),
-                '_format'=>$request->get('_format')
-            ];
-
-            $this->redirectView('api_get_company', $routeOptions, Codes::HTTP_CREATED);
+    public function patchDelegateAction(Request $request, $cid){
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
-        catch(InvalidFormException $e){
-            $view = $this->view(['form'=>$e->getForm()], Codes::HTTP_BADE_REQUEST);
-            return $this->handleView($view);
-        }
-    }
 
-    /**
-     * @param Request $request
-     * @param Company $company
-     * @return CompanyDelegate|mixed
-     */
-    private function createNewDelegateType(Request $request, $company){
+        $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:CompanyDelegate')->find($userId);
+        $view = null;
         $parameters = $request->request->all();
-        $delegate = new CompanyDelegate();
-        $persistedDelegate = $this->processDelegateForm($delegate, $parameters, $company, 'POST');
+        $delegate = $this->getDoctrine()->getRepository("AppBundle:CompanyDelegate")->find($parameters['id']);
+        if($user->getCompany()->getId() == $cid && $delegate){
 
-        return $persistedDelegate;
+
+            $form = $this->createForm(CompanyDelegateType::class, $delegate, ['method'=>'PATCH', 'csrf_protection'=>false]);
+
+            $form->submit($parameters, false);
+
+            if($form->isValid()){
+                // save delegate
+                //$delegate->setPassword(md5($delegate->getPassword()));
+                //$delegate->setCompany($user->getCompany());
+                //$delegate->setIsDefault(0);
+                $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
+                $delegateRepository->persistDelegate($delegate);
+
+                $view = $this->view(['message'=>$this->get('translator')->trans('Delegate is updated successfully')], Codes::HTTP_OK);
+            }
+            else{
+                $view = $this->view(['form'=>$form], Codes::HTTP_BADE_REQUEST);
+            }
+
+        }
+        else{
+            $view = $this->view([], Codes::HTTP_FORBIDDEN);
+        }
+
+        return $this->handleView($view);
+
     }
 
     /**
-     * @param CompanyDelegate $delegate
-     * @param array $parameters
-     * @param Company $company
-     * @param string $method
-     * @return CompanyDelegate|mixed
+     * @param $cid
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function processDelegateForm(CompanyDelegate $delegate, array $parameters, $company, $method='PUT'){
-        $form = $this->createForm(CompanyDelegateType::class, $delegate, ['method'=>$method, 'csrf_protection'=>false] );
-        $form->submit($parameters, 'PATCH' !== $method);
-
-        if($form->isValid()){
-            /**
-             * @var CompanyDelegate
-             */
-            $delegate = $form->getData();
-            $delegate->setPassword(md5($delegate->getPassword()));
-            $delegate->setCompany($company);
-            $delegate->setIsDefault(0);
-            $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
-            $delegateRepository->persistDelegate($delegate);
-
-            return $delegate;
+    public function cgetDelegateAction($cid){
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
 
-        throw new InvalidFormException($this->get('translator')->trans('Invalid Submitted data'), $form);
+        $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:CompanyDelegate')->find($userId);
+        $view = null;
+        if($user->getCompany()->getId() == $cid){
+            
+            $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
+            $delegates = $delegateRepository->getDelegatesByCompanyExcludeDefaultDelegate($user->getCompany());
+            if(!empty($delegates))
+                $view = $this->view(['delegates'=>$delegates], Codes::HTTP_OK);
+            else{
+                $view = $this->view(['message'=>$this->get('translator')->trans("No Delegate Found")], Codes::HTTP_NOT_FOUND);
+            }
+            
+        }
+        else{
+            $view = $this->view([], Codes::HTTP_FORBIDDEN);
+        }
 
+        return $this->handleView($view);
     }
 
 }

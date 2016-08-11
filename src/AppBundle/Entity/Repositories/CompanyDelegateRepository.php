@@ -95,5 +95,18 @@ class CompanyDelegateRepository extends EntityRepository
         $paginator->setCurrentPage($page);
         return $paginator;
     }
+
+    public function getDelegatesByCompanyExcludeDefaultDelegate($company){
+        return $this->_em
+            ->createQueryBuilder()
+            ->select('d')
+            ->from('AppBundle:CompanyDelegate', 'd')
+            ->where('d.company = :company')
+            ->andWhere('d.isDefault != 1')
+            ->setParameter('company', $company)
+            ->getQuery()
+            ->getResult();
+
+    }
     
 }

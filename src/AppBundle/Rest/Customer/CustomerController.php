@@ -29,6 +29,20 @@ class CustomerController extends FOSRestController
 
         return false;
     }
+    public function getLoginAction(){
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $userInfo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Customer')->find($user->getId());
+
+        $userInfo->setPassword('');
+        $view = $this->view(['user'=>$userInfo, 'base_url'=>$this->getParameter('base_url')],  Codes::HTTP_OK );
+
+        return $this->handleView($view);
+    }
+
 
     /**
      * @param $id
@@ -83,12 +97,16 @@ class CustomerController extends FOSRestController
     }
 
     /**
-     * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getTransactionsAction($id){
+    public function getTransactionsAction(){
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $transactions = $this->get('app.loyality')->getTransHistory($id);
+        $customer = $this->getDoctrine()->getManager()->getRepository('AppBundle:Customer')->find($user->getId());
+        $transactions = $this->get('app.loyality')->getTransHistory($customer->getLoyalityId());
 
         if($transactions){
             $view = $this->view(['transaction' => $transactions], Codes::HTTP_OK);
@@ -101,12 +119,15 @@ class CustomerController extends FOSRestController
 
     }
     /**
-     * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getPointsAction($id){
+    public function getPointsAction(){
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $customer = $this->getDoctrine()->getManager()->getRepository('AppBundle:Customer')->find($id);
+        $customer = $this->getDoctrine()->getManager()->getRepository('AppBundle:Customer')->find($user->getId());
 
         $points = $this->get('app.loyality')->getPoints($customer->getLoyalityId());
 
@@ -264,7 +285,7 @@ class CustomerController extends FOSRestController
                 );
 
             //TODO: Enable the mailer service
-           // $this->get('mailer')->send($message);
+            $this->get('mailer')->send($message);
 
             return $this->handleView(['success'=>true], Codes::HTTP_OK);
 

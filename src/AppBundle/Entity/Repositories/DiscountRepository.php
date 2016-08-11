@@ -27,6 +27,19 @@ class DiscountRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
+    public function getDiscountsByCompanyIdFilterByStartAndEndDate($company){
+        return $this->_em->createQueryBuilder()
+            ->select('d')
+            ->from('AppBundle:Discount', 'd')
+            ->where("d.company  = :company")
+            ->andWhere('d.startDate <= :todaydate')
+            ->andWhere('d.endDate >= :todaydate')
+            ->setParameter('todaydate', date('Y-m-d'))
+            ->setParameter('company', $company)
+            ->orderBy('d.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
     /**
      * @param int $page
      *
