@@ -34,7 +34,7 @@ class CustomerUser implements EquatableInterface, AdvancedUserInterface
      * @return bool
      */
 
-    public function __construct($email, $password,$name,$loyalityId,$city,$nationality,$isActive,$salt="",$roles=array('ROLE_CUSTOMER'))
+    public function __construct($email, $password,$name,$loyalityId,$city,$nationality,$isActive,$salt="",$roles=array('ROLE_CUSTOMER', 'ROLE_API'))
     {
         $this->email = $email;
         $this->password = $password;
