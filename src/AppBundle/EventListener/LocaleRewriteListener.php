@@ -8,13 +8,12 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\RouteCollection;
+
 
 class LocaleRewriteListener implements EventSubscriberInterface
 {
     /**
-     * @var Symfony\Component\Routing\RouterInterface
+     * @var Symfony\Component\Routing\RouterInterfac
      */
     private $router;
 
