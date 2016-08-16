@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @package AppBundle\Controller\Rest\Company
  * @RouteResource("delegate", pluralize=false)
  */
-class DelegateController extends FOSRestController
+class DelegateController11 extends FOSRestController
 {
     /**
      * @param $cid

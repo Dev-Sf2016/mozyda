@@ -101,7 +101,7 @@ class WsseProvider implements AuthenticationProviderInterface
 
         // Expire timestamp after 5 minutes
         if (time() - strtotime($created) > 300) {
-            return false;
+           // return false;
         }
 
         // Try to fetch the cache item from pool
@@ -110,7 +110,7 @@ class WsseProvider implements AuthenticationProviderInterface
         // Validate that the nonce is *not* in cache
         // if it is, this could be a replay attack
         if ($cacheItem->isHit()) {
-            throw new NonceExpiredException('Previously used nonce detected');
+          //  throw new NonceExpiredException('Previously used nonce detected');
         }
 
         // Store the item in cache for 5 minutes

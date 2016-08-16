@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @package AppBundle\Controller\Rest\Company
  * @RouteResource("company/discount", pluralize=false)
  */
-class DiscountController extends FOSRestController
+class DiscountController11 extends FOSRestController
 {
     /**
      * @param $id

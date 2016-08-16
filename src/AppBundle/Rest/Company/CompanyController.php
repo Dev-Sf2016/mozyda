@@ -237,7 +237,7 @@ class CompanyController extends FOSRestController
     public function cgetDiscountAction($cid){
 
         $discountsRepository = $this->getDoctrine()->getRepository('AppBundle:Discount');
-        $discounts = $discountsRepository->findAll();
+        $discounts = $discountsRepository->findBy(array('company'=>$cid));
         if(!$discounts){
             $view = $this->view(['message'=>$this->get('translator')->trans('Records not found')], Codes::HTTP_NOT_FOUND);
         }
@@ -402,17 +402,41 @@ class CompanyController extends FOSRestController
         if($user->getCompany()->getId() == $cid){
             $delegate = new CompanyDelegate();
             $parameters = $request->request->all();
+            
             $form = $this->createForm(CompanyDelegateType::class, $delegate, ['method'=>'POST', 'csrf_protection'=>false]);
 
             $form->submit($parameters, false);
 
             if($form->isValid()){
                 // save delegate
+                $password = $delegate->getPassword();
                 $delegate->setPassword(md5($delegate->getPassword()));
                 $delegate->setCompany($user->getCompany());
                 $delegate->setIsDefault(0);
                 $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
                 $delegateRepository->persistDelegate($delegate);
+
+                $message = \Swift_Message::newInstance()
+                    ->setSubject($this->get('translator')->trans('Delegation Account created'))
+                    ->setFrom($this->getParameter("email_from"))
+                    ->setTo($delegate->getEmail())
+                    ->setBody(
+                        $this->renderView(
+                            'emails/delegate-new-account-added.html.twig',
+                            array(
+
+                                'email' => $delegate->getEmail(),
+                                'name' => $delegate->getName(),
+                                'password' => $password,
+                                'company_name' => $user->getCompany()->getName(),
+                                'url' => $this->generateUrl('account_login', array(), UrlGeneratorInterface::ABSOLUTE_URL)
+                            )
+                        )
+                    );
+
+
+//                echo $message;
+                $this->get('mailer')->send($message);
 
                 $view = $this->view(['message'=>$this->get('translator')->trans('Delegate is added successfully')], Codes::HTTP_OK);
             }
@@ -444,6 +468,7 @@ class CompanyController extends FOSRestController
         $view = null;
         $parameters = $request->request->all();
         $delegate = $this->getDoctrine()->getRepository("AppBundle:CompanyDelegate")->find($parameters['id']);
+        unset($parameters['id']);
         if($user->getCompany()->getId() == $cid && $delegate){
 
 
@@ -452,10 +477,6 @@ class CompanyController extends FOSRestController
             $form->submit($parameters, false);
 
             if($form->isValid()){
-                // save delegate
-                //$delegate->setPassword(md5($delegate->getPassword()));
-                //$delegate->setCompany($user->getCompany());
-                //$delegate->setIsDefault(0);
                 $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
                 $delegateRepository->persistDelegate($delegate);
 
