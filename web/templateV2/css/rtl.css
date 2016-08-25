@@ -1,0 +1,32 @@
+.col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5,
+.col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10,
+.col-md-11, .col-md-12{
+    float: right;
+}
+.col-md-3.top-menu > a {
+    font-size: 22px;
+}
+.navbar-nav > li{
+    float: right;
+}
+.pull-right {
+    float: left !important;
+}
+.nav.navbar-nav.social-links{
+    margin: 10px -10px;
+}
+th{
+    text-align: right;
+}
+.nav-pills > li {
+    float: right;
+}
+.nav {
+    padding-right: 0px;
+}
+.navbar-right{
+    float: left !important;
+}
+.navbar-left{
+    float: right !important;
+}

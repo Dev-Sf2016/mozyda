@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html {% if(app.request.getLocale() == 'ar') %}dir="rtl"{% endif %} lang="{{ app.request.getLocale() }}">
+{% include(':includes/v2:head.html.twig') %}
+<body {% if(app.request.getLocale() == 'ar') %}dir="rtl"{% endif %}>
+<div class="wrapper">
+    {% include(':includes/v2:header.html.twig') %}
+    {#{% block topmenu %}#}
+    {#{% embed "includes/language_switcher.twig" %}#}
+    {#{% endembed %}#}
+    {#{% endblock %}#}
+    <div style="clear: both"></div>
+    <div class="container main-container">
+        <div class="sub-container">
+            {% embed "includes/messages.twig" %}
+            {% endembed %}
+
+            {% block body %}{% endblock %}
+        </div>
+
+        <!-- footer-->
+
+        <div class="footer-divider">
+
+        </div>
+        <div class="footer">
+            <div class="container footer-contents">
+                {% embed "includes/footer.twig" %}
+                {% endembed %}
+            </div>
+        </div>
+        {% block javascripts %}{% endblock %}
+    </div>
+</div>
+</body>
+</html>

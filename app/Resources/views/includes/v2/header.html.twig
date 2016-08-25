@@ -1,0 +1,44 @@
+<header>
+    {#<div class="container">#}
+
+    {#</div>#}
+    <div class="navbar navbar-static-top full-width">
+        <div class="navbar-inner">
+            <div class="container header-container">
+                <div class="container absolute">
+                    <div class="row eq-height">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <div class="logo">
+                                <a href="{{ path('homepage') }}">
+                                    <img src="{{ asset('templateV2/images/logo.png') }}" class="img-responsive"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 static-menu">
+                            <div class="row">
+
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 top-menu">
+                                    <a href="{{ path('list_stores') }}">
+                                        <img src="{{ asset('templateV2/images/companies-new.png') }}" class="img-responsive">
+                                    </a>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 top-menu">
+                                    <a href="{{ path('all_discounts') }}">
+                                        <img src="{{ asset('templateV2/images/discounts-new.png') }}" class="img-responsive">
+                                    </a>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 top-menu">
+                                    <a href="{{ path('account_login') }}">
+                                        <img src="{{ asset('templateV2/images/account-new.png') }}" class="img-responsive">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</header>
