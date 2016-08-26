@@ -75,8 +75,8 @@ body{
     height: 33px;
     background-image: url("../images/top-menu-bg.png");
     background-repeat: repeat-x;
-    /*margin-top: 110px;*/
-    margin: 110px -15px 0px -15px;
+    margin-top: 40px;
+    /*margin: 0px -15px 0px -15px;*/
 }
 .footer{
     padding-top: 25px;
@@ -122,15 +122,18 @@ header{margin-bottom: 15px;}
     background: none;
     border: 0px;
 }
-.panel-login .panel-body, .panel-login .panel-heading{
-background-color: #ffffff;
-    opacity: 0.7;
-}
+
 .panel-login .panel-heading{
     border: 0px;
 }
-.panel.panel-login, .panel.panel-heading{
-    background: none;
+
+.panel-default.panel-login{
+    /*width: 590px;*/
+    /*background-image: url("../images/login-bg.png");*/
+    /*background-repeat: no-repeat;*/
+    border: none;
+    box-shadow: none;
+    min-height: 330px;
 }
 h2.panel-heading-text{
     margin: 0px 70px;
@@ -147,8 +150,10 @@ h2.panel-heading-text{
     height: 52px;
     line-height: 49px;
     margin-bottom: 30px;
-    font-size: 20px;
+    font-size: 26px;
     font-weight: bold;
+    margin-top: 40px;
+    box-shadow: 10px 10px 5px #b0b0b0;
 }
 #exTab1 .tab-content {
     color : white;
@@ -186,6 +191,34 @@ li.error{
     min-height: 180px;
     z-index: 999;
 }
+.form-control{
+    font-size: 22px;
+    color: #878787;
+    padding: 6px;
+    -moz-box-shadow:inset 2px 2px 5px #888;
+    box-shadow:inset 2px 2px 5px #888;
+    border: 0px solid #b8b8b8;
+    border-radius: 0px;
+    height:47px;
+
+}
+.btn.btn-default{
+    border: 0px;
+    border-radius: 0px;
+}
+.login-form .btn, .login-form a{
+    color: #AA9055;
+    font-size: 18px;
+}
+a{
+    color: #008059;
+}
+@media (max-width : 992px) {
+    h2.panel-heading-text{
+        margin:0px;
+        width: 100%;
+    }
+}
 @media (min-width: 1200px) {
     .container {
         width: 1440px;
@@ -210,6 +243,7 @@ li.error{
         margin-top: -150px;
         background: url("../images/innercontainer-bg.png");
         background-repeat: no-repeat;
+        min-height: 815px;
     }
     .sub-container{
         margin: 0px 75px 0px 75px
@@ -217,5 +251,28 @@ li.error{
     .sub-container .row.heading-discount{
         margin-top: 130px;
     }
+    #accountlogin.row{
+        padding-top: 300px;
+    }
+    .panel-default.panel-login {
+        /*width: 590px;*/
+        background-image: url("../images/login-bg.png");
+        background-repeat: no-repeat;
+        padding: 0px 40px;
+    }
+    h2.panel-heading-text{
+        background: url("../images/login-form-heading.png");
+        background-repeat: no-repeat;
+        box-shadow: none;
+        height: 100px;
+        line-height: 94px;
+    }
+    .login-form{
+        margin-right: 30px;
+    }
+    .login-form .btn-default{
+        min-width: 120px;
+    }
 }
+
 

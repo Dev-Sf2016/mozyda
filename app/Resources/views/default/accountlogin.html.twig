@@ -1,10 +1,15 @@
-{% extends 'base.html.twig' %}
+{% extends '::baseV2.html.twig' %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-default panel-login">
-                <div class="panel-heading text-center">
+    <div class="row" id="accountlogin">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            {% for flashMessage in app.session.flashbag.get('cust_error') %}
+                <div class="alert alert-danger">
+                    {{ flashMessage|trans }}
+                </div>
+            {% endfor %}
+            <div class="panel-default panel-login">
+                <div class="panel-login-heading text-center">
                     <h2 class="panel-heading-text">
                         {{ 'Login as Customer'|trans }}
                     </h2>
@@ -16,11 +21,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
 
-                            {% for flashMessage in app.session.flashbag.get('cust_error') %}
-                                <div class="alert alert-danger">
-                                    {{ flashMessage|trans }}
-                                </div>
-                            {% endfor %}
+
                             {#{% if error %}#}
                             {#<div class="alert alert-danger">#}
                             {#{{ error.messageKey|trans(error.messageData, 'security') }}#}
@@ -28,7 +29,7 @@
 
                             {#{% endif %}#}
 
-                            <form action="{{ path('customer_login') }}" method="post">
+                            <form action="{{ path('customer_login') }}" method="post" autocomplete="off" class="login-form">
                                 <div class="form-group">
                                     <input type="text" id="username" class="form-control" name="_username"
                                            value="" placeholder="{{ 'Email'|trans }}"/>
@@ -54,23 +55,31 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="panel panel-default panel-login">
-                <div class="panel-heading text-center">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            {% for flashMessage in app.session.flashbag.get('company_error') %}
+                <div class="alert alert-danger">
+                    {{ flashMessage|trans }}
+                </div>
+            {% endfor %}
+            <div class="panel-default panel-login">
+                {#<div class="panel-heading text-center">#}
+                    {#<h2 class="panel-heading-text">#}
+                        {#{{ 'Login as Company'|trans }}#}
+                    {#</h2>#}
+                {#</div>#}
+                <div class="panel-login-heading text-center">
                     <h2 class="panel-heading-text">
                         {{ 'Login as Company'|trans }}
                     </h2>
                 </div>
+
+
                 <div class="panel-body">
                     {#{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}#}
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                            {% for flashMessage in app.session.flashbag.get('company_error') %}
-                                <div class="alert alert-danger">
-                                    {{ flashMessage|trans }}
-                                </div>
-                            {% endfor %}
+
                             {#{% if error %}#}
                             {#<div class="alert alert-danger">#}
                             {#{{ error.messageKey|trans(error.messageData, 'security') }}#}
@@ -78,7 +87,7 @@
 
                             {#{% endif %}#}
 
-                            <form action="{{ path('company_login') }}" method="post">
+                            <form action="{{ path('company_login') }}" method="post" autocomplete="off" class="login-form">
                                 <div class="form-group">
                                     <input type="text" class="form-control" id="username" name="_username"
                                            value="" placeholder="{{ 'Email'|trans }}"/>
@@ -106,7 +115,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="signup text-center">
             {{ 'Don\'t have an account'|trans }} <a href="{{ path('register') }}">{{ 'Sign up'|trans }}</a>
             </div>
