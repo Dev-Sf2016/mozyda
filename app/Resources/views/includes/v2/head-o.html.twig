@@ -1,0 +1,21 @@
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Mzaaya.com!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    <link href="{{ asset('default/fonts/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"/>
+
+    <link href="{{ asset('templateV2/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('templateV2/css/custom.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('templateV2/css/custom-o.css') }}" rel="stylesheet"/>
+    {% if(app.request.getLocale() == 'ar') %}
+        <link href="{{ asset('templateV2/css/rtl.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('templateV2/css/rtl-o.css') }}" rel="stylesheet"/>
+    {% endif %}
+
+
+    <script type="text/javascript" src="{{ asset('templateV2/js/jquery-2.2.3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('templateV2/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('templateV2/js/custom.js') }}"></script>
+
+</head>
