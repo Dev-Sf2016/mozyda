@@ -136,7 +136,6 @@ class RegistrationController extends Controller
 
         $formComp->handleRequest($request);
 
-
         if ($formComp->isSubmitted() && $formComp->isValid()) {
 
             $file = $company->getLogo();
