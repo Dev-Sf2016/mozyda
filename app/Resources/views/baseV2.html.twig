@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html {% if(app.request.getLocale() == 'ar') %}dir="rtl"{% endif %} lang="{{ app.request.getLocale() }}">
-{% include(':includes/v2:head-o.html.twig') %}
+{% include(':includes/v2:head.html.twig') %}
 <body {% if(app.request.getLocale() == 'ar') %}dir="rtl"{% endif %}>
 <div class="wrapper">
-    {% include(':includes/v2:header-o.html.twig') %}
+    {% include(':includes/v2:header.html.twig') %}
     {#{% block topmenu %}#}
     {#{% embed "includes/language_switcher.twig" %}#}
     {#{% endembed %}#}
     {#{% endblock %}#}
     <div style="clear: both"></div>
-    <div class="container br-container"></div>
     <div class="container main-container">
         <div class="sub-container">
             {% embed "includes/messages.twig" %}
@@ -22,20 +21,11 @@
 
 
     </div>
-    {#<div class="clear-fix"></div>#}
-    <div class="footer-divider-bg">
-        <div class="container footer-contents footer-bg" style="height: 220px; margin-top: -50px;">
-            {#big four footer links #}
-            {% embed "includes/v2/footer-links.html.twig" %}
-            {% endembed %}
-        </div>
+    <div class="container footer-divider">
 
     </div>
     <div class="footer">
-
         <div class="container footer-contents">
-            <div class="footer-divider">
-            </div>
             {% embed "includes/footer.twig" %}
             {% endembed %}
         </div>
