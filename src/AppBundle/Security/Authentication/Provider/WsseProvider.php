@@ -64,10 +64,10 @@ class WsseProvider implements AuthenticationProviderInterface
         }
 
         $isValid = $this->validateDigest($token->digest, $token->nonce, $token->created, $user->getPassword());
-
+        //echo 'hi'; die();
         if ($user && $isValid) {
             $authenticatedToken = new WsseUserToken($user->getRoles());
-            //$authenticatedToken->nonce = $token->nonce;
+            $authenticatedToken->nonce = $token->nonce;
             $authenticatedToken->area = $token->area;
 
             $authenticatedToken->setUser($user);
@@ -92,9 +92,10 @@ class WsseProvider implements AuthenticationProviderInterface
      */
     protected function validateDigest($digest, $nonce, $created, $secret)
     {
+
         // Check created time is not in the future
         if (strtotime($created) > time()) {
-            return false;
+            //return false;
         }
 
         //$salem = time() - strtotime($created) ."<br>" . time();
@@ -110,7 +111,7 @@ class WsseProvider implements AuthenticationProviderInterface
         // Validate that the nonce is *not* in cache
         // if it is, this could be a replay attack
         if ($cacheItem->isHit()) {
-          //  throw new NonceExpiredException('Previously used nonce detected');
+            //throw new NonceExpiredException('Previously used nonce detected');
         }
 
         // Store the item in cache for 5 minutes

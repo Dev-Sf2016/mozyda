@@ -7,6 +7,7 @@ namespace AppBundle\Rest\Customer;
 use AppBundle\Entity\CustomerInvitation;
 use AppBundle\Exception\InvalidFormException;
 use AppBundle\Entity\Customer;
+use AppBundle\Form\CustRegForm;
 use AppBundle\Form\Invite;
 use AppBundle\Rest\Codes;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
@@ -23,6 +24,7 @@ class CustomerController extends FOSRestController
 {
     private function isAllowed()
     {
+        //$token = $this->get('security.token_storage')->getToken();
         if($this->get('security.token_storage')->getToken()->area == 'customer'){
             return true;
         }
@@ -141,105 +143,51 @@ class CustomerController extends FOSRestController
         return $this->handleView($view);
 
     }
-    public function newtAction(Request $request){
 
-    }
 
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request){
-        //$companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
-
-        try{
-            $company = $this->createNewType($request);
-
-            $routeOptions = [
-                'id'=>$company->getId(),
-                '_format'=>$request->get('_format')
-            ];
-
-            $this->redirectView('api_get_company', $routeOptions, Codes::HTTP_CREATED);
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
-        catch(InvalidFormException $e){
-            $view = $this->view(['form'=>$e->getForm()], Codes::HTTP_BADE_REQUEST);
-            return $this->handleView($view);
-        }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-
-
-    }
-
-    /**
-     * @param Request $request
-     * @return Company|mixed
-     */
-    private function createNewType(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $customer = $em->getRepository('AppBundle:Customer')->find($user->getId());
         $parameters = $request->request->all();
-        $company = new Company();
+        $parameters['email'] = $customer->getEmail();
+        if(isset($parameters['password']['first']) && $parameters['password']['first']!=''){
+            $md5Password = md5($parameters['password']['first']);
+            $parameters['password']['first'] = $md5Password;
+            //$parameters['password']['second'] = $md5Password;
+        }
+        else{
+            $parameters['password']['first'] = $customer->getPassword();
+            $parameters['password']['second'] = $customer->getPassword();
+        }
 
-        $companyDelegate = new CompanyDelegate();
-        $company->addCompanyDelegate($companyDelegate);
-
-        $persistedCompany = $this->processForm($company, $parameters, 'POST');
-
-        return $persistedCompany;
-
-
-    }
-
-    /**
-     * @param Company $company
-     * @param array $parameters
-     * @param string $method
-     * @return Company|mixed
-     */
-    private function processForm(Company $company, array $parameters, $method='PUT'){
-        $form = $this->createForm(CompanyType::class, $company, ['method'=>$method, 'csrf_protection'=>false] );
-        $form->submit($parameters, 'PATCH' !== $method);
+        $form = $this->createForm(CustRegForm::class, $customer, ['method'=>'PATCH', 'csrf_protection'=>false]);
+        $form->submit($parameters, true);
 
         if($form->isValid()){
-            $company = $form->getData();
-
-            $companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
-            $companyRepository->persistCompany($company);
-
-            return $company;
+            $em->persist($customer);
+            $em->flush();
+            $customer->setPassword('');
+            $tran = $this->get('translator');
+            $view = $this->view(['modal'=>[
+                'user'=>$customer, 'base_url'=>$this->getParameter('base_url')],
+                    'message'=>$tran->trans('Customer Information is updated successfully')], Codes::HTTP_OK);
+        }
+        else{
+            $view = $this->view(['form'=>$form], Codes::HTTP_BADE_REQUEST);
         }
 
-        throw new InvalidFormException($this->get('translator')->trans('Invalid Submitted data'), $form);
 
-    }
+        return $this->handleView($view);
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return \FOS\RestBundle\View\View
-     */
-    public function patchAction(Request $request, $id){
-
-        try{
-            $company = $this->getDoctrine()->getRepository("AppBundle:Company")->find($id);
-
-            if(!$company){
-                throw new NotFoundHttpException($this->get('translator')->trans('The resource \'%s\' was not found', $id));
-            }
-
-            $statusCode = Codes::HTTP_NO_CONTENT;
-            $company = $this->processForm($company, $request->request->all(), 'PATCH');
-
-            $routeOptions = [
-                'id' => $id,
-                '_format' => $request->get('_format')
-            ];
-
-            return $this->routeRedirectView('api_get_company', $routeOptions, $statusCode);
-
-        }
-        catch(InvalidFormException $e){
-
-        }
     }
 
 
