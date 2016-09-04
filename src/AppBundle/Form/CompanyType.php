@@ -20,6 +20,7 @@ class CompanyType extends AbstractType
                 'constraints' => array(
 
                     new Assert\NotBlank()
+                    
                 )
             ))
             ->add('companyDelegate', CollectionType::class, array(
