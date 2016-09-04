@@ -34,6 +34,16 @@ class CompanyController extends FOSRestController
         return false;
     }
 
+    private function isUserValid($companyId){
+        $userid = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:CompanyDelegate')->find($userid);
+        if( $user->getCompany()->getId()  == $companyId){
+            return true;
+        }
+
+        return false;
+
+    }
 
     public function getLoginAction(){
         if(!$this->isAllowed()){
@@ -77,7 +87,7 @@ class CompanyController extends FOSRestController
         }
         else {
 
-            $view = $this->view(['delegate'=>$delegate, 'base_url'=>'http://mozyda.dev'],  Codes::HTTP_OK );
+            $view = $this->view(['delegate'=>$delegate, 'base_url'=>$this->getParameter('base_url')],  Codes::HTTP_OK );
         }
 
         return $this->handleView($view);
@@ -179,7 +189,7 @@ class CompanyController extends FOSRestController
      * @param $id
      * @return \FOS\RestBundle\View\View
      */
-    public function patchAction(Request $request, $id){
+    public function putAction(Request $request, $id){
 
         try{
             $company = $this->getDoctrine()->getRepository("AppBundle:Company")->find($id);
@@ -210,6 +220,10 @@ class CompanyController extends FOSRestController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getDiscountAction($cid, $id){
+        if(!$this->isAllowed() || !$this->isUserValid($cid)){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+
         $discountRepository = $this->getDoctrine()->getRepository('AppBundle:Discount');
 
         $discount = null;
@@ -235,6 +249,9 @@ class CompanyController extends FOSRestController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetDiscountAction($cid){
+        if(!$this->isAllowed() || !$this->isUserValid($cid)){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
 
         $discountsRepository = $this->getDoctrine()->getRepository('AppBundle:Discount');
         $discounts = $discountsRepository->findBy(array('company'=>$cid));
@@ -254,7 +271,7 @@ class CompanyController extends FOSRestController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postDiscountAction(Request $request, $cid){
-        if(!$this->isAllowed()){
+        if(!$this->isAllowed() || !$this->isUserValid($cid)){
             return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
 
@@ -319,9 +336,9 @@ class CompanyController extends FOSRestController
      * @param $cid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchDiscountAction(Request $request, $cid){
+    public function postPdiscountAction(Request $request, $cid){
 
-        if(!$this->isAllowed()){
+        if(!$this->isAllowed() || !$this->isUserValid($cid)){
             return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
 
@@ -332,7 +349,7 @@ class CompanyController extends FOSRestController
         $discountId = $parameters['id'];
         unset($parameters['id']);
         $discount = $this->getDoctrine()->getRepository('AppBundle:Discount')->find($discountId);
-
+        $promotion = $discount->getPromotion();
         $view = null;
         if($user->getCompany()->getId() == $cid && $discount->getCompany()->getId() == $cid){
 
@@ -368,6 +385,9 @@ class CompanyController extends FOSRestController
                     $uploadedFile->move($upload_dir, $fileName);
                     $discount->setPromotion($fileName);
                 }
+                else{
+                    $discount->setPromotion($promotion);
+                }
                 $em = $this->getDoctrine()->getManager();
 
                 $em->persist($discount);
@@ -392,7 +412,8 @@ class CompanyController extends FOSRestController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postDelegateAction(Request $request, $cid){
-        if(!$this->isAllowed()){
+
+        if(!$this->isAllowed() || !$this->isUserValid($cid)){
             return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
 
@@ -402,7 +423,7 @@ class CompanyController extends FOSRestController
         if($user->getCompany()->getId() == $cid){
             $delegate = new CompanyDelegate();
             $parameters = $request->request->all();
-            
+
             $form = $this->createForm(CompanyDelegateType::class, $delegate, ['method'=>'POST', 'csrf_protection'=>false]);
 
             $form->submit($parameters, false);
@@ -458,8 +479,8 @@ class CompanyController extends FOSRestController
      * @param $cid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchDelegateAction(Request $request, $cid){
-        if(!$this->isAllowed()){
+    public function postPdelegateAction(Request $request, $cid){
+        if(!$this->isAllowed() || !$this->isUserValid($cid)){
             return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
 
@@ -500,7 +521,7 @@ class CompanyController extends FOSRestController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function cgetDelegateAction($cid){
-        if(!$this->isAllowed()){
+        if(!$this->isAllowed() || !$this->isUserValid($cid)){
             return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
 

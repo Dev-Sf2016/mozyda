@@ -75,4 +75,6 @@ class DiscountRepository extends \Doctrine\ORM\EntityRepository
         $paginator->setCurrentPage($page);
         return $paginator;
     }
+
+    
 }

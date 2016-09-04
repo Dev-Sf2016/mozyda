@@ -8,10 +8,12 @@ use AppBundle\Entity\CompanyDelegate;
 use AppBundle\Entity\Customer;
 use AppBundle\Form\CompanyType;
 use AppBundle\Form\CustRegForm;
+use Doctrine\ORM\Query\Expr\Join;
 use FOS\RestBundle\Controller\Annotations\FileParam;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\FOSRestController;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -32,17 +34,55 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class HomeController extends FOSRestController{
 
+    /**
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetAlldiscountsAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
 
-    public function getCompaniesAction(){
-        $companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
-        $companies = null;
-        $companies = $companyRepository->findAll();
+        $qb = $em->createQueryBuilder()
+            ->select(['d'])
+            ->from('AppBundle:Discount', 'd')
+            ->innerJoin('AppBundle:Company', 'c', Join::WITH, 'd.company = c.id')
+            ->where('c.isActive = 1')
+            ->andWhere('d.startDate <= :todaydate')
+            ->andWhere('d.endDate >= :todaydate')
+            ->orderBy('d.id', 'DESC')
+            ->setParameter('todaydate', date('Y-m-d'));
 
-        if(!$companies){
+        $paginationCollection = $this->get('app.pagination_factory')->createCollection($qb, $request, 'api_cget_home_alldiscounts');
+        
+
+        if(!$paginationCollection){
             $view = $this->view(['message'=>$this->get('translator')->trans('Records not found')], Codes::HTTP_NOT_FOUND);
         }
         else {
-            $view = $this->view(['companies' => $companies, 'base_url'=>$this->getParameter('base_url')], Codes::HTTP_OK);
+            $view = $this->view(['page'=>$paginationCollection, 'base_url'=>$this->getParameter('base_url')], Codes::HTTP_OK);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cgetCompaniesAction(Request $request){
+        $em = $this->getDoctrine()->getManager(); //getRepository('AppBundle:Company');
+        $qb = $em->createQueryBuilder()
+            ->select('c')
+            ->from('AppBundle:Company', 'c')
+            ->where('c.isActive = 1')
+            ->orderBy('c.name', 'ASC');
+        $paginationCollection = $this->get('app.pagination_factory')->createCollection($qb, $request, 'api_cget_home_companies');
+
+
+        if(!$paginationCollection){
+            $view = $this->view(['message'=>$this->get('translator')->trans('Records not found')], Codes::HTTP_NOT_FOUND);
+        }
+        else {
+            $view = $this->view(['page' => $paginationCollection, 'base_url'=>$this->getParameter('base_url')], Codes::HTTP_OK);
         }
 
         return $this->handleView($view);

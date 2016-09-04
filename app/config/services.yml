@@ -34,7 +34,9 @@ services:
         arguments: ["@router", "%kernel.default_locale%", "%locale_supported%"]
         tags:
           - { name: kernel.event_subscriber }
-
+    app.pagination_factory:
+        class: AppBundle\Rest\Factory\PaginationFactory
+        arguments: ["@router"]
 
     wsse.security.authentication.provider:
         class: AppBundle\Security\Authentication\Provider\WsseProvider
@@ -45,3 +47,4 @@ services:
         class: AppBundle\Security\Firewall\WsseListener
         arguments: ['@security.token_storage', '@security.authentication.manager']
         public: false
+
