@@ -8,11 +8,11 @@ use AppBundle\Entity\Discount;
 use AppBundle\Form\CompanyDelegateType;
 use AppBundle\Form\CompanyType;
 use AppBundle\Form\DiscountType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DefaultController extends Controller
@@ -61,6 +61,46 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $companyDelegateData = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+        //current user company id
+        $em->initializeObject($companyDelegateData->getCompany());
+        // edit the company account and the default loggedin user
+        $company = $em->getRepository('AppBundle:Company')->find($companyDelegateData->getCompany()->getId());
+        $company->addCompanyDelegate($companyDelegateData);
+        $currentPass = $company->getCompanyDelegate()->get(0)->getPassword();
+        $logoFilename = $company->getLogo();
+        $existingLogo = $company->getLogo();
+        $editForm = $this->createForm(\AppBundle\Form\CompanyType::class, $company);
+        $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            if ($company->getCompanyDelegate()->get(0)->getPassword() == '') {
+                $company->getCompanyDelegate()->get(0)->setPassword($currentPass);
+            } else {
+                $company->getCompanyDelegate()->get(0)->setPassword(md5($company->getCompanyDelegate()->get(0)->getPassword()));
+            }
+
+            if ($company->getLogo()) {
+
+                // delete the old thumbmail image
+
+                if (file_exists($this->container->getParameter("app.company.logo_path") . '/' . $logoFilename)) {
+                    unlink($this->container->getParameter("app.company.logo_path") . '/' . $logoFilename);
+                }
+                $logo = $company->getLogo();
+                $logoFilename = sprintf('%s-%s.%s', uniqid(), time(), $logo->guessExtension());
+                $logo->move(
+                    $this->container->getParameter("app.company.logo_path") . '/',
+                    $logoFilename
+                );
+            }
+
+            $company->setLogo($logoFilename);
+            $em->persist($company);
+            $em->flush();
+            $this->addFlash('notice', $this->get('translator')->trans('Company Updated Sucessfully'));
+//            return $this->redirectToRoute('admin_company_edit', array('id' => $company->getId()));
+        }
+
         // add delegate functionality
 
         $companyDelegate = new CompanyDelegate();
@@ -158,7 +198,7 @@ class DefaultController extends Controller
 //                $this->redirectToRoute('company_add_discount');
             }
         }
-        if($request->get('_route') == 'company_home_delegates_paginated'){
+        if ($request->get('_route') == 'company_home_delegates_paginated') {
             $this->addFlash('tab', '2a');
         }
         //end of add discount functionality
@@ -174,8 +214,31 @@ class DefaultController extends Controller
             'form_discount' => $discountForm->createView(),
             'discounts' => $all_discounts['discounts'],
             'company_del' => $all_discounts['company'],
-            'all_delegates' => $all_delegates
+            'all_delegates' => $all_delegates,
+            'edit_form' => $editForm->createView(),
         ));
+    }
+
+    /**
+     * @Route("/company/discount/list", name="company_discount_list")
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function companyDiscountList()
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+        $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+        $em->initializeObject($companyDelegate->getCompany());
+        $discounts = $em->getRepository('AppBundle:Discount')->getDiscountsByCompanyId($companyDelegate->getCompany());
+
+        ///echo "salem";die();
+        return array(
+            'discounts' => $discounts,
+            'company' => $companyDelegate
+        );
     }
 
     /**
@@ -283,7 +346,6 @@ class DefaultController extends Controller
             ));
     }
 
-
     /**
      * @Route("/company/detail", name="company_detail")
      * @param Request $request
@@ -326,7 +388,8 @@ class DefaultController extends Controller
 
 //        $userCompany = $em->getRepository('AppBundle:Company')->findBy('')
     }
-/**
+
+    /**
      * @Route("/company/delegate/{id}/delete", requirements={"id": "\d+"},name="company_delete_delegate")
      *
      */
@@ -338,7 +401,7 @@ class DefaultController extends Controller
 
         $user = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
         $em->initializeObject($user->getCompany());
-        if($delegate->getIsDefault() == 1){
+        if ($delegate->getIsDefault() == 1) {
             return $this->redirectToRoute('company_home');
         }
         if ($user->getCompany() == $delegate->getCompany()) {
@@ -416,28 +479,6 @@ class DefaultController extends Controller
             array(
                 'form' => $form->createView()
             ));
-    }
-
-    /**
-     * @Route("/company/discount/list", name="company_discount_list")
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function companyDiscountList()
-    {
-
-
-        $em = $this->getDoctrine()->getManager();
-        $companyDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
-        $em->initializeObject($companyDelegate->getCompany());
-        $discounts = $em->getRepository('AppBundle:Discount')->getDiscountsByCompanyId($companyDelegate->getCompany());
-
-        ///echo "salem";die();
-        return array(
-            'discounts' => $discounts,
-            'company' => $companyDelegate
-        );
     }
 
     /**

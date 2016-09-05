@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 
 class CompanyEdit extends AbstractType
 {
@@ -28,6 +30,12 @@ class CompanyEdit extends AbstractType
                 ),
             )
             )
+            ->add('companyDelegate', CollectionType::class, array(
+                'entry_type' => CompanyDelegateType::class,
+                'allow_add' => false,
+                'label'=> false,
+                'entry_options' => array('label' => false)
+            ))
             ->add('submit', SubmitType::class, array('label'=>'Save', 'attr'=>array('class'=>'btn btn-custom btn-lg btn-block'))
             );
     }
@@ -36,6 +44,8 @@ class CompanyEdit extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Company',
+            'attr' => array('novalidate' => 'novalidate'),
+            'cascade_validation' => true
         ));
     }
 }

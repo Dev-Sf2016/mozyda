@@ -4,6 +4,7 @@ namespace AppBundle\Controller\admin;
 
 use AppBundle\AppBundle;
 use AppBundle\Entity\Company;
+use AppBundle\Entity\CompanyDelegate;
 use AppBundle\Entity\Customer;
 use AppBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -166,13 +167,27 @@ class DefaultController extends Controller
      * @Route("admin/company/{id}/edit", requirements={"id": "\d+"}, name="admin_company_edit")
      * @Method({"GET", "POST"})
      */
-    public function companyEditAction(Company $company, Request $request)
+    public function companyEditAction(Request $request, $id)
     {
+
         $em = $this->getDoctrine()->getManager();
-//        var_dump($company);
+        $company = $em->getRepository('AppBundle:Company')->find($id);
+//          var_dump($company);
         $logoFilename = $company->getLogo();
         $existingLogo = $company->getLogo();
         $oldStatus = $company->getIsActive();
+
+        $companyDelegateData = $em->getRepository('AppBundle:CompanyDelegate')->findOneBy(
+            array('company' => $company,
+                'isDefault' => 1)
+        );
+
+
+        $company->addCompanyDelegate($companyDelegateData);
+//        var_dump($company->getCompanyDelegate()); die('--');
+        $currentPass = $company->getCompanyDelegate()->get(0)->getPassword();
+//        echo "current pass is ".$currentPass;
+//
         $editForm = $this->createForm(\AppBundle\Form\CompanyEdit::class, $company);
         $editForm->handleRequest($request);
         $deleteCompanyForm = $this->createCompanyDeleteForm($company);
@@ -182,6 +197,11 @@ class DefaultController extends Controller
 //        }
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            if ($company->getCompanyDelegate()->get(0)->getPassword() == '') {
+                $company->getCompanyDelegate()->get(0)->setPassword($currentPass);
+            } else {
+                $company->getCompanyDelegate()->get(0)->setPassword(md5($company->getCompanyDelegate()->get(0)->getPassword()));
+            }
 
             if ($company->getLogo()) {
 
@@ -257,9 +277,7 @@ class DefaultController extends Controller
 
             $this->addFlash('notice', $this->get('translator')->trans('Delegation Updated Sucessfully'));
             return $this->redirectToRoute('admin_company_edit', array('id' => $company->getId()));
-        } else {
-//            echo "form is not valid";
-        }
+        } 
         return $this->render(
             'admin/index/companyedit.html.twig',
             array(
@@ -267,7 +285,7 @@ class DefaultController extends Controller
                 'form' => $editForm->createView(),
                 'file_path' => $this->container->getParameter("app.company.logo_path"),
                 'existing_logo' => $existingLogo,
-                'form_delegation' => $formDelegation->createView(),
+//                'form_delegation' => $formDelegation->createView(),
                 'delete_company_form' => $deleteCompanyForm->createView()
             ));
     }

@@ -16,14 +16,15 @@ class CompanyType extends AbstractType
 
         $builder->add('name', TextType::class, array('label' => 'Company Name'))
             ->add('url', TextType::class, array('label' => 'Website URL'))
-            ->add('logo', FileType::class, array('label' => 'Company Logo',
-                'constraints' => array(
-
-                    new Assert\NotBlank()
-                    
-                )
+            ->add('logo', FileType::class, array('label' => 'Company Logo', 'data_class' => null,
+//                'constraints' => array(
+//
+//                    new Assert\NotBlank()
+//
+//                )
             ))
-            ->add('companyDelegate', CollectionType::class, array(
+            ->add('companyDelegate', CollectionType::class, array('label' => false,
+                'entry_options' => array('label' => false),
                 'entry_type' => CompanyDelegateType::class,
                 'allow_add' => false
             ));

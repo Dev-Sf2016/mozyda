@@ -12,8 +12,10 @@
     <div class="container br-container"></div>
     <div class="container main-container">
         <div class="sub-container">
+            <div class="messages">
             {% embed "includes/messages.twig" %}
             {% endembed %}
+            </div>
 
             {% block body %}{% endblock %}
         </div>
