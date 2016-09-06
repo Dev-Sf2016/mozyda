@@ -16,7 +16,7 @@
             <td>{{ delegate.created|date('y-m-d h:i:s') }}</td>
             <td>
 
-                <a href="{{ path('company_edit_discount', { id: 1}) }}" class="discount_edit btn btn-sm btn-primary"
+                <a href="{{ path('company_edit_delegate', { id: delegate.id}) }}" class="discount_edit btn btn-sm btn-primary"
                    data-toggle="modal">
                     {#data-target="#coupon-edit"#}
                     <i class="fa fa-edit"></i> {{ 'Edit'|trans }}

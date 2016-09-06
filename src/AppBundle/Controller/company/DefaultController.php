@@ -84,7 +84,7 @@ class DefaultController extends Controller
                 // delete the old thumbmail image
 
                 if (file_exists($this->container->getParameter("app.company.logo_path") . '/' . $logoFilename)) {
-                    unlink($this->container->getParameter("app.company.logo_path") . '/' . $logoFilename);
+//                    unlink($this->container->getParameter("app.company.logo_path") . '/' . $logoFilename);
                 }
                 $logo = $company->getLogo();
                 $logoFilename = sprintf('%s-%s.%s', uniqid(), time(), $logo->guessExtension());
@@ -481,6 +481,35 @@ class DefaultController extends Controller
             ));
     }
 
+    /**
+     * @Route("/company/delegate/{id}/edit", requirements={"id": "\d+"},name="company_edit_delegate")
+     */
+    public function companyDelegateEditAction(CompanyDelegate $companyDelegate, Request $request){
+
+        $em = $this->getDoctrine()->getManager();
+        $currentDelegate = $em->getRepository('AppBundle:CompanyDelegate')->find($this->getUser()->getId());
+        if ($currentDelegate->getCompany() != $companyDelegate->getCompany()) {
+            return $this->redirectToRoute('company_home');
+        }
+        $form = $this->createForm(\AppBundle\Form\CompanyDelegateType::class, $companyDelegate);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($companyDelegate);
+            $em->flush();
+            $this->addFlash('notice', $this->get('translator')->trans('Delegation Updated Sucessfully'));
+            $this->addFlash('tab', '2a');
+
+            return $this->redirectToRoute('company_home');
+
+        }
+        return $this->render(
+            ':company:company-edit-delegate.html.twig',
+            array(
+                'form' => $form->createView(),
+
+            ));
+
+    }
     /**
      * @Route("/company/discount/{id}/edit", requirements={"id": "\d+"},name="company_edit_discount")
      */

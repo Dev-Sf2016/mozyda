@@ -24,15 +24,14 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">{{ 'Add Discount'|trans }}</div>
                                 <div class="panel-body">
-                                    {#, {'attr': {'target':'iframe'} }#}
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-centered">
                                     {{ form_start(form) }}
-                                    {{ form_row(form.title) }}
-                                    {{ form_row(form.startDate) }}
-                                    {{ form_row(form.endDate) }}
-                                    {{ form_row(form.promotion) }}
-                                    <img src="{{ asset("files/company/discounts/") }}{{ company_id }}/{{ form.vars.value.promotion }}"
-                                         alt="" width="150" height="150">
+                                    {{ form_row(form.name) }}
+                                    {{ form_row(form.email) }}
+                                    {{ form_row(form.password) }}
+                                    <input type="submit" value="{{ 'Update'|trans }}" class="btn btn-lg btn-group-sm btn-success" />
                                     {{ form_end(form) }}
+                                    </div>
 
 
                                 </div>
