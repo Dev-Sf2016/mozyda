@@ -20,7 +20,8 @@
                             <div class="pull-right">
                                 <a href="{{ url('customer_invite') }}"
                                    class="text-center">{{ 'Invite Friends'| trans }} </a>
-                            </div><br class="clear" />
+                            </div>
+                            <br class="clear"/>
                             <div class="pull-right">
                                 <a href="{{ url('customer_logout') }}">{{ 'Logout'|trans }}</a></div>
                         </div>
@@ -81,63 +82,47 @@
                                     <div class="tab-pane" id="3a">
                                         <h3>{{ 'Customer Details'|trans }}</h3>
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">{{ 'Name'|trans }}:</div>
-                                                    <div class="col-md-6">{{ cust_info.cust_info.cust_name }}</div>
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">{{ 'Email'|trans }} :</div>
-                                                    <div class="col-md-6">{{ cust_info.cust_info.email }}</div>
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">{{ 'Card Status'|trans }} :</div>
-                                                    <div class="col-md-6">{{ cust_info.cust_info.card_status }}</div>
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">{{ 'Card Number'|trans }} :</div>
-                                                    <div class="col-md-6">{{ app.user.loyalityId }}</div>
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">{{ 'City'|trans }} :</div>
-                                                    <div class="col-md-6">{{ app.user.City }}</div>
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">{{ 'Nationality'|trans }} :</div>
-                                                    <div class="col-md-6">{{ app.user.nationality }}</div>
-                                                </div>
-
+                                            <div class="col-md-6 col-centered">
+                                                {{ form_start(form) }}
+                                                {{ form_row(form.email) }}
+                                                {{ form_row(form.name) }}
+                                                {{ form_row(form.city) }}
+                                                {{ form_row(form.nationality) }}
+                                                {{ form_row(form.password) }}
+                                                {{ form_row(form.loyality_id, {'attr': {'readonly': 'true'} }) }}
+                                                {% do form.refferer_email.setRendered %}
+                                                <input type="submit" value="{{ 'Update'|trans }}"
+                                                       class="btn btn-lg btn-block btn-success"/>
+                                                {{ form_end(form) }}
                                             </div>
                                         </div>
+
+
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
                     </div>
                 </div>
+
             </div>
         </div>
+    </div>
+    </div>
+    {% for tab in app.session.flashBag.get('tab') %}
+        <script type="text/javascript">
 
-        <br/>
-        <br/>
-        <br/>
-        <br/>
+            $(document).ready(function () {
+                $('.nav-pills a[href="#{{ tab }}"]').tab('show');
+            });
+
+        </script>
+
+    {% endfor %}
+    <br/>
+    <br/>
+    <br/>
+    <br/>
     </div>
 {% endblock %}
