@@ -491,9 +491,13 @@ class DefaultController extends Controller
         if ($currentDelegate->getCompany() != $companyDelegate->getCompany()) {
             return $this->redirectToRoute('company_home');
         }
+        $currentPass = $companyDelegate->getPassword();
         $form = $this->createForm(\AppBundle\Form\CompanyDelegateType::class, $companyDelegate);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if($companyDelegate->getPassword() == ''){
+                $companyDelegate->setPassword($currentPass);
+            }
             $em->persist($companyDelegate);
             $em->flush();
             $this->addFlash('notice', $this->get('translator')->trans('Delegation Updated Sucessfully'));
