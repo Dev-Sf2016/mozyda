@@ -197,7 +197,10 @@ class CustomerController extends FOSRestController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postInvitefriendAction(Request $request, $cid){
-        
+        if(!$this->isAllowed()){
+            return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
+        }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $invitation = new CustomerInvitation();
 
         $form = $this->createForm(Invite::class, $invitation, ['method'=>'POST', 'csrf_protection'=>false] );
@@ -206,9 +209,7 @@ class CustomerController extends FOSRestController
         if($form->isValid()){
 
             $invitation->setStatus($invitation::SEND_INVITATION);
-            $customer = $this->getDoctrine()->getRepository('AppBundle:Customer')->findOneBy(
-                array('id'=>$cid)
-            );
+            $customer = $this->getDoctrine()->getRepository('AppBundle:Customer')->find($user->getId());
 
 
             $invitation->setRefferer($customer);
@@ -218,11 +219,10 @@ class CustomerController extends FOSRestController
 
             $message = \Swift_Message::newInstance()
                 ->setSubject($this->get('translator')->trans('Invitation to join Mzaaya.com'))
-                ->setFrom('send@example.com')
-                ->setTo('welcome@gmail.com')
+                ->setFrom($this->getParameter("email_from"))
+                ->setTo($invitation->getEmail())
                 ->setBody(
                     $this->renderView(
-                    // app/Resources/views/Emails/registration.html.twig
                         'emails/invitation.html.twig',
                         array('id' => $invitation->getId(),
                             'email' => $invitation->getEmail(),
@@ -232,10 +232,10 @@ class CustomerController extends FOSRestController
                     'text/html'
                 );
 
-            //TODO: Enable the mailer service
             $this->get('mailer')->send($message);
 
-            return $this->handleView(['success'=>true], Codes::HTTP_OK);
+            $view = $this->view(['success'=>true], Codes::HTTP_OK);
+            return $this->handleView($view);
 
 
         }

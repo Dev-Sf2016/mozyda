@@ -16,6 +16,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -68,13 +69,15 @@ class CompanyController extends FOSRestController
         if(!$this->isAllowed()){
             return $this->handleView($this->view([], Codes::HTTP_UN_AUTHORIZED ));
         }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $companyRepository = $this->getDoctrine()->getRepository('AppBundle:Company');
         $delegateRepository = $this->getDoctrine()->getRepository('AppBundle:CompanyDelegate');
         $company = null;
         $delegate = null;
         try{
-            $company = $companyRepository->find($id);
-            $delegate = $delegateRepository->findDefaultDelegateByCompany($company);
+            //$company = $companyRepository->find($user->getId());
+            $delegate = $delegateRepository->find($user->getId());
+            $company = $delegate->getCompany();
 
         }
         catch (\Exception $e){
