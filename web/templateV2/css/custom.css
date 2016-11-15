@@ -213,6 +213,16 @@ li.error{
 a{
     color: #008059;
 }
+.col-centered{
+    float: none !important;
+    margin: 0 auto;
+}
+.sub-container .messages{
+    padding-top: 30px;
+}
+.table-striped>tbody>tr:nth-of-type(odd) {
+    color: #000000;
+}
 @media (max-width : 992px) {
     h2.panel-heading-text{
         margin:0px;

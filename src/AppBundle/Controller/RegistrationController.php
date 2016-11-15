@@ -3,24 +3,22 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Company;
 use AppBundle\Entity\CompanyDelegate;
-use AppBundle\Form\CompanyType;
-use AppBundle\Form\CustRegForm;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInvitation;
+use AppBundle\Form\CompanyType;
+use AppBundle\Form\CustRegForm;
 use AppBundle\Security\User\CustomerUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class RegistrationController extends Controller
 {
@@ -81,7 +79,7 @@ class RegistrationController extends Controller
                     $error = new FormError($reffererInfo['error']);
                     $formCust->get('refferer_email')->addError($error);
                     $saveForm = false;
-                }else{
+                } else {
 
                     $customer->setRefferedBy($reffererInfo['refferer']);
                 }
@@ -117,7 +115,7 @@ class RegistrationController extends Controller
                     );
 
 //                echo $message;
-        $this->get('mailer')->send($message);
+                $this->get('mailer')->send($message);
 
 
 //                $this->get('session')->getFlashBag()->add('notice', 'You have registered Sucessfully, Please follow the email to activate your account');
@@ -132,10 +130,10 @@ class RegistrationController extends Controller
         $companyDelegate = new CompanyDelegate();
 //        var_dump($companyDelegate); die('--');
         $company->addCompanyDelegate($companyDelegate);
-        $formComp = $this->createForm(CompanyType::class, $company);
+        $formComp = $this->createForm(CompanyType::class, $company, array(
+            'validation_groups' => array('registration')));
 
         $formComp->handleRequest($request);
-
 
         if ($formComp->isSubmitted() && $formComp->isValid()) {
 
@@ -225,7 +223,7 @@ class RegistrationController extends Controller
                 'email' => $email
             ));
         if (!empty($refferer)) {
-            $arr = array('refferer_id' => $refferer->getId(), 'error' => '','refferer'=>$refferer);
+            $arr = array('refferer_id' => $refferer->getId(), 'error' => '', 'refferer' => $refferer);
         } else {
             $arr = array('refferer_id' => '', 'error' => $this->get('translator')->trans('Invalid refferer email'));
 
@@ -303,7 +301,6 @@ class RegistrationController extends Controller
     }
 
 
-
     /**
      * @Route("/activateCustomer/{id}/{code}", name="customer_activation")
      */
@@ -348,42 +345,42 @@ class RegistrationController extends Controller
      *
      * @return Response
      */
-    public function forgotCustomerPasswordAction(Request $request){
+    public function forgotCustomerPasswordAction(Request $request)
+    {
 
 //        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
 //            return $this->redirectToRoute('homepage');
 //        }
 
-        $form = $this->createFormBuilder(null, array('attr'=>array('novalidate'=>'novalidate')))
+        $form = $this->createFormBuilder(null, array('attr' => array('novalidate' => 'novalidate')))
             //->setAttribute('novalidate', 'novalidate')
             ->setAction($this->get('router')->getGenerator()->generate('forgot_customer_password'))
             ->add('email', EmailType::class, array(
-                'constraints'=>array(
+                'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Email()
                 )
             ))
-            ->add('save', SubmitType::class, array('label'=>'submit'))
+            ->add('save', SubmitType::class, array('label' => 'submit'))
             ->getForm();
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             //save the form
             $formData = $form->getData();
             $em = $this->getDoctrine()->getManager();
-            $customer = $em->getRepository('AppBundle:Customer')->findOneBy(array("email"=>$formData['email']));
+            $customer = $em->getRepository('AppBundle:Customer')->findOneBy(array("email" => $formData['email']));
 
-            if($customer == null){
+            if ($customer == null) {
                 $this->addFlash('error', $this->get('translator')->trans('User does not exist'));
-            }
-            else{
+            } else {
 
                 //$token = hash('sha256', uniqid(mt_rand(), true), true);
                 $time = time();
-                $token =   uniqid() . md5($formData['email'] . time() . rand(111111, 999999));
-                $link = $this->generateUrl('reset_customer_password', array('time'=>$time, 'token'=>$token), UrlGenerator::ABSOLUTE_URL);
+                $token = uniqid() . md5($formData['email'] . time() . rand(111111, 999999));
+                $link = $this->generateUrl('reset_customer_password', array('time' => $time, 'token' => $token), UrlGenerator::ABSOLUTE_URL);
 
-                $customer->setData(serialize(array('time'=>$time, 'token'=>$token)));
+                $customer->setData(serialize(array('time' => $time, 'token' => $token)));
 
                 $em->persist($customer);
                 $em->flush();
@@ -397,8 +394,8 @@ class RegistrationController extends Controller
                         $this->renderView(
                             'emails/forgot-customer-password-email.twig',
                             array(
-                                'name'=>$customer->getName(),
-                                'link'=>$link
+                                'name' => $customer->getName(),
+                                'link' => $link
                             )
                         ),
                         'text/html'
@@ -409,13 +406,12 @@ class RegistrationController extends Controller
             }
 
 
-
 //            return $this->redirectToRoute('forgot_customer_password');
         }
         return $this->render(
             'registration/forgot-customer-password.html.twig',
             array(
-                'form'=>$form->createView()
+                'form' => $form->createView()
             )
         );
     }
@@ -426,42 +422,42 @@ class RegistrationController extends Controller
      *
      * @return Response
      */
-    public function forgotCompanyPasswordAction(Request $request){
+    public function forgotCompanyPasswordAction(Request $request)
+    {
 
 //        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
 //            return $this->redirectToRoute('homepage');
 //        }
 
-        $form = $this->createFormBuilder(null, array('attr'=>array('novalidate'=>'novalidate')))
+        $form = $this->createFormBuilder(null, array('attr' => array('novalidate' => 'novalidate')))
             //->setAttribute('novalidate', 'novalidate')
             ->setAction($this->get('router')->getGenerator()->generate('forgot_company_password'))
             ->add('email', EmailType::class, array(
-                'constraints'=>array(
+                'constraints' => array(
                     new Assert\NotBlank(),
                     new Assert\Email()
                 )
             ))
-            ->add('save', SubmitType::class, array('label'=>'submit'))
+            ->add('save', SubmitType::class, array('label' => 'submit'))
             ->getForm();
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             //save the form
             $formData = $form->getData();
             $em = $this->getDoctrine()->getManager();
-            $companyDel = $em->getRepository('AppBundle:CompanyDelegate')->findOneBy(array("email"=>$formData['email']));
+            $companyDel = $em->getRepository('AppBundle:CompanyDelegate')->findOneBy(array("email" => $formData['email']));
 
-            if($companyDel == null){
+            if ($companyDel == null) {
                 $this->addFlash('error', $this->get('translator')->trans('User does not exist'));
-            }
-            else{
+            } else {
 
                 //$token = hash('sha256', uniqid(mt_rand(), true), true);
                 $time = time();
-                $token =   uniqid() . md5($formData['email'] . time() . rand(111111, 999999));
-                $link = $this->generateUrl('reset_company_password', array('time'=>$time, 'token'=>$token), UrlGenerator::ABSOLUTE_URL);
+                $token = uniqid() . md5($formData['email'] . time() . rand(111111, 999999));
+                $link = $this->generateUrl('reset_company_password', array('time' => $time, 'token' => $token), UrlGenerator::ABSOLUTE_URL);
 
-                $companyDel->setData(serialize(array('time'=>$time, 'token'=>$token)));
+                $companyDel->setData(serialize(array('time' => $time, 'token' => $token)));
 
                 $em->persist($companyDel);
                 $em->flush();
@@ -475,8 +471,8 @@ class RegistrationController extends Controller
                         $this->renderView(
                             'emails/forgot-customer-password-email.twig',
                             array(
-                                'name'=>$companyDel->getName(),
-                                'link'=>$link
+                                'name' => $companyDel->getName(),
+                                'link' => $link
                             )
                         ),
                         'text/html'
@@ -488,13 +484,12 @@ class RegistrationController extends Controller
             }
 
 
-
 //            return $this->redirectToRoute('forgot_company_password');
         }
         return $this->render(
             'registration/forgot-company-password.html.twig',
             array(
-                'form'=>$form->createView()
+                'form' => $form->createView()
             )
         );
     }
@@ -508,7 +503,8 @@ class RegistrationController extends Controller
      *
      * @return Response
      */
-    public function resetCustomerPasswordAction(Request $request, $time, $token){
+    public function resetCustomerPasswordAction(Request $request, $time, $token)
+    {
 
 //        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
 //            return $this->redirectToRoute('homepage');
@@ -516,32 +512,31 @@ class RegistrationController extends Controller
         $viewData = array();
         $em = $this->getDoctrine()->getManager();
         $time = (integer)$time;
-        $dataValue = serialize(array('time'=>$time, 'token'=>$token));
-        $customer = $em->getRepository('AppBundle:Customer')->findOneBy(array("data"=>$dataValue));
+        $dataValue = serialize(array('time' => $time, 'token' => $token));
+        $customer = $em->getRepository('AppBundle:Customer')->findOneBy(array("data" => $dataValue));
 
-        if($customer == null){
+        if ($customer == null) {
 //            return $this->redirectToRoute('homepage');
-        }
-        else{
+        } else {
             $data = unserialize($customer->getData());
-            if(strtotime('+1 day', $data['time']) > time()){
-                $form = $this->createFormBuilder(array('attr'=>array('novalidate'=>'novalidate')))
+            if (strtotime('+1 day', $data['time']) > time()) {
+                $form = $this->createFormBuilder(array('attr' => array('novalidate' => 'novalidate')))
                     ->add('password', RepeatedType::class, array(
-                        'type'=>PasswordType::class,
+                        'type' => PasswordType::class,
                         'constraints' => array(
                             new Assert\NotBlank(),
-                            new Assert\Length(array('minMessage'=>'Password must be at least 8 characters', 'maxMessage'=>'Password must not be greater then 40 characters', 'min'=>8, 'max'=>40))
+                            new Assert\Length(array('minMessage' => 'Password must be at least 8 characters', 'maxMessage' => 'Password must not be greater then 40 characters', 'min' => 8, 'max' => 40))
                         ),
-                        'invalid_message'=>'Password and confirm password must match',
-                        'first_options'=>array('label'=>'Enter New Password'),
-                        'second_options'=>array('label'=>'Confirm Password'),
-                        'second_name'=>'confirmPassword'
+                        'invalid_message' => 'Password and confirm password must match',
+                        'first_options' => array('label' => 'Enter New Password'),
+                        'second_options' => array('label' => 'Confirm Password'),
+                        'second_name' => 'confirmPassword'
                     ))
-                    ->add('submit', SubmitType::class, array('label'=>'Submit'))
+                    ->add('submit', SubmitType::class, array('label' => 'Submit'))
                     ->getForm();
 
                 $form->handleRequest($request);
-                if($form->isSubmitted() && $form->isValid()){
+                if ($form->isSubmitted() && $form->isValid()) {
 
                     $formData = $form->getData();
 
@@ -557,8 +552,8 @@ class RegistrationController extends Controller
                             $this->renderView(
                                 'emails\reset-customer-password-email.twig',
                                 array(
-                                    'name'=>$customer->getName(),
-                                    'password'=>$formData['password']
+                                    'name' => $customer->getName(),
+                                    'password' => $formData['password']
                                 )
                             ),
                             'text/html'
@@ -568,13 +563,10 @@ class RegistrationController extends Controller
                     $this->addFlash('success', $this->get('translator')->trans('Your password is reset successfully'));
 
 
-
-
                 }
 
                 $viewData['form'] = $form->createView();
-            }
-            else{
+            } else {
                 $this->addFlash('error', $this->get('translator')->trans('Link expired'));
             }
         }
@@ -593,7 +585,8 @@ class RegistrationController extends Controller
      *
      * @return Response
      */
-    public function resetCompanyPasswordAction(Request $request, $time, $token){
+    public function resetCompanyPasswordAction(Request $request, $time, $token)
+    {
 
 //        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
 //            return $this->redirectToRoute('homepage');
@@ -601,32 +594,31 @@ class RegistrationController extends Controller
         $viewData = array();
         $em = $this->getDoctrine()->getManager();
         $time = (integer)$time;
-        $dataValue = serialize(array('time'=>$time, 'token'=>$token));
-        $companyDel = $em->getRepository('AppBundle:CompanyDelegate')->findOneBy(array("data"=>$dataValue));
+        $dataValue = serialize(array('time' => $time, 'token' => $token));
+        $companyDel = $em->getRepository('AppBundle:CompanyDelegate')->findOneBy(array("data" => $dataValue));
 
-        if($companyDel == null){
+        if ($companyDel == null) {
             return $this->redirectToRoute('homepage');
-        }
-        else{
+        } else {
             $data = unserialize($companyDel->getData());
-            if(strtotime('+1 day', $data['time']) > time()){
-                $form = $this->createFormBuilder(array('attr'=>array('novalidate'=>'novalidate')))
+            if (strtotime('+1 day', $data['time']) > time()) {
+                $form = $this->createFormBuilder(array('attr' => array('novalidate' => 'novalidate')))
                     ->add('password', RepeatedType::class, array(
-                        'type'=>PasswordType::class,
+                        'type' => PasswordType::class,
                         'constraints' => array(
                             new Assert\NotBlank(),
-                            new Assert\Length(array('minMessage'=>'Password must be at least 8 characters', 'maxMessage'=>'Password must not be greater then 40 characters', 'min'=>8, 'max'=>40))
+                            new Assert\Length(array('minMessage' => 'Password must be at least 8 characters', 'maxMessage' => 'Password must not be greater then 40 characters', 'min' => 8, 'max' => 40))
                         ),
-                        'invalid_message'=>'Password and confirm password must match',
-                        'first_options'=>array('label'=>'Enter New Password'),
-                        'second_options'=>array('label'=>'Confirm Password'),
-                        'second_name'=>'confirmPassword'
+                        'invalid_message' => 'Password and confirm password must match',
+                        'first_options' => array('label' => 'Enter New Password'),
+                        'second_options' => array('label' => 'Confirm Password'),
+                        'second_name' => 'confirmPassword'
                     ))
-                    ->add('submit', SubmitType::class, array('label'=>'Submit'))
+                    ->add('submit', SubmitType::class, array('label' => 'Submit'))
                     ->getForm();
 
                 $form->handleRequest($request);
-                if($form->isSubmitted() && $form->isValid()){
+                if ($form->isSubmitted() && $form->isValid()) {
 
                     $formData = $form->getData();
 
@@ -642,8 +634,8 @@ class RegistrationController extends Controller
                             $this->renderView(
                                 'emails\reset-company-password-email.twig',
                                 array(
-                                    'name'=>$companyDel->getName(),
-                                    'password'=>$formData['password']
+                                    'name' => $companyDel->getName(),
+                                    'password' => $formData['password']
                                 )
                             ),
                             'text/html'
@@ -653,13 +645,10 @@ class RegistrationController extends Controller
                     $this->addFlash('success', $this->get('translator')->trans('Your password is reset successfully'));
 
 
-
-
                 }
 
                 $viewData['form'] = $form->createView();
-            }
-            else{
+            } else {
                 $this->addFlash('error', $this->get('translator')->trans('Link expired'));
             }
         }
@@ -669,6 +658,7 @@ class RegistrationController extends Controller
             $viewData
         );
     }
+
     /**
      * @Route("/vendorRegistration", name="vendor_registration")
      */

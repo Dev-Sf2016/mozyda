@@ -1,0 +1,18 @@
+<div class="row">
+
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        {{ form_start(edit_form,{'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_row(edit_form.name) }}
+        {{ form_row(edit_form.url) }}
+        {{ form_row(edit_form.logo) }}
+        {{ form_row(edit_form.companyDelegate.children[0].email) }}
+        {{ form_row(edit_form.companyDelegate.children[0].password.first) }}
+        {{ form_row(edit_form.companyDelegate.children[0].password.second) }}
+        {% do edit_form.companyDelegate.children[0].name.setRendered %}
+        <button type="submit" class="btn btn-default pull-right">{{ 'Update'|trans }}</button>
+        {{ form_end(edit_form) }}
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <img src="{{ asset("files/company/logo/") }}{{ company_delegate.company.logo }}" class="img-responsive"/>
+    </div>
+</div>

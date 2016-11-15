@@ -48,6 +48,7 @@ class Company
 
     /**
      * @ORM\Column(name="logo", type="string", length=64)
+     * @Assert\NotBlank(message="This field is required", groups={"registration"})
      * @Assert\Image(
      *     maxSize="10Mi",
      *     maxSizeMessage="Maximum Image size allowed is 1Mi"
@@ -211,13 +212,14 @@ class Company
      */
     public function addCompanyDelegate($companyDelegate)
     {
+        if($this->companyDelegate == null) $this->companyDelegate = new ArrayCollection();
         $this->companyDelegate->add($companyDelegate);
 
         return $this;
     }
 
     /**
-     * @return CompanyDelegate
+     * @return ArrayCollection<CompanyDelegate>
      */
     public function getCompanyDelegate()
     {

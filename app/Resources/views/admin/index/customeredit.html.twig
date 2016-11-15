@@ -35,7 +35,16 @@
             </div>
         </div>
     </div>
+    {% for tab in app.session.flashBag.get('tab') %}
+        <script type="text/javascript">
 
+            $(document).ready(function () {
+                $('.nav-pills a[href="#{{ tab }}"]').tab('show');
+            });
+
+        </script>
+
+    {% endfor %}
     <!-- modal for delete customer -->
 
 

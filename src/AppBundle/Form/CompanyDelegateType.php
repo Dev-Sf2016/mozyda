@@ -25,10 +25,10 @@ class   CompanyDelegateType extends AbstractType
                     'invalid_message'=>'Password and confirm password are not same',
                     'first_options' => array('label' => 'Password'),
                     'second_options' => array('label' => 'Confirm Password'),
-                    'constraints' => array(
-
-                        new Assert\NotBlank()
-                    )
+//                    'constraints' => array(
+//
+//                        new Assert\NotBlank()
+//                    )
                 )
             );
             //->add('submit', SubmitType::class, array('label'=>'Save', 'attr'=>array('class'=>'btn btn-custom btn-lg btn-block')));
